@@ -15,11 +15,14 @@ package com.example.campusforum.models
 import com.google.gson.annotations.SerializedName
 /**
  * 
- * @param uid 
+ * @param content 
+ * @param parentCommentId 
  */
 
 data class InlineObject2 (
-    @SerializedName("uid")
-    val uid: kotlin.String
+    @SerializedName("content")
+    val content: kotlin.String,
+    @SerializedName("parent_comment_id")
+    val parentCommentId: kotlin.String? = null
 )
 
