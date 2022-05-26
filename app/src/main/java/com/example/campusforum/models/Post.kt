@@ -18,9 +18,9 @@ import com.google.gson.annotations.SerializedName
 /**
  * 
  * @param type 
- * @param location 
  * @param id 字符串，新建动态时不发
  * @param by 字符串，新建时不发
+ * @param location 
  * @param imageTextContent 
  * @param mediaContent 
  */
@@ -28,14 +28,14 @@ import com.google.gson.annotations.SerializedName
 data class Post (
     @SerializedName("type")
     val type: Post.Type,
-    @SerializedName("location")
-    val location: Location,
     /* 字符串，新建动态时不发 */
     @SerializedName("id")
     val id: kotlin.String? = null,
     /* 字符串，新建时不发 */
     @SerializedName("by")
     val by: kotlin.String? = null,
+    @SerializedName("location")
+    val location: Location? = null,
     @SerializedName("imageTextContent")
     val imageTextContent: ImageTextPostContent? = null,
     @SerializedName("mediaContent")

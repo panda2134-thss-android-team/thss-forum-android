@@ -11,22 +11,34 @@
 */
 package com.example.campusforum.models
 
+import com.example.campusforum.models.ImageTextPostContent
 
 import com.google.gson.annotations.SerializedName
 /**
  * 
- * @param avatar URL只能以本站允许域名开头
- * @param nickname 
- * @param email 
+ * @param type 
+ * @param imageTextContent 
+ * @param mediaContent 
  */
 
 data class InlineObject1 (
-    /* URL只能以本站允许域名开头 */
-    @SerializedName("avatar")
-    val avatar: kotlin.String,
-    @SerializedName("nickname")
-    val nickname: kotlin.String? = null,
-    @SerializedName("email")
-    val email: kotlin.String? = null
-)
+    @SerializedName("type")
+    val type: InlineObject1.Type,
+    @SerializedName("imageTextContent")
+    val imageTextContent: ImageTextPostContent? = null,
+    @SerializedName("mediaContent")
+    val mediaContent: kotlin.Array<kotlin.String>? = null
+) {
+
+    /**
+    * 
+    * Values: normal,audio,video
+    */
+    
+    enum class Type(val value: kotlin.String){
+        @SerializedName(value="normal")  normal("normal"),
+        @SerializedName(value="audio")  audio("audio"),
+        @SerializedName(value="video")  video("video");
+    }
+}
 

@@ -15,11 +15,18 @@ package com.example.campusforum.models
 import com.google.gson.annotations.SerializedName
 /**
  * 
- * @param uid 
+ * @param nickname 
+ * @param email 
+ * @param avatar URL只能以本站允许域名开头
  */
 
 data class InlineObject (
-    @SerializedName("uid")
-    val uid: kotlin.String
+    @SerializedName("nickname")
+    val nickname: kotlin.String? = null,
+    @SerializedName("email")
+    val email: kotlin.String? = null,
+    /* URL只能以本站允许域名开头 */
+    @SerializedName("avatar")
+    val avatar: kotlin.String? = null
 )
 
