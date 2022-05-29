@@ -15,11 +15,14 @@ package com.example.campusforum.models
 import com.google.gson.annotations.SerializedName
 /**
  * 
- * @param uid 
+ * @param email 
+ * @param password 
  */
 
-data class InlineResponse201 (
-    @SerializedName("uid")
-    val uid: kotlin.String
+data class LoginInfo (
+    @SerializedName("email")
+    val email: kotlin.String,
+    @SerializedName("password")
+    val password: kotlin.String
 )
 

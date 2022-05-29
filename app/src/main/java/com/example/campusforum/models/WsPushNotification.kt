@@ -17,6 +17,8 @@ import com.google.gson.annotations.SerializedName
  * 
  * @param type 
  * @param commentId 对于评论被回复的情况，此字段为回复的id
+ * @param uid 如给你点赞的人
+ * @param notificationId 每个通知唯一
  * @param postId 推送通知和动态有关时存在
  */
 
@@ -26,6 +28,12 @@ data class WsPushNotification (
     /* 对于评论被回复的情况，此字段为回复的id */
     @SerializedName("comment_id")
     val commentId: kotlin.String,
+    /* 如给你点赞的人 */
+    @SerializedName("uid")
+    val uid: kotlin.String,
+    /* 每个通知唯一 */
+    @SerializedName("notification_id")
+    val notificationId: kotlin.String,
     /* 推送通知和动态有关时存在 */
     @SerializedName("post_id")
     val postId: kotlin.String? = null

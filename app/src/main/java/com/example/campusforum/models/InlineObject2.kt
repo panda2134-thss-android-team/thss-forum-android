@@ -11,15 +11,35 @@
 */
 package com.example.campusforum.models
 
+import com.example.campusforum.models.ImageTextPostContent
+import com.example.campusforum.models.MediaPostContent
 
 import com.google.gson.annotations.SerializedName
 /**
  * 
- * @param uid 
+ * @param type 
+ * @param imageTextContent 
+ * @param mediaContent 
  */
 
 data class InlineObject2 (
-    @SerializedName("uid")
-    val uid: kotlin.String
-)
+    @SerializedName("type")
+    val type: InlineObject2.Type,
+    @SerializedName("imageTextContent")
+    val imageTextContent: ImageTextPostContent? = null,
+    @SerializedName("mediaContent")
+    val mediaContent: MediaPostContent? = null
+) {
+
+    /**
+    * 
+    * Values: normal,audio,video
+    */
+    
+    enum class Type(val value: kotlin.String){
+        @SerializedName(value="normal")  normal("normal"),
+        @SerializedName(value="audio")  audio("audio"),
+        @SerializedName(value="video")  video("video");
+    }
+}
 

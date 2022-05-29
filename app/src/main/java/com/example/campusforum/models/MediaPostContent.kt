@@ -15,11 +15,14 @@ package com.example.campusforum.models
 import com.google.gson.annotations.SerializedName
 /**
  * 
- * @param link 
+ * @param title 
+ * @param media 
  */
 
 data class MediaPostContent (
-    @SerializedName("link")
-    val link: kotlin.String
+    @SerializedName("title")
+    val title: kotlin.String,
+    @SerializedName("media")
+    val media: kotlin.Array<kotlin.String>
 )
 

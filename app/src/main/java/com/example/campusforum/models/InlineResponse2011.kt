@@ -15,11 +15,11 @@ package com.example.campusforum.models
 import com.google.gson.annotations.SerializedName
 /**
  * 
- * @param uid 
+ * @param count 
  */
 
 data class InlineResponse2011 (
-    @SerializedName("uid")
-    val uid: kotlin.String
+    @SerializedName("count")
+    val count: kotlin.Int
 )
 

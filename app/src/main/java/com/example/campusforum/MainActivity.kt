@@ -3,26 +3,41 @@ package com.example.campusforum
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.github.kittinunf.fuel.Fuel
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import com.github.kittinunf.fuel.httpGet
-import com.github.kittinunf.result.Result
-import com.example.campusforum.models.User
+import com.github.kittinunf.fuel.gson.jsonBody
 import com.github.kittinunf.fuel.gson.responseObject
-
+import com.example.campusforum.models.*
 
 class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        Fuel.get("http://183.172.58.70:4523/mock/934436/profile/following/").responseObject<List<User>> { _, _, result ->
-            val (userList, error) = result
-            if (userList != null) {
-                for (user in userList) {
-                    println("nickname : ${user.nickname}, uid: ${user.uid}")
+    private val baseurl = "https://lab.panda2134.site:20443"
+    private var tokenMap = mutableMapOf<Int, String>()
+    private var uidMap = mutableMapOf<Int, String>()
+    private fun login(cnt: Int) {
+        val path = "$baseurl/auth/login"
+        val loginInfo = LoginInfo(email = "user$cnt@test.com", password = "password")
+        APIService.login(loginInfo){ _, _, result ->
+            val (bytes, _) = result
+            bytes?.let {
+                tokenMap[cnt] = bytes.token
+                uidMap[cnt] = bytes.uid
+            }
+            if(cnt < 20) login(cnt+1)
+            else getFollowingUsers(20)
+        }
+    }
+    private fun getFollowingUsers(cnt: Int) {
+        APIService.getFollowingUsers(tokenMap[cnt]!!) {_, _, result ->
+            val (bytes, _) = result
+            bytes?.let {
+                for (user in bytes) {
+                    println("user$cnt follows ${user.nickname}")
                 }
             }
         }
+    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        login(1)
+
     }
 }

@@ -13,6 +13,7 @@ package com.example.campusforum.models
 
 import com.example.campusforum.models.ImageTextPostContent
 import com.example.campusforum.models.Location
+import com.example.campusforum.models.MediaPostContent
 
 import com.google.gson.annotations.SerializedName
 /**
@@ -39,7 +40,7 @@ data class Post (
     @SerializedName("imageTextContent")
     val imageTextContent: ImageTextPostContent? = null,
     @SerializedName("mediaContent")
-    val mediaContent: kotlin.Array<kotlin.String>? = null
+    val mediaContent: MediaPostContent? = null
 ) {
 
     /**

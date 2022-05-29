@@ -16,12 +16,18 @@ import com.google.gson.annotations.SerializedName
 /**
  * 
  * @param content 
+ * @param by 
+ * @param id 
  * @param parentCommentId 若非空则说明此评论是回复另一个评论，此字段为回复的评论id
  */
 
 data class Comment (
     @SerializedName("content")
     val content: kotlin.String,
+    @SerializedName("by")
+    val by: kotlin.String,
+    @SerializedName("id")
+    val id: kotlin.String,
     /* 若非空则说明此评论是回复另一个评论，此字段为回复的评论id */
     @SerializedName("parentCommentId")
     val parentCommentId: kotlin.String? = null

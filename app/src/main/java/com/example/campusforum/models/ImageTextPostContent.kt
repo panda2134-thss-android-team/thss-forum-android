@@ -17,12 +17,15 @@ import com.google.gson.annotations.SerializedName
  * 
  * @param text 
  * @param images 
+ * @param title 
  */
 
 data class ImageTextPostContent (
     @SerializedName("text")
     val text: kotlin.String,
     @SerializedName("images")
-    val images: kotlin.Array<kotlin.String>
+    val images: kotlin.Array<kotlin.String>,
+    @SerializedName("title")
+    val title: kotlin.String
 )
 
