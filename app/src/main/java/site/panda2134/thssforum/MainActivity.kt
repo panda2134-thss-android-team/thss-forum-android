@@ -19,7 +19,9 @@ class MainActivity : AppCompatActivity() {
                 uidMap[cnt] = bytes.uid
             }
             if (cnt < 20) login(cnt + 1)
-            else getFollowingUsers(20)
+            else APIService.getPostComments(tokenMap[20]!!, "114514", limit = 114514) { request, _, _ ->
+                println(request)
+            }
         }
     }
     private fun getFollowingUsers(cnt: Int) {
