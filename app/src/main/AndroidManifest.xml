@@ -17,7 +17,7 @@
             android:resource="@xml/network_security_config" />
 
         <activity
-            android:name=".MainActivity"
+            android:name="site.panda2134.thssforum.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
