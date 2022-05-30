@@ -15,18 +15,11 @@ package site.panda2134.thssforum.models
 import com.google.gson.annotations.SerializedName
 /**
  * 
- * @param nickname 
- * @param email 
- * @param avatar URL只能以本站允许域名开头
+ * @param count 
  */
 
-data class InlineObject5 (
-    @SerializedName("nickname")
-    val nickname: kotlin.String? = null,
-    @SerializedName("email")
-    val email: kotlin.String? = null,
-    /* URL只能以本站允许域名开头 */
-    @SerializedName("avatar")
-    val avatar: kotlin.String? = null
+data class NumOfLikesResponse (
+    @SerializedName("count")
+    val count: Int
 )
 

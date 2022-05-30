@@ -21,8 +21,8 @@ import com.google.gson.annotations.SerializedName
 
 data class Blocked (
     @SerializedName("by")
-    val by: kotlin.String,
+    val by: String,
     @SerializedName("blocked_uid")
-    val blockedUid: kotlin.String
+    val blockedUid: String
 )
 

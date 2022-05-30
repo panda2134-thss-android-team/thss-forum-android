@@ -15,17 +15,14 @@ package site.panda2134.thssforum.models
 import com.google.gson.annotations.SerializedName
 /**
  * 
- * @param nickname 
- * @param password 
- * @param email 
+ * @param commentId 
+ * @param postId 
  */
 
-data class InlineObject7 (
-    @SerializedName("nickname")
-    val nickname: kotlin.String,
-    @SerializedName("password")
-    val password: kotlin.String,
-    @SerializedName("email")
-    val email: kotlin.String
+data class NewCommentResponse (
+    @SerializedName("comment_id")
+    val commentId: String,
+    @SerializedName("post_id")
+    val postId: String
 )
 

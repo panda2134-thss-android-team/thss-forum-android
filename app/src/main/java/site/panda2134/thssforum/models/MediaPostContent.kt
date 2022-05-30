@@ -21,8 +21,8 @@ import com.google.gson.annotations.SerializedName
 
 data class MediaPostContent (
     @SerializedName("title")
-    val title: kotlin.String,
+    val title: String,
     @SerializedName("media")
-    val media: kotlin.Array<kotlin.String>
+    val media: kotlin.Array<String>
 )
 

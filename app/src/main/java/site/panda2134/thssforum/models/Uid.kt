@@ -20,6 +20,6 @@ import com.google.gson.annotations.SerializedName
 
 data class Uid (
     @SerializedName("uid")
-    val uid: kotlin.String
+    val uid: String
 )
 

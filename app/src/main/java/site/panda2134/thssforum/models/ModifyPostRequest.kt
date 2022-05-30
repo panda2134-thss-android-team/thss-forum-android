@@ -19,7 +19,7 @@ import com.google.gson.annotations.SerializedName
  * @param mediaContent 
  */
 
-data class InlineObject2 (
+data class ModifyPostRequest (
     @SerializedName("type")
     val type: Type,
     @SerializedName("imageTextContent")
@@ -33,7 +33,7 @@ data class InlineObject2 (
     * Values: normal,audio,video
     */
     
-    enum class Type(val value: kotlin.String){
+    enum class Type(val value: String){
         @SerializedName(value="normal")  normal("normal"),
         @SerializedName(value="audio")  audio("audio"),
         @SerializedName(value="video")  video("video");

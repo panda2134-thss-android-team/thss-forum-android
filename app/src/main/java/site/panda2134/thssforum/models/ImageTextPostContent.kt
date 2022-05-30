@@ -22,10 +22,10 @@ import com.google.gson.annotations.SerializedName
 
 data class ImageTextPostContent (
     @SerializedName("text")
-    val text: kotlin.String,
+    val text: String,
     @SerializedName("images")
-    val images: kotlin.Array<kotlin.String>,
+    val images: kotlin.Array<String>,
     @SerializedName("title")
-    val title: kotlin.String
+    val title: String
 )
 

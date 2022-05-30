@@ -21,8 +21,8 @@ import com.google.gson.annotations.SerializedName
 
 data class Following (
     @SerializedName("by")
-    val by: kotlin.String,
+    val by: String,
     @SerializedName("followee")
-    val followee: kotlin.String
+    val followee: String
 )
 

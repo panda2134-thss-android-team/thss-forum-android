@@ -27,10 +27,10 @@ data class Post (
     val type: Type,
     /* 字符串，新建动态时不发 */
     @SerializedName("id")
-    val id: kotlin.String? = null,
+    val id: String? = null,
     /* 字符串，新建时不发 */
     @SerializedName("by")
-    val by: kotlin.String? = null,
+    val by: String? = null,
     @SerializedName("location")
     val location: Location? = null,
     @SerializedName("imageTextContent")
@@ -44,7 +44,7 @@ data class Post (
     * Values: normal,audio,video
     */
     
-    enum class Type(val value: kotlin.String){
+    enum class Type(val value: String){
         @SerializedName(value="normal")  normal("normal"),
         @SerializedName(value="audio")  audio("audio"),
         @SerializedName(value="video")  video("video");

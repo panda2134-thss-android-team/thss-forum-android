@@ -21,15 +21,15 @@ import com.google.gson.annotations.SerializedName
  * @param accessKeySecret 
  */
 
-data class InlineResponse2001 (
+data class UploadTokenResponse (
     @SerializedName("securityToken")
-    val securityToken: kotlin.String,
+    val securityToken: String,
     /* rfc3339格式的日期 */
     @SerializedName("expiresAt")
-    val expiresAt: kotlin.String,
+    val expiresAt: String,
     @SerializedName("accessKeyId")
-    val accessKeyId: kotlin.String,
+    val accessKeyId: String,
     @SerializedName("accessKeySecret")
-    val accessKeySecret: kotlin.String
+    val accessKeySecret: String
 )
 

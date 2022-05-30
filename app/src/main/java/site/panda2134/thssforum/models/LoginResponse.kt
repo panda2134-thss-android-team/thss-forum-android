@@ -15,14 +15,15 @@ package site.panda2134.thssforum.models
 import com.google.gson.annotations.SerializedName
 /**
  * 
- * @param commentId 
- * @param postId 
+ * @param token 在需要鉴权的接口，发送的HTTP请求都必须带Authorization头部，其值为  Bearer <token字符串>
+ * @param uid 
  */
 
-data class InlineResponse2014 (
-    @SerializedName("comment_id")
-    val commentId: kotlin.String,
-    @SerializedName("post_id")
-    val postId: kotlin.String
+data class LoginResponse (
+    /* 在需要鉴权的接口，发送的HTTP请求都必须带Authorization头部，其值为  Bearer <token字符串> */
+    @SerializedName("token")
+    val token: String,
+    @SerializedName("uid")
+    val uid: String
 )
 

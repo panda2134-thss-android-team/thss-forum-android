@@ -15,11 +15,14 @@ package site.panda2134.thssforum.models
 import com.google.gson.annotations.SerializedName
 /**
  * 
- * @param count 
+ * @param content 
+ * @param parentCommentId 
  */
 
-data class InlineResponse2011 (
-    @SerializedName("count")
-    val count: kotlin.Int
+data class NewCommentRequest (
+    @SerializedName("content")
+    val content: String,
+    @SerializedName("parent_comment_id")
+    val parentCommentId: String? = null
 )
 

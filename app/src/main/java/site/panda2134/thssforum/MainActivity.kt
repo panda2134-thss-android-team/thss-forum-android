@@ -2,42 +2,61 @@ package site.panda2134.thssforum
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.example.campusforum.R
-import site.panda2134.thssforum.models.LoginInfo
+import com.example.campusforum.databinding.ActivityMainBinding
+import com.github.kittinunf.fuel.Fuel
+import com.github.kittinunf.fuel.coroutines.awaitStringResult
+import kotlinx.coroutines.*
+import site.panda2134.thssforum.models.LoginRequest
+import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
     private val baseurl = "https://lab.panda2134.site:20443"
     private var tokenMap = mutableMapOf<Int, String>()
     private var uidMap = mutableMapOf<Int, String>()
-    private fun login(cnt: Int) {
-        val path = "$baseurl/auth/login"
-        val loginInfo = LoginInfo(email = "user$cnt@test.com", password = "password")
-        APIService.login(loginInfo) { _, _, result ->
-            val (bytes, _) = result
-            bytes?.let {
-                tokenMap[cnt] = bytes.token
-                uidMap[cnt] = bytes.uid
-            }
-            if (cnt < 20) login(cnt + 1)
-            else APIService.getPostComments(tokenMap[20]!!, "114514", limit = 114514) { request, _, _ ->
-                println(request)
-            }
-        }
-    }
-    private fun getFollowingUsers(cnt: Int) {
-        APIService.getFollowingUsers(tokenMap[cnt]!!) { _, _, result ->
-            val (bytes, _) = result
-            bytes?.let {
-                for (user in bytes) {
-                    println("user$cnt follows ${user.nickname}")
+
+    private val mainScope = MainScope()
+    private lateinit var binding: ActivityMainBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+
+        binding.title.setOnClickListener {
+//            runBlocking {
+//                withContext(Dispatchers.IO) {
+//                    try {
+//                        val res = Fuel.get("https://jsonplaceholder.typicode.com/posts?id=1")
+//                            .awaitStringResult()
+//                        Log.d("123", res.toString())
+//                    } catch (e: Exception) {
+//                        val qwq2 = 1
+//                    }
+//                }
+//            }
+            mainScope.launch(Dispatchers.IO) {
+                Log.d("start", "started corot")
+                for (cnt in 1..3) {
+                    Log.d("work", "$cnt")
+                    val loginInfo = LoginRequest(email = "user$cnt@test.com", password = "password")
+                    try {
+                        val loginResponse = APIService.login(loginInfo)
+                        tokenMap[cnt] = loginResponse.token
+                        uidMap[cnt] = loginResponse.uid
+                        Log.d("token", "$cnt     ${loginResponse.token}")
+                    } catch (e: Throwable) {
+                        Log.d("error", e.stackTraceToString())
+                    }
                 }
             }
         }
     }
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        login(1)
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mainScope.cancel()
     }
 }

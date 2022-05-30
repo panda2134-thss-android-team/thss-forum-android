@@ -28,7 +28,7 @@ data class WsLoginResponse (
     * Values: success,error
     */
     
-    enum class Type(val value: kotlin.String){
+    enum class Type(val value: String){
         @SerializedName(value="success")  success("success"),
         @SerializedName(value="error")  error("error");
     }

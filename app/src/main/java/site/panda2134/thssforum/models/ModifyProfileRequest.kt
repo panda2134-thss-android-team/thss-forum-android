@@ -15,14 +15,18 @@ package site.panda2134.thssforum.models
 import com.google.gson.annotations.SerializedName
 /**
  * 
+ * @param nickname 
  * @param email 
- * @param password 
+ * @param avatar URL只能以本站允许域名开头
  */
 
-data class LoginInfo (
+data class ModifyProfileRequest (
+    @SerializedName("nickname")
+    val nickname: String? = null,
     @SerializedName("email")
-    val email: kotlin.String,
-    @SerializedName("password")
-    val password: kotlin.String
+    val email: String? = null,
+    /* URL只能以本站允许域名开头 */
+    @SerializedName("avatar")
+    val avatar: String? = null
 )
 

@@ -27,16 +27,16 @@ data class WsPushNotification (
     val type: Type,
     /* 对于评论被回复的情况，此字段为回复的id */
     @SerializedName("comment_id")
-    val commentId: kotlin.String,
+    val commentId: String,
     /* 如给你点赞的人 */
     @SerializedName("uid")
-    val uid: kotlin.String,
+    val uid: String,
     /* 每个通知唯一 */
     @SerializedName("notification_id")
-    val notificationId: kotlin.String,
+    val notificationId: String,
     /* 推送通知和动态有关时存在 */
     @SerializedName("post_id")
-    val postId: kotlin.String? = null
+    val postId: String? = null
 ) {
 
     /**
@@ -44,7 +44,7 @@ data class WsPushNotification (
     * Values: followingUpdated,postLiked,postCommented,commentLiked,commentReplied
     */
     
-    enum class Type(val value: kotlin.String){
+    enum class Type(val value: String){
         @SerializedName(value="following_updated")  followingUpdated("following_updated"),
         @SerializedName(value="post_liked")  postLiked("post_liked"),
         @SerializedName(value="post_commented")  postCommented("post_commented"),

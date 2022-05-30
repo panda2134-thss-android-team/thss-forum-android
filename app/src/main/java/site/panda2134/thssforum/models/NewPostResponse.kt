@@ -15,14 +15,11 @@ package site.panda2134.thssforum.models
 import com.google.gson.annotations.SerializedName
 /**
  * 
- * @param newPassword 
- * @param oldPassword 
+ * @param id 
  */
 
-data class InlineObject4 (
-    @SerializedName("newPassword")
-    val newPassword: kotlin.String,
-    @SerializedName("oldPassword")
-    val oldPassword: kotlin.String
+data class NewPostResponse (
+    @SerializedName("id")
+    val id: String
 )
 

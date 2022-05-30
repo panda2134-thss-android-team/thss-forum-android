@@ -15,11 +15,14 @@ package site.panda2134.thssforum.models
 import com.google.gson.annotations.SerializedName
 /**
  * 
- * @param id 
+ * @param newPassword 
+ * @param oldPassword 
  */
 
-data class InlineResponse2012 (
-    @SerializedName("id")
-    val id: String
+data class ChangePasswordRequest (
+    @SerializedName("newPassword")
+    val newPassword: String,
+    @SerializedName("oldPassword")
+    val oldPassword: String
 )
 

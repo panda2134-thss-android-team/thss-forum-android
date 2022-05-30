@@ -15,14 +15,14 @@ package site.panda2134.thssforum.models
 import com.google.gson.annotations.SerializedName
 /**
  * 
- * @param content 
- * @param parentCommentId 
+ * @param email 
+ * @param password 
  */
 
-data class InlineObject6 (
-    @SerializedName("content")
-    val content: kotlin.String,
-    @SerializedName("parent_comment_id")
-    val parentCommentId: kotlin.String? = null
+data class LoginRequest (
+    @SerializedName("email")
+    val email: String,
+    @SerializedName("password")
+    val password: String
 )
 

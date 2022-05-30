@@ -2,237 +2,270 @@ package site.panda2134.thssforum
 
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.FuelManager
-import com.github.kittinunf.fuel.core.ResponseResultHandler
 import com.github.kittinunf.fuel.core.extensions.authentication
+import com.github.kittinunf.fuel.coroutines.*
+import com.github.kittinunf.fuel.gson.gsonDeserializer
 import com.github.kittinunf.fuel.gson.jsonBody
-import com.github.kittinunf.fuel.gson.responseObject
 import site.panda2134.thssforum.models.*
+import site.panda2134.thssforum.utils.toISOString
 
 class APIService {
     companion object {
         init {
-            FuelManager.instance.basePath = "https://lab.panda2134.site:20443"
+            FuelManager.instance.apply {
+                basePath = "https://lab.panda2134.site:20443"
+                timeoutInMillisecond = 5000
+                timeoutReadInMillisecond = 5000
+            }
         }
 
         // 获取当前用户关注了哪些人
-        fun getFollowingUsers (token:String, handler: ResponseResultHandler<Array<User>>) =
+        suspend fun getFollowingUsers(token: String) =
             Fuel.get("/profile/following/")
                 .authentication()
                 .bearer(token)
-                .responseObject(handler)
+                .awaitObject(gsonDeserializer<Array<User>>())
 
 
         //获取当前用户被谁关注
-        fun getFollowers (token:String, handler:ResponseResultHandler<Array<User>>) =
+        suspend fun getFollowers(token: String) =
             Fuel.get("/profile/followers/")
                 .authentication()
                 .bearer(token)
-                .responseObject(handler)
+                .awaitObject(gsonDeserializer<Array<User>>())
 
 
         //增加当前用户关注的人
-        fun followUser (token:String, body: Uid, handler: ResponseResultHandler<Uid>) =
+        suspend fun followUser(token: String, uid: String) =
             Fuel.post("/profile/following/")
                 .authentication()
                 .bearer(token)
-                .jsonBody(body)
-                .responseObject(handler)
+                .jsonBody(Uid(uid))
+                .awaitObject(gsonDeserializer<Uid>())
 
 
         //当前用户取消关注
-        fun unfollowUser (token:String, uid:String, handler: ResponseResultHandler<Empty>) =
+        suspend fun unfollowUser(token: String, uid: String) =
             Fuel.delete("/profile/following/$uid")
                 .authentication()
                 .bearer(token)
-                .responseObject(handler)
+                .awaitStringResponse()
 
 
         //获得当前用户黑名单
-        fun getBlacklist (token: String, handler: ResponseResultHandler<Array<User>>) =
+        suspend fun getBlacklist(token: String) =
             Fuel.get("/profile/blacklist/")
                 .authentication()
                 .bearer(token)
-                .responseObject(handler)
+                .awaitObject(gsonDeserializer<Array<User>>())
 
 
         //新增黑名单用户
-        fun addBlacklistUser (token: String, body: Uid, handler:ResponseResultHandler<Uid>) =
+        suspend fun addBlacklistUser(token: String, uid: String) =
             Fuel.post("/profile/blacklist/")
                 .authentication()
                 .bearer(token)
-                .jsonBody(body)
-                .responseObject(handler)
+                .jsonBody(Uid(uid))
+                .awaitObject(gsonDeserializer<Uid>())
 
 
         //删除黑名单用户
-        fun delBlacklistUser (token: String, uid:String, handler: ResponseResultHandler<Empty>) =
+        suspend fun delBlacklistUser(token: String, uid: String) =
             Fuel.delete("/profile/blacklist/$uid")
                 .authentication()
                 .bearer(token)
-                .responseObject(handler)
+                .awaitString()
 
 
         //获得用户基本信息
-        fun getUserInfo (token: String, uid: String, handler: ResponseResultHandler<User>) =
+        suspend fun getUserInfo(token: String, uid: String) =
             Fuel.get("/users/$uid")
                 .authentication()
                 .bearer(token)
-                .responseObject(handler)
+                .awaitObject(gsonDeserializer<User>())
 
 
         //获得用户动态
-        fun getUserPosts (token: String, uid: String, start: String? = null, end: String? = null, handler: ResponseResultHandler<Array<Post>>) =
-            Fuel.get("/users/$uid/posts?", listOf("start" to start, "end" to end))
+        suspend fun getUserPosts(
+            token: String,
+            uid: String,
+            start: java.util.Date? = null,
+            end: java.util.Date? = null
+        ): Array<Post> {
+            return Fuel.get("/users/$uid/posts?", listOf("start" to start?.toISOString(), "end" to end?.toISOString()))
                 .authentication()
                 .bearer(token)
-                .responseObject(handler)
+                .awaitObject(gsonDeserializer<Array<Post>>())
+        }
 
 
         //修改当前用户基本信息
-        fun modifyMyInfo (token: String, body: InlineObject5, handler: ResponseResultHandler<User>) =
+        suspend fun modifyProfile (token: String, body: ModifyProfileRequest) =
             Fuel.put("/profile/")
                 .authentication()
                 .bearer(token)
                 .jsonBody(body)
-                .responseObject(handler)
+                .awaitObject(gsonDeserializer<User>())
 
 
         // 获取当前用户基本信息
-        fun getMyInfo (token:String, handler: ResponseResultHandler<User>) =
+        suspend fun getProfile(token: String) =
             Fuel.get("/profile")
                 .authentication()
                 .bearer(token)
-                .responseObject(handler)
+                .awaitObject(gsonDeserializer<User>())
 
 
         //注册用户
-        fun register (body: InlineObject7, handler: ResponseResultHandler<Uid>) =
+        suspend fun register(body: RegisterRequest) =
             Fuel.post("/auth/register")
                 .jsonBody(body)
-                .responseObject(handler)
+                .awaitObject(gsonDeserializer<Uid>())
 
 
         //登陆
-        fun login (body: LoginInfo, handler: ResponseResultHandler<InlineResponse200>) =
+        suspend fun login(body: LoginRequest) =
             Fuel.post("/auth/login")
                 .jsonBody(body)
-                .responseObject(handler)
+                .awaitObject(gsonDeserializer<LoginResponse>())
 
 
         //修改当前用户密码
-        fun changeMyPassword (token: String, body: InlineObject4, handler: ResponseResultHandler<Empty>) =
+        suspend fun changePassword(token: String, body: ChangePasswordRequest) {
             Fuel.put("/auth/change-password")
                 .authentication()
                 .bearer(token)
                 .jsonBody(body)
-                .responseObject(handler)
+                .awaitString()
+        }
 
 
         //查看点赞人数目
-        fun getNumOfLikes (token: String, post_id: String, handler: ResponseResultHandler<InlineResponse2011>) =
+        suspend fun getNumOfLikes(token: String, post_id: String) =
             Fuel.get("/posts/$post_id/like")
                 .authentication()
                 .bearer(token)
-                .responseObject(handler)
+                .awaitObject(gsonDeserializer<NumOfLikesResponse>())
 
 
         //给动态点赞
-        fun likeThisPost (token: String, post_id: String, handler: ResponseResultHandler<InlineResponse2011>) =
+        suspend fun likeThisPost(token: String, post_id: String) =
             Fuel.post("/posts/$post_id/like")
                 .authentication()
                 .bearer(token)
-                .responseObject(handler)
+                .awaitObject(gsonDeserializer<NumOfLikesResponse>())
 
 
         //取消自己的点赞
-        fun unlikeThisPost (token: String, post_id: String, handler: ResponseResultHandler<InlineResponse2011>) =
+        suspend fun unlikeThisPost(token: String, post_id: String) =
             Fuel.delete("/posts/$post_id/like")
                 .authentication()
                 .bearer(token)
-                .responseObject(handler)
+                .awaitObject(gsonDeserializer<NumOfLikesResponse>())
 
 
         //获得动态列表
-        fun getPosts (token: String, start: String? = null, end: String? = null, following: String? = null, handler: ResponseResultHandler<Array<Post>>) =
-            Fuel.get("/posts/?", listOf("start" to start, "end" to end, "following" to following))
+        suspend fun getPosts(
+            token: String,
+            start: java.util.Date? = null,
+            end: java.util.Date? = null,
+            following: String? = null
+        ) {
+            Fuel.get("/posts/", listOf("start" to start?.toISOString(), "end" to end?.toISOString(), "following" to following))
                 .authentication()
                 .bearer(token)
-                .responseObject(handler)
+                .awaitObject(gsonDeserializer<Array<Post>>())
+        }
 
 
         //获得动态详细信息
-        fun getPostInfo (token: String, post_id: String, handler: ResponseResultHandler<Post>) =
+        suspend fun getPostInfo(token: String, post_id: String) =
             Fuel.get("/posts/$post_id")
                 .authentication()
                 .bearer(token)
-                .responseObject(handler)
+                .awaitObject(gsonDeserializer<Post>())
 
 
         //发布动态
-        fun newPost (token: String, body: Post, handler: ResponseResultHandler<InlineResponse2012>) =
+        suspend fun newPost(token: String, body: Post) =
             Fuel.post("/posts/")
                 .authentication()
                 .bearer(token)
                 .jsonBody(body)
-                .responseObject(handler)
+                .awaitObject(gsonDeserializer<NewPostResponse>())
 
 
         //修改动态
-        fun modifyPost (token: String, post_id: String, body: InlineObject2, handler: ResponseResultHandler<Post>) =
+        suspend fun modifyPost(token: String, post_id: String, body: ModifyPostRequest) =
             Fuel.put("/posts/$post_id")
                 .authentication()
                 .bearer(token)
                 .jsonBody(body)
-                .responseObject(handler)
+                .awaitObject(gsonDeserializer<Post>())
 
 
         //删除动态
-        fun deletePost (token: String, post_id: String, handler: ResponseResultHandler<Empty>) =
+        suspend fun deletePost(token: String, post_id: String) {
             Fuel.delete("/posts/$post_id")
                 .authentication()
                 .bearer(token)
-                .responseObject(handler)
+                .awaitString()
+        }
+
+        enum class SortBy (val value: String) {
+            NEWEST_FIRST("newest"),
+            OLDEST_FIRST("oldest")
+        }
 
 
         //动态评论区
-        fun getPostComments (token: String, post_id: String, skip: Int? = null, limit: Int? = null, sort_by: String? = null, handler: ResponseResultHandler<Array<Comment>>) =
-            Fuel.get("/posts/$post_id/comments/", listOf("skip" to skip, "limit" to limit, "sort_by" to sort_by))
+        suspend fun getPostComments(
+            token: String,
+            post_id: String,
+            skip: Int? = null,
+            limit: Int? = null,
+            sort_by: SortBy? = SortBy.NEWEST_FIRST
+        ) =
+            Fuel.get(
+                "/posts/$post_id/comments/",
+                listOf("skip" to skip, "limit" to limit, "sort_by" to sort_by?.value)
+            )
                 .authentication()
                 .bearer(token)
-                .responseObject(handler)
+                .awaitObject(gsonDeserializer<Array<Comment>>())
 
 
         //发布评论
-        fun newComment (token: String, post_id: String, body: InlineObject6, handler: ResponseResultHandler<InlineResponse2014>) =
-            Fuel.post("/posts/$post_id/comments/")
+        suspend fun newComment(token: String, postId: String, body: NewCommentRequest) =
+            Fuel.post("/posts/$postId/comments/")
                 .authentication()
                 .bearer(token)
                 .jsonBody(body)
-                .responseObject(handler)
+                .awaitObject(gsonDeserializer<NewCommentResponse>())
 
 
         //获得评论详细信息
-        fun getCommentInfo (token: String, post_id: String, comment_id: String, handler: ResponseResultHandler<Comment>) =
+        suspend fun getCommentInfo(token: String, post_id: String, comment_id: String) =
             Fuel.get("/posts/$post_id/comments/$comment_id")
                 .authentication()
                 .bearer(token)
-                .responseObject(handler)
+                .awaitObject(gsonDeserializer<Comment>())
 
 
         //删除评论
-        fun deleteComment (token: String, post_id: String, comment_id: String, handler: ResponseResultHandler<Empty>) =
+        suspend fun deleteComment(token: String, post_id: String, comment_id: String) =
             Fuel.delete("/posts/$post_id/comments/$comment_id")
                 .authentication()
                 .bearer(token)
-                .responseObject(handler)
+                .awaitString()
 
 
         //获得阿里云OSS上传的临时token
-        fun getUploadToken (token: String, handler: ResponseResultHandler<InlineResponse2001>) =
+        suspend fun getUploadToken(token: String) =
             Fuel.post("/upload/token")
                 .authentication()
                 .bearer(token)
-                .responseObject(handler)
+                .awaitObject(gsonDeserializer<UploadTokenResponse>())
 
     }
 }

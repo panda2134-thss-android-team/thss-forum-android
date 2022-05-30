@@ -21,9 +21,9 @@ import com.google.gson.annotations.SerializedName
 
 data class WsLoginRequest (
     @SerializedName("token")
-    val token: kotlin.String,
+    val token: String,
     /* 可以参考 https://devnote.pro/posts/10000002731155 获得android_id 作为此字段取值 */
     @SerializedName("unique_id")
-    val uniqueId: kotlin.String
+    val uniqueId: String
 )
 

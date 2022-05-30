@@ -23,7 +23,7 @@ import com.google.gson.annotations.SerializedName
 data class Location (
     /* 比如“北京市海淀区清华大学中央主楼” */
     @SerializedName("description")
-    val description: kotlin.String,
+    val description: String,
     @SerializedName("lon")
     val lon: java.math.BigDecimal,
     @SerializedName("lat")

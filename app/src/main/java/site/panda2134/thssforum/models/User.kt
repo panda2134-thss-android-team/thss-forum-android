@@ -24,15 +24,15 @@ import com.google.gson.annotations.SerializedName
 
 data class User (
     @SerializedName("uid")
-    val uid: kotlin.String,
+    val uid: String,
     @SerializedName("nickname")
-    val nickname: kotlin.String,
+    val nickname: String,
     @SerializedName("email")
-    val email: kotlin.String,
+    val email: String,
     @SerializedName("avatar")
-    val avatar: kotlin.String,
+    val avatar: String,
     /* 发给客户端的内容不含有此字段 */
     @SerializedName("passwordHash")
-    val passwordHash: kotlin.String? = null
+    val passwordHash: String? = null
 )
 
