@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">CampusForum</string>
+    <string name="TOAST_NOT_LOGGED_IN">登录过期或未登录</string>
+    <string name="TOAST_PERMISSION_DENIED">没有此操作权限！</string>
+    <string name="TOAST_INTERNAL_SERVER_ERROR">服务器内部错误</string>
+    <string name="TOAST_UNPROCESSABLE_ENTITY">校验失败</string>
+    <string name="GLOBAL_SHARED_PREF">site.panda2134.thssforum.SHARED_PREF</string>
+    <string name="PREF_KEY_TOKEN">token</string>
 </resources>

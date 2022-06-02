@@ -3,6 +3,7 @@ package site.panda2134.thssforum
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import com.example.campusforum.R
 import com.example.campusforum.databinding.ActivityMainBinding
 import com.github.kittinunf.fuel.Fuel
@@ -18,32 +19,22 @@ class MainActivity : AppCompatActivity() {
 
     private val mainScope = MainScope()
     private lateinit var binding: ActivityMainBinding
+    private lateinit var api: APIService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
+        api = APIService(this)
         binding.title.setOnClickListener {
-//            runBlocking {
-//                withContext(Dispatchers.IO) {
-//                    try {
-//                        val res = Fuel.get("https://jsonplaceholder.typicode.com/posts?id=1")
-//                            .awaitStringResult()
-//                        Log.d("123", res.toString())
-//                    } catch (e: Exception) {
-//                        val qwq2 = 1
-//                    }
-//                }
-//            }
             mainScope.launch(Dispatchers.IO) {
                 Log.d("start", "started corot")
                 for (cnt in 1..3) {
                     Log.d("work", "$cnt")
-                    val loginInfo = LoginRequest(email = "user$cnt@test.com", password = "password")
+                    val loginInfo = LoginRequest(email = "user$cnt@test.com", password = "pass")
                     try {
-                        val loginResponse = APIService.login(loginInfo)
+                        val loginResponse = api.login(loginInfo)
                         tokenMap[cnt] = loginResponse.token
                         uidMap[cnt] = loginResponse.uid
                         Log.d("token", "$cnt     ${loginResponse.token}")

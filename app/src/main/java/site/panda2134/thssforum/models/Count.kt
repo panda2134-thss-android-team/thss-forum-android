@@ -18,8 +18,8 @@ import com.google.gson.annotations.SerializedName
  * @param count 
  */
 
-data class UnderscoreUnderscoreUnderscoreUnderscoreUnderscore (
+data class Count (
     @SerializedName("count")
-    val count: kotlin.Int
+    val count: Int
 )
 
