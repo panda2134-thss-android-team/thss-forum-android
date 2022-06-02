@@ -6,6 +6,7 @@ import android.widget.Toast
 import com.example.campusforum.R
 import com.google.gson.Gson
 import com.github.kittinunf.fuel.core.FuelManager
+import com.github.kittinunf.fuel.core.HttpException
 import com.github.kittinunf.fuel.core.awaitUnit
 import com.github.kittinunf.fuel.core.extensions.authentication
 import com.github.kittinunf.fuel.core.interceptors.LogRequestAsCurlInterceptor
@@ -59,11 +60,7 @@ class APIService(private val context: Context) {
                 }
                 if (toastMessage != null) {
                     MainScope().launch {
-                        try {
-                            Toast.makeText(context, toastMessage, Toast.LENGTH_LONG).show()
-                        } catch (e: Throwable){
-                            val a = 1
-                        }
+                        Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
                     }
                 }
                 next(request, response)

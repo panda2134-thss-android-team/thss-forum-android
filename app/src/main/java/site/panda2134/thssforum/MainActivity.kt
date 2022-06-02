@@ -7,6 +7,7 @@ import android.widget.Toast
 import com.example.campusforum.R
 import com.example.campusforum.databinding.ActivityMainBinding
 import com.github.kittinunf.fuel.Fuel
+import com.github.kittinunf.fuel.core.FuelError
 import com.github.kittinunf.fuel.coroutines.awaitStringResult
 import kotlinx.coroutines.*
 import site.panda2134.thssforum.models.LoginRequest
@@ -29,18 +30,12 @@ class MainActivity : AppCompatActivity() {
         api = APIService(this)
         binding.title.setOnClickListener {
             mainScope.launch(Dispatchers.IO) {
-                Log.d("start", "started corot")
-                for (cnt in 1..3) {
-                    Log.d("work", "$cnt")
-                    val loginInfo = LoginRequest(email = "user$cnt@test.com", password = "pass")
-                    try {
-                        val loginResponse = api.login(loginInfo)
-                        tokenMap[cnt] = loginResponse.token
-                        uidMap[cnt] = loginResponse.uid
-                        Log.d("token", "$cnt     ${loginResponse.token}")
-                    } catch (e: Throwable) {
-                        Log.d("error", e.stackTraceToString())
-                    }
+                val loginInfo = LoginRequest(email = "user1@test.com", password = "passpass")
+                try {
+                    val loginResponse = api.login(loginInfo)
+                    Log.d("token", loginResponse.token)
+                } catch (e: FuelError) {
+                    Log.d("error", e.response.statusCode.toString())
                 }
             }
         }
