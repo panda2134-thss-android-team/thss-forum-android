@@ -6,4 +6,6 @@
     <string name="TOAST_UNPROCESSABLE_ENTITY">校验失败</string>
     <string name="GLOBAL_SHARED_PREF">site.panda2134.thssforum.SHARED_PREF</string>
     <string name="PREF_KEY_TOKEN">token</string>
+    <string name="PREF_KEY_TOKEN_EXPIRE_AT">tokenExpiresAt</string>
+    <string name="login">登录</string>
 </resources>

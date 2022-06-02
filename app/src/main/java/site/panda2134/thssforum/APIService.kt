@@ -46,9 +46,13 @@ class APIService(private val context: Context) {
                         context.getString(R.string.TOAST_PERMISSION_DENIED) + "(${err.message})"
                     }
                     422 -> {
-                        val err = Gson().fromJson(String(response.data), UnprocessableEntityResponse::class.java)
+                        val err = Gson().fromJson(
+                            String(response.data),
+                            UnprocessableEntityResponse::class.java
+                        )
                         val errorType = context.getString(R.string.TOAST_UNPROCESSABLE_ENTITY)
-                        val errorMessage = err.errors.joinToString { it.path.joinToString() + ':' + it.message }
+                        val errorMessage =
+                            err.errors.joinToString { it.path.joinToString() + ':' + it.message }
                         "$errorType $errorMessage"
                     }
                     in 500..599 -> {
@@ -175,10 +179,20 @@ class APIService(private val context: Context) {
 
 
     //登陆
-    suspend fun login(body: LoginRequest) =
-        fuel.post("/auth/login")
+    suspend fun login(body: LoginRequest): LoginResponse {
+        val response = fuel.post("/auth/login")
             .jsonBody(body)
             .awaitObject(gsonDeserializer<LoginResponse>())
+        with(context) {
+            val pref = getSharedPreferences(getString(R.string.GLOBAL_SHARED_PREF), MODE_PRIVATE)
+            with(pref.edit()) {
+                this.putString(context.getString(R.string.PREF_KEY_TOKEN), response.token)
+                apply()
+            }
+        }
+        token = response.token
+        return response
+    }
 
 
     //修改当前用户密码
