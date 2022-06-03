@@ -17,6 +17,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        Assert.assertEquals("com.example.campusforum", appContext.packageName)
+        Assert.assertEquals("site.panda2134.thssforum", appContext.packageName)
     }
 }

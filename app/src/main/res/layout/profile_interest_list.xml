@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginHorizontal="10dp"
+    android:layout_marginTop="10dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+    <ImageView
+        android:id="@+id/search_img"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="@dimen/normal_margin"
+        android:layout_gravity="center_vertical"
+        app:srcCompat="@drawable/ic_baseline_search_24"
+        app:tint="@color/search_icon" />
+    <TextView
+        android:id="@+id/interval"
+        android:layout_marginTop="5dp"
+        android:layout_height="@dimen/text_down_line_height"
+        android:layout_width="match_parent"
+        android:background="@color/text_down_line"
+        android:layout_marginBottom="@dimen/normal_margin"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_interests_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:itemCount="9"
+        tools:listitem="@layout/profile_interest_list_item" />
+</LinearLayout>

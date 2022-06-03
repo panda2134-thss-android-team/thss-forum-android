@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/comment_item"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/post_item_inside_margin">
+        <ImageView
+            android:id="@+id/interest_list_pic"
+            android:layout_width="@dimen/interest_list_pic"
+            android:layout_height="@dimen/interest_list_pic"
+            app:srcCompat="@drawable/text_box_edit_outline"
+            android:background="@color/purple_500"
+            app:tint="#A7B923" />
+            <TextView
+                android:id="@+id/commenter_name"
+                android:textSize="@dimen/interest_list_name"
+                android:layout_marginLeft="@dimen/pic_to_text_margin"
+                android:textColor="@color/interest_list_name"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="用户A" />
+    </LinearLayout>
+    <TextView
+        android:id="@+id/interval"
+        android:layout_height="@dimen/interval_height"
+        android:layout_width="match_parent"
+        android:background="@color/interval_line"/>
+</LinearLayout>

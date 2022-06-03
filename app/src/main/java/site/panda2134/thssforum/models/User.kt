@@ -18,8 +18,7 @@ import com.google.gson.annotations.SerializedName
  * @param uid 
  * @param nickname 
  * @param email 
- * @param avatar 
- * @param passwordHash 发给客户端的内容不含有此字段
+ * @param avatar
  */
 
 data class User (
@@ -31,8 +30,5 @@ data class User (
     val email: String,
     @SerializedName("avatar")
     val avatar: String,
-    /* 发给客户端的内容不含有此字段 */
-    @SerializedName("passwordHash")
-    val passwordHash: String? = null
 )
 

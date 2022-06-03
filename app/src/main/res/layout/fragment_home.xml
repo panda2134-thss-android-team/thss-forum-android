@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/normal_margin"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/line_1"
+                android:layout_height="@dimen/card_line_height"
+                android:layout_width="@dimen/card_line_1_width"
+                android:layout_marginTop="@dimen/card_line_top"
+                android:background="@color/card_line" />
+
+            <ImageView
+                android:layout_width="@dimen/my_pic"
+                android:layout_height="@dimen/my_pic"
+                android:contentDescription="@string/drafts"
+                app:srcCompat="@drawable/discover"
+                android:background="@color/click_blue"
+                app:tint="#FFFFFF" />
+
+            <LinearLayout android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/Name"
+                    style="@style/TextAppearance.AppCompat.Headline"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/normal_margin"
+                    android:layout_marginTop="3dp"
+                    android:text="移动应用" />
+
+                <TextView
+                    android:id="@+id/line_2"
+                    android:layout_height="@dimen/card_line_height"
+                    android:layout_width="@dimen/card_line_2_width"
+                    android:layout_marginTop="@dimen/small_margin"
+                    android:background="@color/card_line" />
+
+                <TextView
+                    android:id="@+id/motto"
+                    style="@style/TextAppearance.AppCompat.Body1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/motto"
+                    android:layout_marginLeft="@dimen/normal_margin"
+                    android:layout_marginTop="@dimen/small_margin"
+                    android:text="希望可以早点写完大作业" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/post_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            app:contentPadding="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/publisher_pic"
+                    android:layout_height="@dimen/publisher_pic"
+                    android:contentDescription="@string/drafts"
+                    app:srcCompat="@drawable/text_box_edit_outline"
+                    android:background="@color/purple_200"
+                    app:tint="#FFFFFF" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/pic_to_text_margin"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/postUser"
+                            android:textSize="@dimen/publisher_name"
+                            android:textColor="@color/click_blue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="用户A" />
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/followed_button"
+                            android:layout_width="35dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="6dp"
+                            android:layout_marginBottom="1dp"
+                            android:layout_marginStart="5dp"
+                            app:cardBackgroundColor="@color/followed_button_bg"
+                            app:cardCornerRadius="3dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <TextView
+                                android:id="@+id/followed_button_text"
+                                android:textColor="@color/word_grey"
+                                android:textSize="10sp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="已关注" />
+
+                        </androidx.cardview.widget.CardView>
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/postTitle"
+                        style="@style/TextAppearance.AppCompat.SearchResult.Subtitle"
+                        android:textStyle="bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/post_item_inside_margin"
+                        android:text="如何看待这个动态？" />
+
+                    <TextView
+                        android:id="@+id/postContent"
+                        style="@style/TextAppearance.AppCompat.Body2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/post_item_inside_margin"
+                        android:text="发布内容区域发布内容区域发布内容区域发布内容区域发布内容区域发布内容区域发布内容区域发布内容区域发布内容区域" />
+
+                    <TextView
+                        android:id="@+id/position"
+                        style="@style/TextAppearance.AppCompat.Caption"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/post_item_inside_margin"
+                        android:text="北京市 · 清华大学李文正馆"
+                        android:textColor="@color/click_blue"
+                        android:gravity="center_vertical"
+                        tools:ignore="MissingConstraints" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/post_item_inside_margin"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/postTime"
+                            style="@style/TextAppearance.AppCompat.Caption"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/post_item_inside_margin"
+                            android:text="2小时前"
+                            android:gravity="center_vertical"
+                            tools:ignore="MissingConstraints" />
+
+                        <TextView
+                            android:id="@+id/post_delete"
+                            style="@style/TextAppearance.AppCompat.Caption"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/post_item_inside_margin"
+                            app:layout_constraintLeft_toRightOf="@+id/postTime"
+                            android:layout_marginLeft="@dimen/post_item_inside_margin"
+                            android:text="@string/delete"
+                            android:textColor="@color/click_blue"
+                            android:gravity="center_vertical"
+                            tools:ignore="MissingConstraints" />
+
+                        <ImageView
+                            android:id="@+id/share"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:contentDescription="@string/drafts"
+                            app:srcCompat="@drawable/ic_baseline_share_24"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            android:layout_marginEnd="@dimen/post_item_inside_margin"
+                            app:tint="@color/share_icon"
+                            tools:ignore="MissingConstraints" />
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/click_to_like"
+                            android:layout_width="20dp"
+                            android:layout_height="15dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:layout_marginBottom="3dp"
+                            app:cardBackgroundColor="@color/click_to_like_bg"
+                            app:cardCornerRadius="3dp"
+                            app:layout_constraintEnd_toStartOf="@+id/share"
+                            android:layout_marginEnd="@dimen/post_item_inside_margin"
+                            tools:ignore="MissingConstraints">
+
+                            <ImageView
+                                android:id="@+id/like_dots"
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:layout_gravity="center"
+                                android:contentDescription="@string/drafts"
+                                app:srcCompat="@drawable/to_like_dots"
+                                app:tint="@color/click_to_like_dots"
+                                tools:ignore="MissingConstraints" />
+
+                        </androidx.cardview.widget.CardView>
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/background_grey"
+                        android:layout_marginTop="@dimen/post_item_inside_margin"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/background_grey">
+
+                            <ImageView
+                                android:id="@+id/like_img"
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:padding="3dp"
+                                android:layout_gravity="center_vertical"
+                                app:srcCompat="@drawable/heart"
+                                app:tint="@color/click_blue"
+                                tools:ignore="MissingConstraints" />
+
+                            <TextView
+                                android:id="@+id/like_num"
+                                style="@style/TextAppearance.AppCompat.Caption"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/post_item_inside_margin"
+                                android:text="35"
+                                android:textColor="@color/click_blue"
+                                tools:ignore="MissingConstraints" />
+                        </LinearLayout>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recycler_comments"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                            tools:itemCount="3"
+                            tools:listitem="@layout/post_comment_item" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+</layout>

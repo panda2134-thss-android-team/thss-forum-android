@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <EditText
+        android:id="@+id/title"
+        android:layout_marginTop="@dimen/normal_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/medium_margin"
+        style="@style/TextAppearance.AppCompat.Headline"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:hint="@string/title_hint"
+        android:inputType="textLongMessage" />
+    <EditText
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/small_margin"
+        android:layout_marginHorizontal="@dimen/medium_margin"
+        android:textColor="@color/black"
+        android:hint="@string/content_hint"
+        android:inputType="textLongMessage" />
+    <TextView
+        android:id="@+id/pics_text"
+        android:textSize="@dimen/types_size"
+        android:layout_marginTop="@dimen/small_margin"
+        android:layout_marginLeft="@dimen/pic_to_text_margin"
+        android:textColor="@color/pics_color"
+        android:layout_gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pics" />
+</LinearLayout>
