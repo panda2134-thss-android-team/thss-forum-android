@@ -1,9 +1,13 @@
 package site.panda2134.thssforum
 
+import android.content.pm.PackageManager
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import com.alibaba.sdk.android.oss.callback.OSSProgressCallback
 import com.example.campusforum.R
 import com.example.campusforum.databinding.ActivityMainBinding
 import com.github.kittinunf.fuel.Fuel
@@ -13,6 +17,7 @@ import com.google.gson.Gson
 import kotlinx.coroutines.*
 import site.panda2134.thssforum.models.LoginRequest
 import java.lang.Exception
+import java.util.jar.Manifest
 
 class MainActivity : AppCompatActivity() {
     private val baseurl = "https://lab.panda2134.site:20443"
@@ -27,6 +32,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+        val perm = ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE)
+
+        if (perm != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                listOf(android.Manifest.permission.READ_EXTERNAL_STORAGE).toTypedArray(),
+                1
+            )
+        }
 
         api = APIService(this)
         binding.login.setOnClickListener {
@@ -44,12 +59,16 @@ class MainActivity : AppCompatActivity() {
         binding.debug.setOnClickListener {
             mainScope.launch(Dispatchers.IO) {
                 try {
-                    val resp = api.getProfile()
-                    Log.d("profile", Gson().toJson(resp))
-                } catch (e: FuelError) {
-                    Log.d("error", e.response.statusCode.toString())
+                    api.uploadFileToOSS(
+                        Uri.parse("file:/sdcard/Pictures/Screenshots/Screenshot_20220603-151946_THSSForum.png")
+                    ) { _, currentSize, totalSize ->
+                        binding.progressBar.min = 0
+                        binding.progressBar.max = 100
+                        binding.progressBar.progress = (currentSize * 100 / totalSize).toInt()
+                    }
+                } catch (e: Throwable) {
+                    e.printStackTrace()
                 }
-
             }
         }
     }

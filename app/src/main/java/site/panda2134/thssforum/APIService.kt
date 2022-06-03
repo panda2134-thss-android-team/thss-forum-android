@@ -2,24 +2,36 @@ package site.panda2134.thssforum
 
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
+import android.net.Uri
+import android.webkit.MimeTypeMap
 import android.widget.Toast
+import com.alibaba.sdk.android.oss.OSSClient
+import com.alibaba.sdk.android.oss.callback.OSSProgressCallback
+import com.alibaba.sdk.android.oss.common.auth.OSSStsTokenCredentialProvider
+import com.alibaba.sdk.android.oss.model.PutObjectRequest
 import com.example.campusforum.R
 import com.google.gson.Gson
 import com.github.kittinunf.fuel.core.FuelManager
-import com.github.kittinunf.fuel.core.HttpException
+import com.github.kittinunf.fuel.core.ProgressCallback
 import com.github.kittinunf.fuel.core.awaitUnit
 import com.github.kittinunf.fuel.core.extensions.authentication
 import com.github.kittinunf.fuel.core.interceptors.LogRequestAsCurlInterceptor
 import com.github.kittinunf.fuel.coroutines.*
 import com.github.kittinunf.fuel.gson.gsonDeserializer
 import com.github.kittinunf.fuel.gson.jsonBody
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import site.panda2134.thssforum.models.*
-import site.panda2134.thssforum.utils.toISOString
+import java.time.Instant
+import java.time.format.DateTimeParseException
+import java.util.*
 
+@Suppress("unused")
 class APIService(private val context: Context) {
     private var token: String
+    private var ossToken: UploadTokenResponse? = null
 
     init {
         with(context) {
@@ -28,7 +40,7 @@ class APIService(private val context: Context) {
         }
     }
 
-    val fuel: FuelManager = FuelManager().apply {
+    private val fuel: FuelManager = FuelManager().apply {
         basePath = "https://lab.panda2134.site:20443"
         timeoutInMillisecond = 5000
         timeoutReadInMillisecond = 5000
@@ -141,16 +153,16 @@ class APIService(private val context: Context) {
     //获得用户动态
     suspend fun getUserPosts(
         uid: String,
-        start: java.util.Date? = null,
-        end: java.util.Date? = null
+        start: Instant? = null,
+        end: Instant? = null
     ): Array<Post> {
         return fuel.get(
             "/users/$uid/posts?",
-            listOf("start" to start?.toISOString(), "end" to end?.toISOString())
+            listOf("start" to start?.toString(), "end" to end?.toString())
         )
             .authentication()
             .bearer(token)
-            .awaitObject(gsonDeserializer<Array<Post>>())
+            .awaitObject(gsonDeserializer())
     }
 
 
@@ -231,15 +243,15 @@ class APIService(private val context: Context) {
 
     //获得动态列表
     suspend fun getPosts(
-        start: java.util.Date? = null,
-        end: java.util.Date? = null,
+        start: Instant? = null,
+        end: Instant? = null,
         following: String? = null
     ) {
         fuel.get(
             "/posts/",
             listOf(
-                "start" to start?.toISOString(),
-                "end" to end?.toISOString(),
+                "start" to start?.toString(),
+                "end" to end?.toString(),
                 "following" to following
             )
         )
@@ -331,11 +343,53 @@ class APIService(private val context: Context) {
 
 
     //获得阿里云OSS上传的临时token
-    suspend fun getUploadToken() =
+    private suspend fun getUploadToken() =
         fuel.post("/upload/token")
             .authentication()
             .bearer(token)
             .awaitObject(gsonDeserializer<UploadTokenResponse>())
 
+    suspend fun uploadFileToOSS(uri: Uri): Uri = this.uploadFileToOSS(uri, null)
+
+    suspend fun uploadFileToOSS(uri: Uri, progressCallback: OSSProgressCallback<PutObjectRequest>?): Uri {
+        var localOSSToken = ossToken
+        var tokenExpired = true
+        try {
+            if (localOSSToken != null) {
+                tokenExpired = Instant.parse(localOSSToken.expiresAt).isBefore(Instant.now())
+            }
+        } catch (e: DateTimeParseException) {
+            // default to expired
+        }
+        val myProfile = getProfile()
+        val uidReversed = myProfile.uid.reversed()
+
+        if (localOSSToken == null || tokenExpired) {
+            localOSSToken = getUploadToken()
+            ossToken = localOSSToken
+        }
+        val ossEndpoint = context.getString(R.string.OSS_ENDPOINT)
+        val bucketDomain = context.getString(R.string.OSS_BUCKET_DOMAIN)
+        val credProvider = OSSStsTokenCredentialProvider(localOSSToken.accessKeyId, localOSSToken.accessKeySecret, localOSSToken.securityToken)
+        val oss = OSSClient(context, ossEndpoint, credProvider)
+        val extension = MimeTypeMap.getFileExtensionFromUrl(uri.toString())
+        val objectKey = "upload/${uidReversed.substring(0..1)}/${myProfile.uid}/${UUID.randomUUID()}.$extension"
+        withContext(Dispatchers.IO) {
+            val req = PutObjectRequest(
+                context.getString(R.string.OSS_BUCKET),
+                objectKey,
+                uri
+            )
+            if (progressCallback != null) {
+                req.setProgressCallback { request, currentSize, totalSize ->
+                    MainScope().launch {
+                        progressCallback.onProgress(request, currentSize, totalSize)
+                    }
+                }
+            }
+            oss.putObject(req)
+        }
+        return Uri.parse("https://$bucketDomain/$objectKey")
+    }
 }
 

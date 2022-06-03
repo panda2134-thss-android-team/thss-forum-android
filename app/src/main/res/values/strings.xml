@@ -1,4 +1,7 @@
 <resources>
+    <string name="OSS_ENDPOINT">oss-cn-beijing.aliyuncs.com</string>
+    <string name="OSS_BUCKET_DOMAIN">thssforum.oss-cn-beijing.aliyuncs.com</string>
+    <string name="OSS_BUCKET">thssforum</string>
     <string name="app_name">CampusForum</string>
     <string name="TOAST_NOT_LOGGED_IN">登录过期或未登录</string>
     <string name="TOAST_PERMISSION_DENIED">没有此操作权限！</string>
@@ -8,4 +11,5 @@
     <string name="PREF_KEY_TOKEN">token</string>
     <string name="PREF_KEY_TOKEN_EXPIRE_AT">tokenExpiresAt</string>
     <string name="login">登录</string>
+    <string name="upload">上传</string>
 </resources>
