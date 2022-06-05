@@ -1,29 +1,35 @@
 package site.panda2134.thssforum.ui.post
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.ActivityNavigator
 import site.panda2134.thssforum.R
-import site.panda2134.thssforum.databinding.PostPureTextBinding
 
-class PostPureText : AppCompatActivity() {
-    private lateinit var binding: PostPureTextBinding
+open class ActivityNewPost : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        println("post_pure_text")
 
-        binding = PostPureTextBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
     }
 
-    // activity的menubar
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         if (menu == null) return false
 
         val inflater = menuInflater
         inflater.inflate(R.menu.send_menu, menu)
+        return true
+    }
+
+    override fun finish() {
+        super.finish()
+        ActivityNavigator.applyPopAnimationsToPendingTransition(this)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
         return true
     }
 

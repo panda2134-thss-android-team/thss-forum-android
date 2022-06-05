@@ -6,7 +6,7 @@ import site.panda2134.thssforum.R
 import site.panda2134.thssforum.databinding.ProfileDraftsBinding
 import site.panda2134.thssforum.databinding.ProfileEditMyProfileBinding
 
-class ProfileEditMyProfile : AppCompatActivity() {
+class ProfileEditMyProfile : ActivityProfileItem() {
     private lateinit var binding: ProfileEditMyProfileBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

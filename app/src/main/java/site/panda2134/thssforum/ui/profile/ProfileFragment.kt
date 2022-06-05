@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
+import site.panda2134.thssforum.R
 import site.panda2134.thssforum.databinding.FragmentProfileBinding
 
 
@@ -21,8 +23,8 @@ class ProfileFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val viewModel =
-            ViewModelProvider(this).get(ProfileViewModel::class.java)
+//        val viewModel =
+//            ViewModelProvider(this).get(ProfileViewModel::class.java)
 
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -33,20 +35,17 @@ class ProfileFragment : Fragment() {
 //        }
 
         val drafts: View = binding.drafts
-        val interestList: View = binding.interestList
+        val followingList: View = binding.followingList
         val editMyProfile: View = binding.editMyProfile
         // set jump
         drafts.setOnClickListener {
-            val intent = Intent(activity, ProfileDrafts::class.java)
-            startActivity(intent)
+            requireView().findNavController().navigate(R.id.action_navigation_profile_to_profileDrafts)
         }
-        interestList.setOnClickListener {
-            val intent = Intent(activity, ProfileInterestList::class.java)
-            startActivity(intent)
+        followingList.setOnClickListener {
+            requireView().findNavController().navigate(R.id.action_navigation_profile_to_profileFollowingList)
         }
         editMyProfile.setOnClickListener {
-            val intent = Intent(activity, ProfileEditMyProfile::class.java)
-            startActivity(intent)
+            requireView().findNavController().navigate(R.id.action_navigation_profile_to_profileEditMyProfile)
         }
 
 
@@ -62,12 +61,12 @@ class ProfileFragment : Fragment() {
     // 在顶栏加图标（因为是fragment所以写法不同）
     // 之后写点击事件的时候，直接对应重载就可以了
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(site.panda2134.thssforum.R.menu.profile_menu, menu)
+        inflater.inflate(R.menu.profile_menu, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            site.panda2134.thssforum.R.id.bell_menu -> {
+            R.id.bell_menu -> {
                 val intent = Intent(activity, ProfileNotify::class.java)
                 startActivity(intent)
                 true

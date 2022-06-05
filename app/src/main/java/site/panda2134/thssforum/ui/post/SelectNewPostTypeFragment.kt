@@ -9,12 +9,14 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.ActivityNavigator
+import androidx.navigation.findNavController
 import site.panda2134.thssforum.MainActivity
 import site.panda2134.thssforum.R
 import site.panda2134.thssforum.databinding.*
 import site.panda2134.thssforum.ui.home.DiscoverMenuSearch
 
-class PostFragment : Fragment() {
+class SelectNewPostTypeFragment : Fragment() {
 
     private var _binding: FragmentPostBinding? = null
 
@@ -38,26 +40,22 @@ class PostFragment : Fragment() {
 
         buttonPureText.setOnClickListener {
             // Do something in response to button click
-            val intent = Intent(activity, PostPureText::class.java)
-            startActivity(intent)
+            requireView().findNavController().navigate(R.id.action_navigation_post_to_postPureText)
         }
 
         buttonTextPicMix.setOnClickListener {
             // Do something in response to button click
-            val intent = Intent(activity, PostTextPicMix::class.java)
-            startActivity(intent)
+            requireView().findNavController().navigate(R.id.action_navigation_post_to_postTextPicMix)
         }
 
         buttonAudio.setOnClickListener {
             // Do something in response to button click
-            val intent = Intent(activity, PostAudio::class.java)
-            startActivity(intent)
+            requireView().findNavController().navigate(R.id.action_navigation_post_to_postAudio)
         }
 
         buttonVideo.setOnClickListener {
             // Do something in response to button click
-            val intent = Intent(activity, PostVideo::class.java)
-            startActivity(intent)
+            requireView().findNavController().navigate(R.id.action_navigation_post_to_postVideo)
         }
 
         return root
@@ -67,9 +65,6 @@ class PostFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
-
-
 
 
 }

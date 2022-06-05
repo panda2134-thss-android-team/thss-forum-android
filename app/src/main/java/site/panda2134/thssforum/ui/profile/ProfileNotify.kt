@@ -8,7 +8,7 @@ import android.view.MenuItem
 import site.panda2134.thssforum.R
 import site.panda2134.thssforum.databinding.ProfileBellPageBinding
 
-class ProfileNotify : AppCompatActivity() {
+class ProfileNotify : ActivityProfileItem() {
     private lateinit var binding: ProfileBellPageBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -6,7 +6,7 @@ import site.panda2134.thssforum.R
 import site.panda2134.thssforum.databinding.ProfileDraftsBinding
 import site.panda2134.thssforum.databinding.ProfileInterestListBinding
 
-class ProfileInterestList : AppCompatActivity() {
+class ProfileFollowingList : ActivityProfileItem() {
     private lateinit var binding: ProfileInterestListBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

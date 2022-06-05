@@ -34,13 +34,13 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val viewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
+//        val viewModel =
+//            ViewModelProvider(this).get(HomeViewModel::class.java)
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         // CommentItem的// TODO:之后删
-        TODO("dynamic loading of CommentItem")
+//        TODO("dynamic loading of CommentItem")
         // 建议：先做发帖的动态加载（每次加载一天动态，如果返回空，则加载一个星期，再不行就提示“只能查看近一周动态”）
         // comment的动态加载不急着做
 //        dataset = dataSource.getPosts().toMutableList()
