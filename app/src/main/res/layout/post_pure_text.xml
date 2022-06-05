@@ -14,13 +14,17 @@
         android:textStyle="bold"
         android:hint="@string/title_hint"
         android:inputType="textLongMessage" />
+
     <EditText
         android:id="@+id/content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/small_margin"
+        android:layout_height="0dp"
         android:layout_marginHorizontal="@dimen/medium_margin"
-        android:textColor="@color/black"
+        android:layout_marginTop="@dimen/small_margin"
+        android:layout_weight="1"
         android:hint="@string/content_hint"
-        android:inputType="textLongMessage" />
+        android:minLines="5"
+        android:gravity="top|start"
+        android:singleLine="false"
+        android:textColor="@color/black" />
 </LinearLayout>
