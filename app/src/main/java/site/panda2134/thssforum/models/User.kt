@@ -17,8 +17,9 @@ import com.google.gson.annotations.SerializedName
  * 
  * @param uid 
  * @param nickname 
- * @param email 
+ * @param email
  * @param avatar
+ * @param intro
  */
 
 data class User (
@@ -30,5 +31,7 @@ data class User (
     val email: String,
     @SerializedName("avatar")
     val avatar: String,
+    @SerializedName("intro")
+    val intro: String,
 )
 

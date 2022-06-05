@@ -3,6 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/chang/Desktop/Android Teamwork2/thss-forum-android/app/src/main/res/drawable/ic_baseline_share_24.xml" value="0.1075" />
+        <entry key="..\:/Users/chang/Desktop/Android Teamwork2/thss-forum-android/app/src/main/res/drawable/ic_baseline_videocam_24.xml" value="0.1075" />
+        <entry key="..\:/Users/chang/Desktop/Android Teamwork2/thss-forum-android/app/src/main/res/layout/activity_main.xml" value="0.23596014492753623" />
+        <entry key="..\:/Users/chang/Desktop/Android Teamwork2/thss-forum-android/app/src/main/res/layout/activity_post_audio.xml" value="0.23596014492753623" />
+        <entry key="..\:/Users/chang/Desktop/Android Teamwork2/thss-forum-android/app/src/main/res/layout/activity_post_pure_text.xml" value="0.23596014492753623" />
+        <entry key="..\:/Users/chang/Desktop/Android Teamwork2/thss-forum-android/app/src/main/res/layout/fragment_home.xml" value="0.2578125" />
+        <entry key="..\:/Users/chang/Desktop/Android Teamwork2/thss-forum-android/app/src/main/res/layout/post_comment_item.xml" value="0.2578125" />
+        <entry key="..\:/Users/chang/Desktop/Android Teamwork2/thss-forum-android/app/src/main/res/menu/bottom_nav_menu.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.1" />
       </map>
     </option>
