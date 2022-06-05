@@ -2,13 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingHorizontal="@dimen/medium_margin"
+    android:paddingVertical="@dimen/normal_margin"
     android:orientation="vertical">
     <EditText
         android:id="@+id/title"
-        android:layout_marginTop="@dimen/normal_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/medium_margin"
         style="@style/TextAppearance.AppCompat.Headline"
         android:textColor="@color/black"
         android:textStyle="bold"
@@ -18,13 +19,22 @@
     <EditText
         android:id="@+id/content"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginHorizontal="@dimen/medium_margin"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/small_margin"
-        android:layout_weight="1"
         android:hint="@string/content_hint"
-        android:minLines="5"
+        android:minLines="10"
         android:gravity="top|start"
         android:singleLine="false"
         android:textColor="@color/black" />
+
+    <Button
+        android:id="@+id/add_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_location"
+        app:icon="@drawable/ic_baseline_add_location_24"/>
+    <TextView
+        android:id="@+id/location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 </LinearLayout>
