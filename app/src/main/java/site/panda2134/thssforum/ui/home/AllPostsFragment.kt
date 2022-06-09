@@ -51,8 +51,7 @@ class AllPostsFragment: Fragment() {
         try {
             val user: User = apiService.getProfile()
             withContext(Dispatchers.Main) {
-                binding.myName.text = user.nickname
-                binding.myMotto.text = user.intro
+                binding.postUser.text = user.nickname
             }
             // 画图
             val bmp = Fuel.get(user.avatar).await(object : ResponseDeserializable<Bitmap> {
@@ -61,7 +60,7 @@ class AllPostsFragment: Fragment() {
                 }
             })
             withContext(Dispatchers.Main) {
-                binding.myImage.setImageBitmap(bmp)// 画图
+                binding.postUserImage.setImageBitmap(bmp)// 画图
             }
         } catch (e: Throwable) {
             e.printStackTrace()

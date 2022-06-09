@@ -11,6 +11,8 @@
         android:id="@+id/add_likes_menu_item"
         android:title="@string/title_home"
         android:enabled="true"
-        android:icon="@drawable/ic_baseline_thumb_up_24"
+        android:icon="@drawable/ic_baseline_access_time_24"
+        android:iconTint="@color/white"
+        android:background="@drawable/search_switch_change"
         app:showAsAction="always" />
 </menu>
