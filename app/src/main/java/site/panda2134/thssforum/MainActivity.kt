@@ -1,14 +1,21 @@
 package site.panda2134.thssforum
 
 import android.os.Bundle
+import android.util.Log
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.github.kittinunf.fuel.core.FuelError
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import site.panda2134.thssforum.R
+import site.panda2134.thssforum.api.APIService
 import site.panda2134.thssforum.databinding.ActivityMainBinding
+import site.panda2134.thssforum.models.LoginRequest
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,5 +39,19 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        val apiService = APIService(this)
+        Log.d("MainActivity", "111")
+        this.lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val loginResponse =
+                    apiService.login(LoginRequest(email = "user1@test.com", password = "password"))
+                Log.d("MainActivity", "token = ${loginResponse.token}, uid = ${loginResponse.uid}")
+            } catch (e: FuelError) {
+                e.localizedMessage
+                e.printStackTrace()
+            }
+        }
+        Log.d("MainActivity", "222")
     }
 }

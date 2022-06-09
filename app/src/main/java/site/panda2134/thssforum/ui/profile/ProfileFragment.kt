@@ -1,11 +1,24 @@
 package site.panda2134.thssforum.ui.profile
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import com.github.kittinunf.fuel.Fuel
+import com.github.kittinunf.fuel.core.ResponseDeserializable
+import com.github.kittinunf.fuel.core.await
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import site.panda2134.thssforum.api.APIService
 import site.panda2134.thssforum.databinding.FragmentProfileBinding
+import site.panda2134.thssforum.models.User
+import java.io.InputStream
 
 
 class ProfileFragment : Fragment() {
@@ -15,6 +28,28 @@ class ProfileFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+
+
+    private suspend fun loadUserInfo(apiService: APIService) {
+        try {
+            val user: User = apiService.getProfile()
+            withContext(Dispatchers.Main) {
+                binding.name.text = user.nickname
+                binding.motto.text = user.intro
+            }
+            // 画图
+            val bmp = Fuel.get(user.avatar).await(object : ResponseDeserializable<Bitmap> {
+                override fun deserialize(inputStream: InputStream): Bitmap? {
+                    return BitmapFactory.decodeStream(inputStream)
+                }
+            })
+            withContext(Dispatchers.Main) {
+                binding.image.setImageBitmap(bmp)
+            }
+        } catch (e: Throwable) {
+            e.printStackTrace()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,6 +84,13 @@ class ProfileFragment : Fragment() {
             startActivity(intent)
         }
 
+        // 载入顶部：我的头像、昵称和简介
+        val user: User
+        val apiService = APIService(requireActivity())
+        MainScope().launch(Dispatchers.IO) {
+            loadUserInfo(apiService)
+        }
+
 
         return root
     }
@@ -78,6 +120,6 @@ class ProfileFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+//        _binding = null
     }
 }

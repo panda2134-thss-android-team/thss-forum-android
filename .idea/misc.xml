@@ -3,6 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/THSSForum/app/src/main/res/layout/activity_profile_interest_list.xml" value="0.2109375" />
+        <entry key="..\:/THSSForum/app/src/main/res/layout/fragment_all_posts.xml" value="0.335" />
+        <entry key="..\:/THSSForum/app/src/main/res/layout/fragment_home.xml" value="0.12681159420289856" />
+        <entry key="..\:/THSSForum/app/src/main/res/layout/fragment_profile.xml" value="0.2441123188405797" />
+        <entry key="..\:/THSSForum/app/src/main/res/layout/item_post.xml" value="0.2109375" />
+        <entry key="..\:/THSSForum/app/src/main/res/layout/profile_interest_list_item.xml" value="0.2109375" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.1" />
       </map>
     </option>

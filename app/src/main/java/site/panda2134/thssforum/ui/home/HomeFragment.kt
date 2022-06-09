@@ -1,19 +1,29 @@
 package site.panda2134.thssforum.ui.home
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.RecyclerView
+import androidx.lifecycle.viewModelScope
+import com.github.kittinunf.fuel.Fuel
+import com.github.kittinunf.fuel.core.ResponseDeserializable
+import com.github.kittinunf.fuel.core.await
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import site.panda2134.thssforum.R
-import site.panda2134.thssforum.adapter.CommentItemAdapter
+import site.panda2134.thssforum.api.APIService
 import site.panda2134.thssforum.data.CommentItemDataSource
 import site.panda2134.thssforum.databinding.FragmentHomeBinding
 import site.panda2134.thssforum.models.CommentResponse
-import java.lang.IllegalArgumentException
+import site.panda2134.thssforum.models.User
+import java.io.InputStream
+
 
 class HomeFragment : Fragment() {
     private lateinit var tabAdapter: TabAdapter
@@ -28,6 +38,8 @@ class HomeFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+    private var bitmap: Bitmap? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,7 +52,7 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         // CommentItem的// TODO:之后删
-        TODO("dynamic loading of CommentItem")
+        // TODO("dynamic loading of CommentItem")
         // 建议：先做发帖的动态加载（每次加载一天动态，如果返回空，则加载一个星期，再不行就提示“只能查看近一周动态”）
         // comment的动态加载不急着做
 //        dataset = dataSource.getPosts().toMutableList()
@@ -58,10 +70,47 @@ class HomeFragment : Fragment() {
 //                }
 //            }
 //        })
+        //<androidx.recyclerview.widget.RecyclerView
+        //                            android:id="@+id/recycler_comments"
+        //                            android:layout_width="match_parent"
+        //                            android:layout_height="match_parent"
+        //                            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        //                            tools:itemCount="3"
+        //                            tools:listitem="@layout/post_comment_item" />
         // CommentItem的
+
+        // 载入顶部：我的头像、昵称和简介
+        val user: User
+        val apiService = APIService(requireActivity())
+        MainScope().launch(Dispatchers.IO) {
+            loadUserInfo(apiService)
+        }
 
         return binding.root
     }
+
+    private suspend fun loadUserInfo(apiService: APIService) {
+        try {
+            val user: User = apiService.getProfile()
+            withContext(Dispatchers.Main) {
+                binding.myName.text = user.nickname
+                binding.myMotto.text = user.intro
+            }
+            // 画图
+
+            val bmp = Fuel.get(user.avatar).await(object : ResponseDeserializable<Bitmap> {
+                override fun deserialize(inputStream: InputStream): Bitmap? {
+                    return BitmapFactory.decodeStream(inputStream)
+                }
+            })
+            withContext(Dispatchers.Main) {
+                binding.myImage.setImageBitmap(bmp)
+            }
+        } catch (e: Throwable) {
+            e.printStackTrace()
+        }
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         tabAdapter = TabAdapter(this)
@@ -103,6 +152,6 @@ class HomeFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+//        _binding = null
     }
 }
