@@ -19,7 +19,7 @@
     <color name="click_to_like_dots">#FFFFFF</color>
     <color name="text_down_line">#A9A9A9</color>
     <color name="search_icon">#708090</color>
-    <color name="interest_list_name">#000000</color>
+<!--    <color name="interest_list_name">#000000</color>--><!--默认色可以更好适配深色模式-->
     <color name="types_color">#696969</color>
     <color name="pics_color">#696969</color>
     <color name="radio_button">#696969</color>

@@ -80,9 +80,9 @@
         tools:layout="@layout/activity_profile_drafts" />
     <activity
         android:id="@+id/profileInterestList"
-        android:name="site.panda2134.thssforum.ui.profile.ProfileFollowingList"
+        android:name="site.panda2134.thssforum.ui.profile.following.ProfileFollowingList"
         android:label="activity_profile_interest_list"
-        tools:layout="@layout/activity_profile_interest_list" />
+        tools:layout="@layout/profile_following_list" />
     <activity
         android:id="@+id/profileNotify"
         android:name="site.panda2134.thssforum.ui.profile.ProfileNotify"

@@ -16,6 +16,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import site.panda2134.thssforum.api.APIService
+import site.panda2134.thssforum.api.downloadImage
 import site.panda2134.thssforum.databinding.FragmentAllPostsBinding
 import site.panda2134.thssforum.databinding.FragmentHomeBinding
 import site.panda2134.thssforum.models.User
@@ -54,11 +55,7 @@ class AllPostsFragment: Fragment() {
                 binding.postUser.text = user.nickname
             }
             // 画图
-            val bmp = Fuel.get(user.avatar).await(object : ResponseDeserializable<Bitmap> {
-                override fun deserialize(inputStream: InputStream): Bitmap? {
-                    return BitmapFactory.decodeStream(inputStream)
-                }
-            })
+            val bmp = downloadImage(user.avatar)
             withContext(Dispatchers.Main) {
                 binding.postUserImage.setImageBitmap(bmp)// 画图
             }

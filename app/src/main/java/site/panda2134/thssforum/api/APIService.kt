@@ -2,13 +2,17 @@ package site.panda2134.thssforum.api
 
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
+import android.content.Intent
 import android.net.Uri
+import android.os.Bundle
 import android.webkit.MimeTypeMap
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import com.alibaba.sdk.android.oss.OSSClient
 import com.alibaba.sdk.android.oss.callback.OSSProgressCallback
 import com.alibaba.sdk.android.oss.common.auth.OSSStsTokenCredentialProvider
 import com.alibaba.sdk.android.oss.model.PutObjectRequest
+import com.github.kittinunf.fuel.core.FuelError
 import site.panda2134.thssforum.R
 import com.google.gson.Gson
 import com.github.kittinunf.fuel.core.FuelManager
@@ -20,19 +24,40 @@ import com.github.kittinunf.fuel.gson.gsonDeserializer
 import com.github.kittinunf.fuel.gson.jsonBody
 import kotlinx.coroutines.*
 import site.panda2134.thssforum.models.*
+import site.panda2134.thssforum.ui.LoginActivity
 import java.time.Instant
 import java.time.format.DateTimeParseException
 import java.util.*
 
 @Suppress("unused")
 class APIService(private val context: Context) {
+    val noToken = "NO_TOKEN"
+
     private var token: String
+        get() = with(context) {
+            val pref = getSharedPreferences(getString(R.string.GLOBAL_SHARED_PREF), MODE_PRIVATE)
+            return pref.getString(getString(R.string.PREF_KEY_TOKEN), noToken).toString() // don't use an empty string, avoiding 400
+        }
+        set(it) = with(context) {
+            val pref = getSharedPreferences(getString(R.string.GLOBAL_SHARED_PREF), MODE_PRIVATE)
+            with(pref.edit()) {
+                this.putString(context.getString(R.string.PREF_KEY_TOKEN), it)
+                apply()
+            }
+        }
+    val isLoggedIn: Boolean get() = (token != noToken)
     private var ossToken: UploadTokenResponse? = null
 
-    init {
-        with(context) {
-            val pref = getSharedPreferences(getString(R.string.GLOBAL_SHARED_PREF), MODE_PRIVATE)
-            token = pref.getString(getString(R.string.PREF_KEY_TOKEN), "").toString()
+    suspend fun ensureLoggedIn() {
+        if (!isLoggedIn) {
+            gotoLoginActivity()
+        }
+        try {
+            getProfile() // if the token expired, login activity will be launched
+        } catch (e: FuelError) {
+            if (e.response.statusCode == 401) {
+                gotoLoginActivity()
+            }
         }
     }
 
@@ -45,8 +70,8 @@ class APIService(private val context: Context) {
             { request, response ->
                 val toastMessage = when (response.statusCode) {
                     401 -> {
-                        token = "" // reset token!
-//                        TODO("跳转到登录，并且清空返回栈")
+                        token = noToken // reset token!
+                        gotoLoginActivity()
                         context.getString(R.string.TOAST_NOT_LOGGED_IN)
                     }
                     403 -> {
@@ -77,6 +102,14 @@ class APIService(private val context: Context) {
                 }
                 next(request, response)
             }
+        }
+    }
+
+    private fun gotoLoginActivity() {
+        MainScope().launch {
+            startActivity(context, Intent(context, LoginActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }, Bundle())
         }
     }
 
@@ -196,13 +229,6 @@ class APIService(private val context: Context) {
         val response = fuel.post("/auth/login")
             .jsonBody(body)
             .awaitObject(gsonDeserializer<LoginResponse>())
-        with(context) {
-            val pref = getSharedPreferences(getString(R.string.GLOBAL_SHARED_PREF), MODE_PRIVATE)
-            with(pref.edit()) {
-                this.putString(context.getString(R.string.PREF_KEY_TOKEN), response.token)
-                apply()
-            }
-        }
         token = response.token
         return response
     }
