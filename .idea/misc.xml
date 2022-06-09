@@ -3,12 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/THSSForum/app/src/main/res/layout/activity_profile_interest_list.xml" value="0.2109375" />
-        <entry key="..\:/THSSForum/app/src/main/res/layout/fragment_all_posts.xml" value="0.335" />
-        <entry key="..\:/THSSForum/app/src/main/res/layout/fragment_home.xml" value="0.12681159420289856" />
-        <entry key="..\:/THSSForum/app/src/main/res/layout/fragment_profile.xml" value="0.2441123188405797" />
-        <entry key="..\:/THSSForum/app/src/main/res/layout/item_post.xml" value="0.2109375" />
-        <entry key="..\:/THSSForum/app/src/main/res/layout/profile_interest_list_item.xml" value="0.2109375" />
+        <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/activity_post_audio.xml" value="0.1" />
+        <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/activity_post_pure_text.xml" value="0.1" />
+        <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/activity_post_text_pic_mix.xml" value="0.1" />
+        <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/activity_post_video.xml" value="0.1" />
+        <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/activity_profile_interest_list.xml" value="0.1" />
+        <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/fragment_post.xml" value="0.1625" />
+        <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/fragment_profile.xml" value="0.34375" />
+        <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/post_pure_text.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.1" />
       </map>
     </option>

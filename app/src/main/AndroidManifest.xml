@@ -2,10 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="site.panda2134.thssforum">
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <!--android:usesCleartextTraffic="true"-->
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -16,6 +21,9 @@
         <!-- <meta-data
             android:name="com.google.android.actions"
             android:resource="@xml/network_security_config" /> -->
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="a30817e0513e42453a3a838489950284"/>
         <activity
             android:name=".ui.profile.ProfileNotify"
             android:label="@string/menubell"
@@ -29,7 +37,7 @@
             android:exported="true"
             android:label="@string/edit_my_profile"/>
         <activity
-            android:name=".ui.profile.ProfileInterestList"
+            android:name=".ui.profile.ProfileFollowingList"
             android:exported="true"
             android:label="@string/interests_list"/>
         <activity
@@ -37,19 +45,19 @@
             android:exported="true"
             android:label="@string/drafts"/>
         <activity
-            android:name=".ui.post.PostVideo"
+            android:name=".ui.post.ActivityNewVideoPost"
             android:exported="true"
             android:label="@string/menu_video"/>
         <activity
-            android:name=".ui.post.PostAudio"
+            android:name=".ui.post.ActivityNewAudioPost"
             android:exported="true"
             android:label="@string/menu_audio"/>
         <activity
-            android:name=".ui.post.PostTextPicMix"
+            android:name=".ui.post.ActivityNewTextPicMixPost"
             android:exported="true"
             android:label="@string/menu_textpicmix"/>
         <activity
-            android:name=".ui.post.PostPureText"
+            android:name=".ui.post.ActivityNewPureTextPost"
             android:exported="true"
             android:label="@string/menu_puretext"/>
         <activity
@@ -71,6 +79,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <service android:name="com.amap.api.location.APSService" />
     </application>
 
 </manifest>

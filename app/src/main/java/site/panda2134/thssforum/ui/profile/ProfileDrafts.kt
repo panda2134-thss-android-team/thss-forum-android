@@ -6,7 +6,7 @@ import site.panda2134.thssforum.R
 import site.panda2134.thssforum.databinding.PostAudioBinding
 import site.panda2134.thssforum.databinding.ProfileDraftsBinding
 
-class ProfileDrafts : AppCompatActivity() {
+class ProfileDrafts : ActivityProfileItem() {
     private lateinit var binding: ProfileDraftsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

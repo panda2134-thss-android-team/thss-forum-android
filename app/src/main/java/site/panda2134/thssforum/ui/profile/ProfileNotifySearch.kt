@@ -13,7 +13,7 @@ import site.panda2134.thssforum.databinding.HomeSearchPageBinding
 import site.panda2134.thssforum.databinding.ProfileNotifySearchPageBinding
 
 
-class ProfileNotifySearch : AppCompatActivity() {
+class ProfileNotifySearch : ActivityProfileItem() {
     private lateinit var binding: ProfileNotifySearchPageBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
