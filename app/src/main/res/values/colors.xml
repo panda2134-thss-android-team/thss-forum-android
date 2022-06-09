@@ -7,8 +7,8 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="background_grey">#F5F5F5</color>
-    <color name="interval_grey">#EDEDED</color>
+<!--    <color name="background_color_light">#F5F5F5</color>-->
+<!--    <color name="padding_color">#EDEDED</color>-->
 
     <color name="interval_line">#DCDCDC</color>
     <color name="click_blue">#2F5597</color>
