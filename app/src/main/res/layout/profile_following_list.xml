@@ -15,16 +15,25 @@
         android:layout_gravity="center_vertical"
         app:srcCompat="@drawable/ic_baseline_search_24"
         app:tint="@color/search_icon" />
-    <TextView
+    <View
         android:id="@+id/interval"
         android:layout_marginTop="5dp"
         android:layout_height="@dimen/text_down_line_height"
         android:layout_width="match_parent"
         android:background="@color/text_down_line"
         android:layout_marginBottom="@dimen/normal_margin"/>
+    <TextView
+        android:id="@+id/no_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:paddingVertical="@dimen/normal_margin"
+        tools:visibility="gone"
+        android:text="@string/RECYCLER_VIEW_NO_CONTENT"/>
 
     <ProgressBar
         android:id="@+id/following_list_loading"
+        tools:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <androidx.recyclerview.widget.RecyclerView

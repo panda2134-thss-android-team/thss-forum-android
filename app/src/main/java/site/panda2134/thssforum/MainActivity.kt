@@ -19,6 +19,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val apiService = APIService(this)
+        if (!apiService.isLoggedIn) {
+            apiService.gotoLoginActivity()
+            return
+        }
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -34,8 +40,5 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
-        val apiService = APIService(this)
-        MainScope().launch { apiService.ensureLoggedIn() }
     }
 }

@@ -48,17 +48,9 @@ class APIService(private val context: Context) {
     val isLoggedIn: Boolean get() = (token != noToken)
     private var ossToken: UploadTokenResponse? = null
 
-    suspend fun ensureLoggedIn() {
-        if (!isLoggedIn) {
-            gotoLoginActivity()
-        }
-        try {
-            getProfile() // if the token expired, login activity will be launched
-        } catch (e: FuelError) {
-            if (e.response.statusCode == 401) {
-                gotoLoginActivity()
-            }
-        }
+    fun logout() {
+        token = noToken
+        gotoLoginActivity()
     }
 
     private val fuel: FuelManager = FuelManager().apply {
@@ -105,7 +97,7 @@ class APIService(private val context: Context) {
         }
     }
 
-    private fun gotoLoginActivity() {
+    fun gotoLoginActivity() {
         MainScope().launch {
             startActivity(context, Intent(context, LoginActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

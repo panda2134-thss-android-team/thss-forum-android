@@ -13,7 +13,7 @@ import site.panda2134.thssforum.models.User
 
 // 对于关注者列表不需要实现懒加载
 // 主页的RecyclerView需要实现，因此还要考虑监听滚动事件
-class ProfileFollowingRecyclerAdapter(private val dataset: ArrayList<User>):
+class ProfileFollowingRecyclerViewAdapter(private val dataset: ArrayList<User>):
     RecyclerView.Adapter<ProfileFollowingViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProfileFollowingViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
