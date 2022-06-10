@@ -1,9 +1,6 @@
 package site.panda2134.thssforum.ui.profile
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import site.panda2134.thssforum.R
-import site.panda2134.thssforum.databinding.PostAudioBinding
 import site.panda2134.thssforum.databinding.ProfileDraftsBinding
 
 class ProfileDrafts : ActivityProfileItem() {

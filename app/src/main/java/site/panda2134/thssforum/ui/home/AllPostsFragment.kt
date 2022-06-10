@@ -1,16 +1,10 @@
 package site.panda2134.thssforum.ui.home
 
-import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.view.*
-import androidx.fragment.app.Fragment
-import site.panda2134.thssforum.R
+import android.view.LayoutInflater
 import android.view.View
-import com.github.kittinunf.fuel.Fuel
-import com.github.kittinunf.fuel.core.ResponseDeserializable
-import com.github.kittinunf.fuel.core.await
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -18,9 +12,7 @@ import kotlinx.coroutines.withContext
 import site.panda2134.thssforum.api.APIService
 import site.panda2134.thssforum.api.downloadImage
 import site.panda2134.thssforum.databinding.FragmentAllPostsBinding
-import site.panda2134.thssforum.databinding.FragmentHomeBinding
 import site.panda2134.thssforum.models.User
-import java.io.InputStream
 
 const val EXTRA_MESSAGE = "site.panda2134.thssforum.MESSAGE"
 

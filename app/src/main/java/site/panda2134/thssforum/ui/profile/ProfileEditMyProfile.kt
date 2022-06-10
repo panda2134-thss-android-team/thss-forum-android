@@ -1,9 +1,6 @@
 package site.panda2134.thssforum.ui.profile
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import site.panda2134.thssforum.R
-import site.panda2134.thssforum.databinding.ProfileDraftsBinding
 import site.panda2134.thssforum.databinding.ProfileEditMyProfileBinding
 
 class ProfileEditMyProfile : ActivityProfileItem() {

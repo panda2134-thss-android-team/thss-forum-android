@@ -1,7 +1,5 @@
 package site.panda2134.thssforum.adapter
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,14 +7,13 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.github.kittinunf.fuel.Fuel
-import com.github.kittinunf.fuel.core.ResponseDeserializable
-import com.github.kittinunf.fuel.coroutines.await
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import site.panda2134.thssforum.R
 import site.panda2134.thssforum.api.downloadImage
 import site.panda2134.thssforum.models.Comment
-import java.io.InputStream
 
 class CommentItemAdapter(private val comments: List<Comment>):
     RecyclerView.Adapter<CommentItemAdapter.PostCommentItemViewHolder>() {

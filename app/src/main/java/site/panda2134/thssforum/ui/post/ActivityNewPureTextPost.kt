@@ -1,21 +1,12 @@
 package site.panda2134.thssforum.ui.post
 
 import android.Manifest
-import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.transition.Visibility
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
-import androidx.navigation.ActivityNavigator
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
-import com.amap.api.location.AMapLocationListener
-import site.panda2134.thssforum.R
 import site.panda2134.thssforum.databinding.PostPureTextBinding
 
 class ActivityNewPureTextPost : ActivityNewPost() {

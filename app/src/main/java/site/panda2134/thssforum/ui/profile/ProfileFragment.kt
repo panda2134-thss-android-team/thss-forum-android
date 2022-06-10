@@ -1,27 +1,19 @@
 package site.panda2134.thssforum.ui.profile
 
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
-import com.github.kittinunf.fuel.Fuel
-import com.github.kittinunf.fuel.core.ResponseDeserializable
-import com.github.kittinunf.fuel.core.await
+import androidx.navigation.findNavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import site.panda2134.thssforum.api.APIService
-import androidx.navigation.findNavController
 import site.panda2134.thssforum.R
+import site.panda2134.thssforum.api.APIService
 import site.panda2134.thssforum.api.downloadImage
 import site.panda2134.thssforum.databinding.FragmentProfileBinding
 import site.panda2134.thssforum.models.User
-import java.io.InputStream
 
 
 class ProfileFragment : Fragment() {
