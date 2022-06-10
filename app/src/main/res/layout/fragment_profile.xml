@@ -61,13 +61,13 @@
         <TextView
             android:id="@+id/interval_1"
             android:layout_height="@dimen/profile_interval"
-            android:layout_width="match_parent"
-            android:background="@color/interval_grey"/>
+            android:layout_width="match_parent"/>
         <LinearLayout
             android:id="@+id/drafts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:background="?attr/colorSurface"
             android:paddingVertical="@dimen/my_profile_gap"
             android:layout_marginHorizontal="@dimen/profile_line_margin">
 
@@ -95,13 +95,13 @@
         <TextView
             android:id="@+id/interval_2"
             android:layout_height="@dimen/profile_interval"
-            android:layout_width="match_parent"
-            android:background="@color/interval_grey"/>
+            android:layout_width="match_parent"/>
         <LinearLayout
             android:id="@+id/following_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:background="?attr/colorSurface"
             android:paddingVertical="@dimen/my_profile_gap"
             android:layout_marginHorizontal="@dimen/profile_line_margin">
 
@@ -130,13 +130,13 @@
         <TextView
             android:id="@+id/interval_3"
             android:layout_height="@dimen/profile_interval"
-            android:layout_width="match_parent"
-            android:background="@color/interval_grey"/>
+            android:layout_width="match_parent"/>
         <LinearLayout
             android:id="@+id/edit_my_profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:background="?attr/colorSurface"
             android:paddingVertical="@dimen/my_profile_gap"
             android:layout_marginHorizontal="@dimen/profile_line_margin">
 
@@ -165,7 +165,6 @@
         <TextView
             android:id="@+id/interval_4"
             android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:background="@color/interval_grey"/>
+            android:layout_width="match_parent"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

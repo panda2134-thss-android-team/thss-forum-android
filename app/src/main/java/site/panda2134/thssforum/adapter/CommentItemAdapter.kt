@@ -14,6 +14,7 @@ import com.github.kittinunf.fuel.core.ResponseDeserializable
 import com.github.kittinunf.fuel.coroutines.await
 import kotlinx.coroutines.*
 import site.panda2134.thssforum.R
+import site.panda2134.thssforum.api.downloadImage
 import site.panda2134.thssforum.models.Comment
 import java.io.InputStream
 
@@ -34,13 +35,9 @@ class CommentItemAdapter(private val comments: List<Comment>):
         val comment = comments[position]
         with (holder) {
             mainScope.launch {
-                val avatar = Fuel.download(comment.user.avatar).await(object: ResponseDeserializable<Bitmap> {
-                    override fun deserialize(inputStream: InputStream): Bitmap {
-                        return BitmapFactory.decodeStream(inputStream)
-                    }
-                })
+                val avatar = downloadImage(comment.user.avatar)
                 holder.rootView.findViewById<ImageView>(R.id.commenter_pic).setImageBitmap(avatar)
-                holder.rootView.findViewById<TextView>(R.id.commenter_name).text = comment.data.content
+                holder.rootView.findViewById<TextView>(R.id.following_nickname).text = comment.data.content
             }
         }
         // holder.rootView.setOnClickListener { ctx.loadPostDetailActivity(post) }

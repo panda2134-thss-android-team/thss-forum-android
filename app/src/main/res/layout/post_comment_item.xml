@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <TextView
-                    android:id="@+id/commenter_name"
+                    android:id="@+id/following_nickname"
                     android:textSize="@dimen/commenter_name"
                     android:textColor="@color/click_blue"
                     android:layout_width="wrap_content"

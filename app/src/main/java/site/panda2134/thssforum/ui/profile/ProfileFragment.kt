@@ -18,6 +18,7 @@ import kotlinx.coroutines.withContext
 import site.panda2134.thssforum.api.APIService
 import androidx.navigation.findNavController
 import site.panda2134.thssforum.R
+import site.panda2134.thssforum.api.downloadImage
 import site.panda2134.thssforum.databinding.FragmentProfileBinding
 import site.panda2134.thssforum.models.User
 import java.io.InputStream
@@ -40,11 +41,7 @@ class ProfileFragment : Fragment() {
                 binding.motto.text = user.intro
             }
             // 画图
-            val bmp = Fuel.get(user.avatar).await(object : ResponseDeserializable<Bitmap> {
-                override fun deserialize(inputStream: InputStream): Bitmap? {
-                    return BitmapFactory.decodeStream(inputStream)
-                }
-            })
+            val bmp = downloadImage(user.avatar)
             withContext(Dispatchers.Main) {
                 binding.image.setImageBitmap(bmp)
             }

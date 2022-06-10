@@ -11,6 +11,5 @@
         android:id="@+id/seq_menu_item"
         android:title="@string/like_time_switch"
         android:enabled="true"
-        android:icon="@drawable/ic_baseline_thumb_up_24"
-        app:showAsAction="always" />
+        android:icon="@drawable/ic_baseline_thumb_up_24" />
 </menu>

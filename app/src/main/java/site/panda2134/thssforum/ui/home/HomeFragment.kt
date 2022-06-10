@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import site.panda2134.thssforum.R
 import site.panda2134.thssforum.api.APIService
+import site.panda2134.thssforum.api.downloadImage
 import site.panda2134.thssforum.data.CommentItemDataSource
 import site.panda2134.thssforum.databinding.FragmentHomeBinding
 import site.panda2134.thssforum.models.CommentResponse
@@ -100,11 +101,7 @@ class HomeFragment : Fragment() {
             }
             // 画图
 
-            val bmp = Fuel.get(user.avatar).await(object : ResponseDeserializable<Bitmap> {
-                override fun deserialize(inputStream: InputStream): Bitmap? {
-                    return BitmapFactory.decodeStream(inputStream)
-                }
-            })
+            val bmp = downloadImage(user.avatar)
             withContext(Dispatchers.Main) {
                 binding.myImage.setImageBitmap(bmp)
             }

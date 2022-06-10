@@ -11,6 +11,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.github.kittinunf.fuel.core.FuelError
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import site.panda2134.thssforum.R
 import site.panda2134.thssforum.api.APIService
@@ -41,17 +42,6 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         val apiService = APIService(this)
-        Log.d("MainActivity", "111")
-        this.lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                val loginResponse =
-                    apiService.login(LoginRequest(email = "user1@test.com", password = "password"))
-                Log.d("MainActivity", "token = ${loginResponse.token}, uid = ${loginResponse.uid}")
-            } catch (e: FuelError) {
-                e.localizedMessage
-                e.printStackTrace()
-            }
-        }
-        Log.d("MainActivity", "222")
+        MainScope().launch { apiService.ensureLoggedIn() }
     }
 }
