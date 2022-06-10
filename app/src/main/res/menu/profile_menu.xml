@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/bell_menu"
-        android:title="@string/title_profile"
+        android:title="@string/notify"
         android:enabled="true"
         android:icon="@drawable/bell"
         app:showAsAction="always" />

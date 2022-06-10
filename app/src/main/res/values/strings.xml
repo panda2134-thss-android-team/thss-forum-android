@@ -62,4 +62,8 @@
     <string name="title_hint">请输入动态标题…</string>
     <string name="pics">图片</string>
     <string name="notify_search_hint">查询通知内容…</string>
+
+    <string name="like_time_switch">动态展示顺序</string>
+    <string name="search">搜索</string>
+    <string name="notify">通知</string>
 </resources>

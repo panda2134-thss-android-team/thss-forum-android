@@ -5,9 +5,8 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.*
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.ResponseDeserializable
 import com.github.kittinunf.fuel.core.await
@@ -39,6 +38,9 @@ class HomeFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
     private var bitmap: Bitmap? = null
+
+    private var is_time_seq = true // 右上角的展示顺序：默认是时间顺序
+    private var menu: Menu? = null
 
 
     override fun onCreateView(
@@ -112,6 +114,7 @@ class HomeFragment : Fragment() {
     }
 
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         tabAdapter = TabAdapter(this)
         binding.pager.adapter = tabAdapter
@@ -133,13 +136,25 @@ class HomeFragment : Fragment() {
     // 之后写点击事件的时候，直接对应重载就可以了
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.discover_searchswitch_menuicon, menu)
+        this.menu = menu
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.add_search_menu_item -> {
+            R.id.search_menu_item -> {
                 val intent = Intent(activity, DiscoverMenuSearch::class.java)
                 startActivity(intent)
+                true
+            }
+            R.id.seq_menu_item -> {
+                if(is_time_seq) {
+                    is_time_seq = false
+                    menu?.getItem(1)?.icon = ContextCompat.getDrawable(requireActivity(), R.drawable.ic_baseline_thumb_up_24);
+                }
+                else {
+                    is_time_seq = true
+                    menu?.getItem(1)?.icon = (ContextCompat.getDrawable(requireActivity(), R.drawable.ic_baseline_access_time_24));
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)
