@@ -1,6 +1,5 @@
 package site.panda2134.thssforum.ui.home.postlist
 
-import android.location.Location
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
@@ -8,6 +7,7 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import cn.bingoogolapple.photopicker.activity.BGAPhotoPreviewActivity
 import cn.bingoogolapple.photopicker.widget.BGANinePhotoLayout
+import com.arges.sepan.argmusicplayer.Models.ArgAudio
 import com.bumptech.glide.Glide
 import com.github.marlonlom.utilities.timeago.TimeAgo
 import com.github.marlonlom.utilities.timeago.TimeAgoMessages
@@ -24,6 +24,7 @@ import java.util.*
 
 class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIService): RecyclerView.ViewHolder(binding.root), BGANinePhotoLayout.Delegate {
     private var post: Post? = null
+
     fun setPost(p: Post) {
         post = p
 
@@ -52,8 +53,33 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIServi
                 val content = p.postContent.imageTextContent!!
                 binding.postTitle.text = content.title
                 binding.postContent.text = content.text
+                binding.audioPlayer.visibility = View.GONE
                 binding.postImages.data = content.images
                 binding.postImages.setDelegate(this)
+            }
+            PostType.audio -> {
+                val content = p.postContent.mediaContent!!
+                binding.postTitle.text = content.title
+                binding.postContent.visibility = View.GONE
+                binding.audioPlayer.visibility = View.VISIBLE
+                binding.audioPlayer.apply {
+                    disableNextPrevButtons()
+                    setPlaylistRepeat(false)
+                    playAudioAfterPercent(10)
+                    play(ArgAudio.createFromURL(
+                        p.author.nickname, p.postContent.mediaContent.title,
+                        p.postContent.mediaContent.media[0]
+                    ))
+                    // 加载完成后不马上开始播放
+                    var firstPlayed = false
+                    this.setOnPlayingListener {
+                        if (!firstPlayed) {
+                            firstPlayed = true
+                            pause()
+                        }
+                    }
+                }
+                binding.postImages.visibility = View.GONE
             }
             else -> println("not implemented")
         }

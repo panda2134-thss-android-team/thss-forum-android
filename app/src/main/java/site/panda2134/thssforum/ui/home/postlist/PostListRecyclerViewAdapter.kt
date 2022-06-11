@@ -1,5 +1,6 @@
 package site.panda2134.thssforum.ui.home.postlist
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -51,6 +52,12 @@ class PostListRecyclerViewAdapter(val api: APIService, val fetchFollowing: Boole
         }
     }
 
+    override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
+        if (holder is PostListRecyclerViewHolder) {
+            holder.binding.audioPlayer.pause()
+        }
+    }
+
     override fun getItemCount(): Int {
         return posts.size + 1
     }
@@ -63,6 +70,7 @@ class PostListRecyclerViewAdapter(val api: APIService, val fetchFollowing: Boole
         else POST_ITEM
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun fetchMorePosts () {
 
         val scope = MainScope()
@@ -84,7 +92,11 @@ class PostListRecyclerViewAdapter(val api: APIService, val fetchFollowing: Boole
                     val insertedAt = posts.size
                     posts.addAll(postsToAdd)
                     withContext(Dispatchers.Main) {
-                        notifyItemRangeInserted(insertedAt, postsToAdd.size)
+                        if (posts.size == postsToAdd.size) { // initial
+                            notifyDataSetChanged()
+                        } else {
+                            notifyItemRangeInserted(insertedAt, postsToAdd.size)
+                        }
                     }
                     if (isEnded()) {
                         fetchMorePosts()
