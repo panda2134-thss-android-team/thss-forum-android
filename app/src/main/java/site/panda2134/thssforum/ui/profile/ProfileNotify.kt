@@ -1,7 +1,6 @@
 package site.panda2134.thssforum.ui.profile
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -20,9 +19,7 @@ class ProfileNotify : ActivityProfileItem() {
     }
 
     // activity的menubar
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        if (menu == null) return false
-
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.profile_notify_search, menu)
         return true

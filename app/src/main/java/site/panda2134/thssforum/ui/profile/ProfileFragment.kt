@@ -1,41 +1,35 @@
 package site.panda2134.thssforum.ui.profile
 
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
-import com.github.kittinunf.fuel.Fuel
-import com.github.kittinunf.fuel.core.ResponseDeserializable
-import com.github.kittinunf.fuel.core.await
+import androidx.navigation.findNavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import site.panda2134.thssforum.api.APIService
-import androidx.navigation.findNavController
 import site.panda2134.thssforum.R
+import site.panda2134.thssforum.api.APIService
 import site.panda2134.thssforum.api.downloadImage
 import site.panda2134.thssforum.databinding.FragmentProfileBinding
 import site.panda2134.thssforum.models.User
-import java.io.InputStream
 
 
 class ProfileFragment : Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
+    private lateinit var api: APIService
 
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
 
 
-    private suspend fun loadUserInfo(apiService: APIService) {
+    private suspend fun loadUserInfo() {
         try {
-            val user: User = apiService.getProfile()
+            val user: User = api.getProfile()
             withContext(Dispatchers.Main) {
                 binding.name.text = user.nickname
                 binding.motto.text = user.intro
@@ -66,25 +60,25 @@ class ProfileFragment : Fragment() {
 //            textView.text = it
 //        }
 
-        val drafts: View = binding.drafts
-        val followingList: View = binding.followingList
-        val editMyProfile: View = binding.editMyProfile
         // set jump
-        drafts.setOnClickListener {
+        binding.drafts.setOnClickListener {
             requireView().findNavController().navigate(R.id.action_navigation_profile_to_profileDrafts)
         }
-        followingList.setOnClickListener {
+        binding.followingList.setOnClickListener {
             requireView().findNavController().navigate(R.id.action_navigation_profile_to_profileFollowingList)
         }
-        editMyProfile.setOnClickListener {
+        binding.editMyProfile.setOnClickListener {
             requireView().findNavController().navigate(R.id.action_navigation_profile_to_profileEditMyProfile)
         }
+        binding.logout.setOnClickListener {
+            api.logout()
+        }
+
 
         // 载入顶部：我的头像、昵称和简介
-        val user: User
-        val apiService = APIService(requireActivity())
+        api = APIService(requireActivity())
         MainScope().launch(Dispatchers.IO) {
-            loadUserInfo(apiService)
+            loadUserInfo()
         }
 
 

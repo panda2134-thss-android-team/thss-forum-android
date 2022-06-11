@@ -1,7 +1,5 @@
 package site.panda2134.thssforum.models
 
-import com.google.gson.annotations.SerializedName
-
 data class ErrorResponse (
     val message: String
 )

@@ -1,22 +1,16 @@
 package site.panda2134.thssforum
 
 import android.os.Bundle
-import android.util.Log
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.github.kittinunf.fuel.core.FuelError
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
-import site.panda2134.thssforum.R
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import site.panda2134.thssforum.api.APIService
 import site.panda2134.thssforum.databinding.ActivityMainBinding
-import site.panda2134.thssforum.models.LoginRequest
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,6 +18,18 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val appLocale = LocaleListCompat.forLanguageTags("zh-CN")
+        AppCompatDelegate.setApplicationLocales(appLocale)
+
+
+
+
+        val apiService = APIService(this)
+        if (!apiService.isLoggedIn) {
+            apiService.gotoLoginActivity()
+            return
+        }
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -40,8 +46,5 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-//
-//        val apiService = APIService(this)
-//        MainScope().launch { apiService.ensureLoggedIn() }
     }
 }

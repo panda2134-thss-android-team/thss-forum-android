@@ -20,13 +20,18 @@ class ProfileFollowingList : ActivityProfileItem() {
         binding = ProfileFollowingListBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.followingList.visibility = View.GONE
+        binding.noContent.visibility = View.GONE
 
         MainScope().launch {
             val following = api.getFollowingUsers()
             withContext(Dispatchers.Main) {
                 binding.followingListLoading.visibility = View.GONE
-                binding.followingList.visibility = View.VISIBLE
-                binding.followingList.adapter = ProfileFollowingRecyclerAdapter(following)
+                if (following.size > 0) {
+                    binding.followingList.visibility = View.VISIBLE
+                    binding.followingList.adapter = ProfileFollowingRecyclerViewAdapter(following)
+                } else {
+                    binding.noContent.visibility = View.VISIBLE
+                }
             }
         }
     }

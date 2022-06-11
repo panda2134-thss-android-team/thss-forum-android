@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF6200EE</color> <!--这个颜色是radiobutton、edittext那里会用的，我也不知道在里调用的，但这个颜色比较好看-->
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <!--    <color name="background_color_light">#F5F5F5</color>-->
+    <!--    <color name="padding_color">#EDEDED</color>-->
+
+    <color name="interval_line">#DCDCDC</color>
+    <color name="click_blue">#1976D2</color>
+    <color name="word_grey">#696969</color>
+    <color name="followed_button_bg">#FFE699</color>
+    <color name="click_to_like_bg">#A9A9A9</color>
+    <color name="share_icon">#708090</color>
+    <color name="click_to_like_dots">#FFFFFF</color>
+    <color name="text_down_line">#A9A9A9</color>
+    <color name="search_icon">#708090</color>
+    <!--    <color name="interest_list_name">#000000</color>--><!--默认色可以更好适配深色模式-->
+    <color name="types_color">#696969</color>
+    <color name="pics_color">#696969</color>
+    <color name="radio_button">#696969</color>
+    <color name="card_line">#696969</color>
+    <color name="motto">#696969</color>
+</resources>

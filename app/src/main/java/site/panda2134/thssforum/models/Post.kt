@@ -12,6 +12,7 @@
 package site.panda2134.thssforum.models
 
 import com.google.gson.annotations.SerializedName
+import java.time.Instant
 
 
 /**
@@ -35,7 +36,9 @@ data class PostResponse (
     @SerializedName("imageTextContent")
     val imageTextContent: ImageTextPostContent? = null,
     @SerializedName("mediaContent")
-    val mediaContent: MediaPostContent? = null
+    val mediaContent: MediaPostContent? = null,
+    @SerializedName("createdAt")
+    val createdAt: Instant
 )
 
 data class Post (
@@ -53,17 +56,19 @@ class PostContent private constructor (
     @SerializedName("mediaContent")
     val mediaContent: MediaPostContent? = null,
     @Transient
-    val id: String? = null
+    val id: String? = null,
+    @Transient
+    val createdAt: Instant? = null
 )  {
     companion object {
-        fun makeImageTextPost (content: ImageTextPostContent, location: Location? = null) =
-            PostContent(PostType.normal, location, content, null)
-        fun makeAudioPost (content: MediaPostContent, location: Location? = null) =
-            PostContent(PostType.audio, location, null, content)
-        fun makeVideoPost (content: MediaPostContent, location: Location? = null) =
-            PostContent(PostType.video, location, null, content)
+        fun makeImageTextPost (content: ImageTextPostContent, location: Location? = null, createdAt: Instant) =
+            PostContent(PostType.normal, location, content, null, createdAt = createdAt)
+        fun makeAudioPost (content: MediaPostContent, location: Location? = null, createdAt: Instant) =
+            PostContent(PostType.audio, location, null, content, createdAt = createdAt)
+        fun makeVideoPost (content: MediaPostContent, location: Location? = null, createdAt: Instant) =
+            PostContent(PostType.video, location, null, content, createdAt = createdAt)
         fun fromPostResponse (response: PostResponse) =
-            PostContent(response.type, response.location, response.imageTextContent, response.mediaContent, response.id)
+            PostContent(response.type, response.location, response.imageTextContent, response.mediaContent, response.id, response.createdAt)
     }
 }
 

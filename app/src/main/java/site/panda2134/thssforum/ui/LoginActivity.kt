@@ -1,9 +1,9 @@
 package site.panda2134.thssforum.ui
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.github.kittinunf.fuel.core.FuelError
 import kotlinx.coroutines.Dispatchers

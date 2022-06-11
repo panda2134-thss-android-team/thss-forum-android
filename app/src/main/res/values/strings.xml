@@ -11,16 +11,21 @@
     <string name="TOAST_INTERNAL_SERVER_ERROR">服务器内部错误</string>
     <string name="TOAST_UNPROCESSABLE_ENTITY">校验失败</string>
     <string name="TOAST_EMAIL_USED">此电子邮件已被注册</string>
+    <string name="NO_MORE_CONTENT">没有更多内容了</string>
 
     <string name="GLOBAL_SHARED_PREF">site.panda2134.thssforum.SHARED_PREF</string>
     <string name="PREF_KEY_TOKEN">token</string>
     <string name="PREF_KEY_TOKEN_EXPIRE_AT">tokenExpiresAt</string>
 
+    <string name="RECYCLER_VIEW_NO_CONTENT">暂无内容</string>
+
     <string name="email">电子邮箱</string>
     <string name="password">密码</string>
     <string name="register">注册</string>
     <string name="login">登录</string>
+    <string name="logout">登出</string>
     <string name="upload">上传</string>
+    <string name="loading">加载中…</string>
 
     <string name="title_home">发现</string>
     <string name="title_post">发布</string>
@@ -76,4 +81,5 @@
     <string name="nickname">昵称</string>
     <string name="intro">简介</string>
 
+    <string name="followed">已关注</string>
 </resources>

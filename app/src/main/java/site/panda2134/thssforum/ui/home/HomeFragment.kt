@@ -2,14 +2,11 @@ package site.panda2134.thssforum.ui.home
 
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.*
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.github.kittinunf.fuel.Fuel
-import com.github.kittinunf.fuel.core.ResponseDeserializable
-import com.github.kittinunf.fuel.core.await
+import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -17,17 +14,15 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import site.panda2134.thssforum.R
 import site.panda2134.thssforum.api.APIService
-import site.panda2134.thssforum.api.downloadImage
 import site.panda2134.thssforum.data.CommentItemDataSource
 import site.panda2134.thssforum.databinding.FragmentHomeBinding
 import site.panda2134.thssforum.models.CommentResponse
 import site.panda2134.thssforum.models.User
-import java.io.InputStream
 
 
 class HomeFragment : Fragment() {
     private lateinit var tabAdapter: TabAdapter
-    private var _binding: FragmentHomeBinding? = null
+    private lateinit var binding: FragmentHomeBinding
 
     // CommentItem的// TODO:之后删
     private val hasNext = true
@@ -37,7 +32,6 @@ class HomeFragment : Fragment() {
 
     // This property is only valid between onCreateView and
     // onDestroyView.
-    private val binding get() = _binding!!
     private var bitmap: Bitmap? = null
 
     private var is_time_seq = true // 右上角的展示顺序：默认是时间顺序
@@ -52,35 +46,7 @@ class HomeFragment : Fragment() {
 //        val viewModel =
 //            ViewModelProvider(this).get(HomeViewModel::class.java)
 
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-
-        // CommentItem的// TODO:之后删
-        // TODO("dynamic loading of CommentItem")
-        // 建议：先做发帖的动态加载（每次加载一天动态，如果返回空，则加载一个星期，再不行就提示“只能查看近一周动态”）
-        // comment的动态加载不急着做
-//        dataset = dataSource.getPosts().toMutableList()
-//        binding.recyclerComments.adapter = CommentItemAdapter(dataset)
-//        binding.recyclerComments.addOnScrollListener(object: RecyclerView.OnScrollListener() {
-//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                super.onScrolled(recyclerView, dx, dy)
-//                if (!recyclerView.canScrollVertically(1)) {
-//                    if (dataSource.hasNextPage) {
-//                        Log.i("dataset", "loaded")
-//                        val oldLen = dataset.size
-//                        dataset.addAll(dataSource.getPosts())
-//                        recyclerView.adapter?.notifyItemInserted(oldLen)
-//                    }
-//                }
-//            }
-//        })
-        //<androidx.recyclerview.widget.RecyclerView
-        //                            android:id="@+id/recycler_comments"
-        //                            android:layout_width="match_parent"
-        //                            android:layout_height="match_parent"
-        //                            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        //                            tools:itemCount="3"
-        //                            tools:listitem="@layout/post_comment_item" />
-        // CommentItem的
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         // 载入顶部：我的头像、昵称和简介
         val user: User
@@ -98,12 +64,7 @@ class HomeFragment : Fragment() {
             withContext(Dispatchers.Main) {
                 binding.myName.text = user.nickname
                 binding.myMotto.text = user.intro
-            }
-            // 画图
-
-            val bmp = downloadImage(user.avatar)
-            withContext(Dispatchers.Main) {
-                binding.myImage.setImageBitmap(bmp)
+                Glide.with(requireActivity()).load(user.avatar).placeholder(R.drawable.ic_baseline_account_circle_24).into(binding.myAvatar)
             }
         } catch (e: Throwable) {
             e.printStackTrace()
@@ -156,14 +117,5 @@ class HomeFragment : Fragment() {
             }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-
-
-
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-//        _binding = null
     }
 }

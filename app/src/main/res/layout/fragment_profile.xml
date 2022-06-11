@@ -164,7 +164,38 @@
         </LinearLayout>
         <TextView
             android:id="@+id/interval_4"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/profile_interval"
             android:layout_width="match_parent"/>
+        <LinearLayout
+            android:id="@+id/logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="?attr/colorSurface"
+            android:paddingVertical="@dimen/my_profile_gap"
+            android:layout_marginHorizontal="@dimen/profile_line_margin">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="@string/logout"
+                app:srcCompat="@drawable/ic_baseline_exit_to_app_24"
+                app:tint="#696969" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/profile_line_margin"
+                android:text="@string/logout"
+                android:layout_weight="1"
+                android:textSize="15sp"/>
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="197dp"
+                app:srcCompat="@drawable/ic_baseline_arrow_forward_ios_24"
+                app:tint="#A8A8A8" />
+        </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
