@@ -64,6 +64,8 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIServi
                 binding.audioPlayer.visibility = View.VISIBLE
                 binding.audioPlayer.apply {
                     disableNextPrevButtons()
+                    setProgressMessage(context.getString(R.string.loading))
+                    disableRepeatButton()
                     setPlaylistRepeat(false)
                     playAudioAfterPercent(10)
                     play(ArgAudio.createFromURL(
