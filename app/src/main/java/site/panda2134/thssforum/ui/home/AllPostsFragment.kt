@@ -33,19 +33,9 @@ class AllPostsFragment : Fragment() {
         // 把动态item中的每一项调用api填写
         api = APIService(requireActivity())
 
-        val recyclerLayoutManager = LinearLayoutManager(requireActivity())
         val adapter = PostListRecyclerViewAdapter(api, false)
-        adapter.fetchMorePosts()
         binding.allPostsList.adapter = adapter
-        binding.allPostsList.layoutManager = recyclerLayoutManager
-        binding.allPostsList.addOnScrollListener(object: RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (recyclerLayoutManager.findLastVisibleItemPosition() == (recyclerView.adapter?.itemCount ?: 0) - 1) { // last item
-                    (recyclerView.adapter as PostListRecyclerViewAdapter).fetchMorePosts()
-                }
-            }
-        })
+        adapter.setupRecyclerView(this.requireContext(), binding.allPostsList)
         return binding.root
     }
 }

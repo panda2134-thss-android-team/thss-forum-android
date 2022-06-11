@@ -4,7 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/drawable-v24/search_switch_change.xml" value="0.1755" />
+        <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/drawable/account_star.xml" value="0.173" />
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/drawable/ic_baseline_access_time_24.xml" value="0.1755" />
+        <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/drawable/ic_baseline_account_circle_24.xml" value="0.173" />
+        <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.173" />
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/drawable/ic_baseline_thumb_up_24.xml" value="0.1755" />
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout-w1240dp/activity_login.xml" value="0.2182061579651941" />
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout-w936dp/activity_login.xml" value="0.2546875" />

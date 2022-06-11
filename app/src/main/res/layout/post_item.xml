@@ -78,8 +78,13 @@
                 style="@style/TextAppearance.AppCompat.Body2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/post_item_inside_margin"
+                android:layout_marginVertical="@dimen/post_item_inside_margin"
                 tools:text="发布内容区域发布内容区域发布内容区域发布内容区域发布内容区域发布内容区域发布内容区域发布内容区域发布内容区域" />
+
+            <cn.bingoogolapple.photopicker.widget.BGANinePhotoLayout
+                android:id="@+id/post_images"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/location"

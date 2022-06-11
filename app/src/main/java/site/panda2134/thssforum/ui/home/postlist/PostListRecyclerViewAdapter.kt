@@ -1,7 +1,9 @@
 package site.panda2134.thssforum.ui.home.postlist
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -95,5 +97,28 @@ class PostListRecyclerViewAdapter(val api: APIService, val fetchFollowing: Boole
                 notifyItemInserted(posts.size)
             }
         }
+    }
+
+    fun setupRecyclerView (context: Context, recyclerView: RecyclerView) {
+        recyclerView.adapter = this
+        recyclerView.layoutManager = LinearLayoutManager(context)
+
+        registerAdapterDataObserver(object: RecyclerView.AdapterDataObserver() {
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                super.onItemRangeInserted(positionStart, itemCount)
+                if (positionStart == 0) {
+                    recyclerView.layoutManager!!.scrollToPosition(0)
+                }
+            }
+        })
+        fetchMorePosts()
+        recyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if ((recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition() == (recyclerView.adapter?.itemCount ?: 0) - 1) { // last item
+                    this@PostListRecyclerViewAdapter.fetchMorePosts()
+                }
+            }
+        })
     }
 }

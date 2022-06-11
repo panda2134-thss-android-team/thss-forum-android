@@ -2,13 +2,13 @@ package site.panda2134.thssforum
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 import site.panda2134.thssforum.api.APIService
 import site.panda2134.thssforum.databinding.ActivityMainBinding
 
@@ -18,6 +18,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val appLocale = LocaleListCompat.forLanguageTags("zh-CN")
+        AppCompatDelegate.setApplicationLocales(appLocale)
+
+
+
 
         val apiService = APIService(this)
         if (!apiService.isLoggedIn) {

@@ -12,26 +12,53 @@ import com.alibaba.sdk.android.oss.OSSClient
 import com.alibaba.sdk.android.oss.callback.OSSProgressCallback
 import com.alibaba.sdk.android.oss.common.auth.OSSStsTokenCredentialProvider
 import com.alibaba.sdk.android.oss.model.PutObjectRequest
-import com.github.kittinunf.fuel.core.FuelError
 import com.github.kittinunf.fuel.core.FuelManager
+import com.github.kittinunf.fuel.core.ResponseDeserializable
 import com.github.kittinunf.fuel.core.awaitUnit
 import com.github.kittinunf.fuel.core.extensions.authentication
 import com.github.kittinunf.fuel.core.interceptors.LogRequestAsCurlInterceptor
 import com.github.kittinunf.fuel.coroutines.awaitObject
 import com.github.kittinunf.fuel.gson.gsonDeserializer
 import com.github.kittinunf.fuel.gson.jsonBody
-import com.google.gson.Gson
+import com.google.gson.*
+import io.gsonfire.DateSerializationPolicy
+import io.gsonfire.GsonFireBuilder
 import kotlinx.coroutines.*
 import site.panda2134.thssforum.R
 import site.panda2134.thssforum.models.*
 import site.panda2134.thssforum.ui.LoginActivity
+import java.lang.reflect.Type
 import java.time.Instant
 import java.time.format.DateTimeParseException
 import java.util.*
 
+
 @Suppress("unused")
 class APIService(private val context: Context) {
     val noToken = "NO_TOKEN"
+    val gsonFireObject: Gson
+
+    init {
+        val gsonFireBuilder: GsonFireBuilder = GsonFireBuilder()
+            .dateSerializationPolicy(DateSerializationPolicy.rfc3339)
+        val gsonBuilder = gsonFireBuilder.createGsonBuilder()
+            .registerTypeAdapter(Instant::class.java, object: JsonDeserializer<Instant> {
+                override fun deserialize(
+                    json: JsonElement?,
+                    typeOfT: Type?,
+                    context: JsonDeserializationContext?
+                ): Instant {
+                    if (json !is JsonPrimitive || ! json.isString) {
+                        throw IllegalStateException("parsing Instant requires a string")
+                    }
+                    return Instant.parse(json.asString)
+                }
+
+            })
+        gsonFireObject = gsonBuilder.create()
+    }
+
+    inline fun <reified T: Any> gsonFireDeserializer(): ResponseDeserializable<T> = gsonDeserializer<T>(gsonFireObject)
 
     private var token: String
         get() = with(context) {
@@ -110,7 +137,7 @@ class APIService(private val context: Context) {
         fuel.get("/profile/following/")
             .authentication()
             .bearer(token)
-            .awaitObject(gsonDeserializer<ArrayList<User>>())
+            .awaitObject(gsonFireDeserializer<ArrayList<User>>())
 
 
     //获取当前用户被谁关注
@@ -118,7 +145,7 @@ class APIService(private val context: Context) {
         fuel.get("/profile/followers/")
             .authentication()
             .bearer(token)
-            .awaitObject(gsonDeserializer<ArrayList<User>>())
+            .awaitObject(gsonFireDeserializer<ArrayList<User>>())
 
 
     //增加当前用户关注的人
@@ -127,7 +154,7 @@ class APIService(private val context: Context) {
             .authentication()
             .bearer(token)
             .jsonBody(Uid(uid))
-            .awaitObject(gsonDeserializer<Uid>())
+            .awaitObject(gsonFireDeserializer<Uid>())
 
 
     //当前用户取消关注
@@ -143,7 +170,7 @@ class APIService(private val context: Context) {
         fuel.get("/profile/blacklist/")
             .authentication()
             .bearer(token)
-            .awaitObject(gsonDeserializer<ArrayList<User>>())
+            .awaitObject(gsonFireDeserializer<ArrayList<User>>())
 
 
     //新增黑名单用户
@@ -152,7 +179,7 @@ class APIService(private val context: Context) {
             .authentication()
             .bearer(token)
             .jsonBody(Uid(uid))
-            .awaitObject(gsonDeserializer<Uid>())
+            .awaitObject(gsonFireDeserializer<Uid>())
 
 
     //删除黑名单用户
@@ -168,7 +195,7 @@ class APIService(private val context: Context) {
         fuel.get("/users/$uid")
             .authentication()
             .bearer(token)
-            .awaitObject(gsonDeserializer<User>())
+            .awaitObject(gsonFireDeserializer<User>())
 
 
     //获得用户动态
@@ -183,7 +210,7 @@ class APIService(private val context: Context) {
         )
             .authentication()
             .bearer(token)
-            .awaitObject(gsonDeserializer<ArrayList<PostResponse>>())
+            .awaitObject(gsonFireDeserializer<ArrayList<PostResponse>>())
         return posts.map { postResponse ->
             MainScope().async(Dispatchers.IO) {
                 Post(this@APIService.getUserInfo(postResponse.by), PostContent.fromPostResponse(postResponse))
@@ -198,7 +225,7 @@ class APIService(private val context: Context) {
             .authentication()
             .bearer(token)
             .jsonBody(body)
-            .awaitObject(gsonDeserializer<User>())
+            .awaitObject(gsonFireDeserializer<User>())
 
 
     // 获取当前用户基本信息
@@ -206,21 +233,21 @@ class APIService(private val context: Context) {
         fuel.get("/profile")
             .authentication()
             .bearer(token)
-            .awaitObject(gsonDeserializer<User>())
+            .awaitObject(gsonFireDeserializer<User>())
 
 
     //注册用户
     suspend fun register(body: RegisterRequest) =
         fuel.post("/auth/register")
             .jsonBody(body)
-            .awaitObject(gsonDeserializer<Uid>())
+            .awaitObject(gsonFireDeserializer<Uid>())
 
 
     //登陆
     suspend fun login(body: LoginRequest): LoginResponse {
         val response = fuel.post("/auth/login")
             .jsonBody(body)
-            .awaitObject(gsonDeserializer<LoginResponse>())
+            .awaitObject(gsonFireDeserializer<LoginResponse>())
         token = response.token
         return response
     }
@@ -241,7 +268,7 @@ class APIService(private val context: Context) {
         fuel.get("/posts/$post_id/like")
             .authentication()
             .bearer(token)
-            .awaitObject(gsonDeserializer<NumOfLikesResponse>())
+            .awaitObject(gsonFireDeserializer<NumOfLikesResponse>())
 
 
     //给动态点赞
@@ -249,7 +276,7 @@ class APIService(private val context: Context) {
         fuel.post("/posts/$post_id/like")
             .authentication()
             .bearer(token)
-            .awaitObject(gsonDeserializer<NumOfLikesResponse>())
+            .awaitObject(gsonFireDeserializer<NumOfLikesResponse>())
 
 
     //取消自己的点赞
@@ -257,7 +284,7 @@ class APIService(private val context: Context) {
         fuel.delete("/posts/$post_id/like")
             .authentication()
             .bearer(token)
-            .awaitObject(gsonDeserializer<NumOfLikesResponse>())
+            .awaitObject(gsonFireDeserializer<NumOfLikesResponse>())
 
 
     //获得动态列表
@@ -276,7 +303,7 @@ class APIService(private val context: Context) {
         )
             .authentication()
             .bearer(token)
-            .awaitObject(gsonDeserializer<ArrayList<PostResponse>>())
+            .awaitObject(gsonFireDeserializer<ArrayList<PostResponse>>())
         return posts.map { postResponse ->
             scope.async(Dispatchers.IO) {
                 Post(this@APIService.getUserInfo(postResponse.by), PostContent.fromPostResponse(postResponse))
@@ -291,7 +318,7 @@ class APIService(private val context: Context) {
         fuel.get("/posts/$postId")
             .authentication()
             .bearer(token)
-            .awaitObject(gsonDeserializer<PostResponse>())
+            .awaitObject(gsonFireDeserializer<PostResponse>())
             .run {
                 Post(this@APIService.getUserInfo(by), PostContent.fromPostResponse(this))
             }
@@ -303,7 +330,7 @@ class APIService(private val context: Context) {
             .authentication()
             .bearer(token)
             .jsonBody(content)
-            .awaitObject(gsonDeserializer<NewPostResponse>())
+            .awaitObject(gsonFireDeserializer<NewPostResponse>())
 
 
     //修改动态
@@ -312,7 +339,7 @@ class APIService(private val context: Context) {
             .authentication()
             .bearer(token)
             .jsonBody(body)
-            .awaitObject(gsonDeserializer<PostResponse>())
+            .awaitObject(gsonFireDeserializer<PostResponse>())
 
 
     //删除动态
@@ -343,7 +370,7 @@ class APIService(private val context: Context) {
         )
             .authentication()
             .bearer(token)
-            .awaitObject(gsonDeserializer<ArrayList<CommentResponse>>())
+            .awaitObject(gsonFireDeserializer<ArrayList<CommentResponse>>())
             .map { commentResponse ->
                 scope.async(Dispatchers.IO) {
                     Comment(this@APIService.getUserInfo(commentResponse.by), commentResponse)
@@ -357,7 +384,7 @@ class APIService(private val context: Context) {
             .authentication()
             .bearer(token)
             .jsonBody(body)
-            .awaitObject(gsonDeserializer<NewCommentResponse>())
+            .awaitObject(gsonFireDeserializer<NewCommentResponse>())
 
 
     //获得评论详细信息
@@ -365,7 +392,7 @@ class APIService(private val context: Context) {
         fuel.get("/posts/$postId/comments/$commentId")
             .authentication()
             .bearer(token)
-            .awaitObject(gsonDeserializer<CommentResponse>())
+            .awaitObject(gsonFireDeserializer<CommentResponse>())
             .run {
                 Comment(this@APIService.getUserInfo(by), this)
             }
@@ -384,7 +411,7 @@ class APIService(private val context: Context) {
         fuel.post("/upload/token")
             .authentication()
             .bearer(token)
-            .awaitObject(gsonDeserializer<UploadTokenResponse>())
+            .awaitObject(gsonFireDeserializer<UploadTokenResponse>())
 
     suspend fun uploadFileToOSS(uri: Uri): Uri = this.uploadFileToOSS(uri, null)
 

@@ -19,9 +19,7 @@ class ProfileNotify : ActivityProfileItem() {
     }
 
     // activity的menubar
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        if (menu == null) return false
-
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.profile_notify_search, menu)
         return true
