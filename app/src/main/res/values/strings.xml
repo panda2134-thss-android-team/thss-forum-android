@@ -31,6 +31,7 @@
 
     <string name="pure_text">纯文字</string>
     <string name="text_pic_mix">图文混合</string>
+    <string name="normal">纯文字 和 图文混合</string>
     <string name="audio">音频</string>
     <string name="video">视频</string>
     <string name="all">全部</string>
@@ -52,6 +53,7 @@
     <string name="user_name">用户名</string>
     <string name="content">内容</string>
     <string name="title_name">动态名</string>
+    <string name="title_content">动态名称 或 内容</string>
     <string name="type">动态类型</string>
 
     <string name="likes">点赞</string>
@@ -71,4 +73,7 @@
     <string name="like_time_switch">动态展示顺序</string>
     <string name="search">搜索</string>
     <string name="notify">通知</string>
+    <string name="nickname">昵称</string>
+    <string name="intro">简介</string>
+
 </resources>

@@ -34,13 +34,9 @@ class DiscoverMenuSearch : AppCompatActivity() {
                     if (checked) {
                         // 全部
                     }
-                R.id.rb_pure_text ->
+                R.id.rb_normal ->
                     if (checked) {
-                        // 纯文字
-                    }
-                R.id.rb_text_pic_mix ->
-                    if (checked) {
-                        // 图文混合
+                        // 纯文字 和 图文混合
                     }
                 R.id.rb_audio ->
                     if (checked) {

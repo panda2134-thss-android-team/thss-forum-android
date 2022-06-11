@@ -40,8 +40,8 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
-        val apiService = APIService(this)
-        MainScope().launch { apiService.ensureLoggedIn() }
+//
+//        val apiService = APIService(this)
+//        MainScope().launch { apiService.ensureLoggedIn() }
     }
 }

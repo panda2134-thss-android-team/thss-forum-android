@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/medium_margin"
         android:textColor="@color/black"
-        android:hint="@string/title_name"
+        android:hint="@string/title_content"
         android:inputType="textLongMessage" />
     <EditText
         android:id="@+id/user_name"
@@ -22,14 +22,6 @@
         android:layout_marginHorizontal="@dimen/medium_margin"
         android:textColor="@color/black"
         android:hint="@string/user_name"
-        android:inputType="textLongMessage" />
-    <EditText
-        android:id="@+id/content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/medium_margin"
-        android:textColor="@color/black"
-        android:hint="@string/content"
         android:inputType="textLongMessage" />
     <TextView
         android:id="@+id/types"
@@ -53,15 +45,10 @@
             android:layout_height="wrap_content"
             android:text="@string/all" />
         <RadioButton
-            android:id="@+id/rb_pure_text"
+            android:id="@+id/rb_normal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/pure_text" />
-        <RadioButton
-            android:id="@+id/rb_text_pic_mix"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/text_pic_mix" />
+            android:text="@string/normal" />
         <RadioButton
             android:id="@+id/rb_audio"
             android:layout_width="wrap_content"
