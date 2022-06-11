@@ -22,9 +22,11 @@ class PostListRecyclerViewAdapter(val api: APIService, val fetchFollowing: Boole
     private val LIST_LOADING = 1
     private val LIST_END = 2
     private var fetchTillInstant: Instant = Instant.now()
-    private var ended: Boolean = false
     private val posts: ArrayList<Post> = arrayListOf()
     private val loadingLock = Mutex()
+
+    private fun isEnded() = ChronoUnit.DAYS.between(fetchTillInstant, Instant.now()) >= 7
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         return when(viewType) {
@@ -53,7 +55,7 @@ class PostListRecyclerViewAdapter(val api: APIService, val fetchFollowing: Boole
 
     override fun getItemViewType(position: Int): Int {
         return if (position == posts.size) {
-            if (ended) LIST_END
+            if (isEnded()) LIST_END
             else LIST_LOADING
         }
         else POST_ITEM
@@ -62,21 +64,28 @@ class PostListRecyclerViewAdapter(val api: APIService, val fetchFollowing: Boole
     fun fetchMorePosts () {
 
         val scope = MainScope()
-        ended = (ChronoUnit.DAYS.between(fetchTillInstant, Instant.now()) > 7)
-        if (!ended) {
+        if (!isEnded()) {
             scope.launch(Dispatchers.IO) {
                 loadingLock.withLock {
-                    val postsToAdd =
-                        api.getPosts(
+                    var postsToAdd: List<Post> = arrayListOf()
+                    while (!isEnded()) {
+                        postsToAdd = api.getPosts(
                             end = fetchTillInstant,
                             following = fetchFollowing,
                             scope = scope
                         )
-                    fetchTillInstant -= ChronoUnit.DAYS.duration // fetch 1 day each time
+                        fetchTillInstant -= ChronoUnit.DAYS.duration // fetch 1 day each time
+                        if (postsToAdd.isNotEmpty()) {
+                            break
+                        }
+                    }
                     val insertedAt = posts.size
                     posts.addAll(postsToAdd)
                     withContext(Dispatchers.Main) {
                         notifyItemRangeInserted(insertedAt, postsToAdd.size)
+                    }
+                    if (isEnded()) {
+                        fetchMorePosts()
                     }
                 }
             }
