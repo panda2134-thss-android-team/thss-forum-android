@@ -1,5 +1,18 @@
 package site.panda2134.thssforum.ui.profile
 
+import android.os.Bundle
+import android.text.Editable
+import android.view.View
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import site.panda2134.thssforum.api.APIService
+import site.panda2134.thssforum.api.downloadImage
+import site.panda2134.thssforum.databinding.ProfileEditMyProfileBinding
+import site.panda2134.thssforum.models.ModifyProfileRequest
+import site.panda2134.thssforum.models.User
+
 <<<<<<< HEAD
 import android.R
 import android.os.Bundle
@@ -53,12 +66,12 @@ class ProfileEditMyProfile : ActivityProfileItem() {
 
     private suspend fun EditUserInfo(apiService: APIService) {
         try {
-            var user: User
+            var user: ModifyProfileRequest
             user.nickname = binding.myName.text.toString()
             user.intro = binding.myIntro.text.toString()
             // TODO: 修改图片
 
-            apiService.modifyProfile(user.toJson())
+            apiService.modifyProfile(ModifyProfileRequest)
         } catch (e: Throwable) {
             e.printStackTrace()
         }
