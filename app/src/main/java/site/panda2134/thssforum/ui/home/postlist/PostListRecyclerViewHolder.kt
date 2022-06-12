@@ -2,6 +2,7 @@ package site.panda2134.thssforum.ui.home.postlist
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -17,13 +18,16 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import site.panda2134.thssforum.R
 import site.panda2134.thssforum.api.APIService
+import site.panda2134.thssforum.api.downloadImage
 import site.panda2134.thssforum.databinding.PostItemBinding
 import site.panda2134.thssforum.models.Post
 import site.panda2134.thssforum.models.PostType
+import site.panda2134.thssforum.models.User
 import java.util.*
 
 class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIService): RecyclerView.ViewHolder(binding.root), BGANinePhotoLayout.Delegate {
     private var post: Post? = null
+    private var post_id: String? = ""
 
     fun setPost(p: Post) {
         post = p
@@ -48,6 +52,7 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIServi
 
             binding.postTime.text = TimeAgo.using(it.toEpochMilli(), timeAgoMessages)
         }
+        post_id = p.postContent.id
         when(p.postContent.type) {
             PostType.normal -> {
                 val content = p.postContent.imageTextContent!!
@@ -85,6 +90,28 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIServi
             }
             else -> println("not implemented")
         }
+
+        val like_button = binding.likeButton
+        like_button.setOnClickListener() {
+            // 修改个人信息
+            MainScope().launch(Dispatchers.IO) {
+                likeOrCancelLike(api)
+            }
+        }
+
+    }
+
+    private suspend fun likeOrCancelLike(apiService: APIService) {
+//        try {
+//            val user: User = apiService.likeThisPost(post_id)
+//
+//            withContext(Dispatchers.Main) {
+//                binding.myName.text = user.nickname.toEditable()
+//                binding.myIntro.text = user.intro.toEditable()
+//            }
+//        } catch (e: Throwable) {
+//            e.printStackTrace()
+//        }
     }
 
     override fun onClickNinePhotoItem(

@@ -43,6 +43,8 @@
     <dimen name="profile_button_save_w">70dp</dimen>
     <dimen name="profile_button_save_ts">15sp</dimen><!--ts for text_size-->
 
+    <dimen name="image_border_w">1dp</dimen>
+
 
 
 </resources>

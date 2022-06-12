@@ -39,9 +39,4 @@ data class User (
     val avatar: String,
     @SerializedName("intro")
     val intro: String,
-<<<<<<< HEAD
 )
-=======
-)
-
->>>>>>> b4b450e45b368d43885bb35d9952a220dcd4308f

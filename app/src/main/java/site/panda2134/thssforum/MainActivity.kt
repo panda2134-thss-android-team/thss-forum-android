@@ -30,9 +30,6 @@ class MainActivity : AppCompatActivity() {
         val appLocale = LocaleListCompat.forLanguageTags("zh-CN")
         AppCompatDelegate.setApplicationLocales(appLocale)
 
-
-
-
         val apiService = APIService(this)
         if (!apiService.isLoggedIn) {
             apiService.gotoLoginActivity()
@@ -54,12 +51,12 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-        val apiService = APIService(this)
-        Log.d("MainActivity", "111")
-        this.lifecycleScope.launch(Dispatchers.IO) {
-            val loginResponse = apiService.login(LoginRequest(email = "user1@test.com", password = "password"))
-            Log.d("MainActivity", "token = ${loginResponse.token}, uid = ${loginResponse.uid}")
-        }
-        Log.d("MainActivity", "222")
+//        val apiService = APIService(this)
+//        Log.d("MainActivity", "111")
+//        this.lifecycleScope.launch(Dispatchers.IO) {
+//            val loginResponse = apiService.login(LoginRequest(email = "user1@test.com", password = "password"))
+//            Log.d("MainActivity", "token = ${loginResponse.token}, uid = ${loginResponse.uid}")
+//        }
+//        Log.d("MainActivity", "222")
     }
 }

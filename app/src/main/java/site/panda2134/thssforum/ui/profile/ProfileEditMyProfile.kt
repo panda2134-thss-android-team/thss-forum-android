@@ -2,7 +2,8 @@ package site.panda2134.thssforum.ui.profile
 
 import android.os.Bundle
 import android.text.Editable
-import android.view.View
+import android.widget.Toast
+import android.widget.Toast.makeText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -11,21 +12,6 @@ import site.panda2134.thssforum.api.APIService
 import site.panda2134.thssforum.api.downloadImage
 import site.panda2134.thssforum.databinding.ProfileEditMyProfileBinding
 import site.panda2134.thssforum.models.ModifyProfileRequest
-import site.panda2134.thssforum.models.User
-
-import android.R
-import android.os.Bundle
-import android.text.Editable
-import android.view.View
-import android.widget.Button
-import com.github.kittinunf.fuel.gson.gsonDeserializer
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import site.panda2134.thssforum.api.APIService
-import site.panda2134.thssforum.api.downloadImage
-import site.panda2134.thssforum.databinding.ProfileEditMyProfileBinding
 import site.panda2134.thssforum.models.User
 
 
@@ -48,14 +34,13 @@ class ProfileEditMyProfile : ActivityProfileItem() {
 
         val save_button = binding.saveButton
         save_button.setOnClickListener() {
-            fun onClick(v: View?) {
-                // 修改个人信息
-                val user: User
-                val api = APIService(this)
-                MainScope().launch(Dispatchers.IO) {
-                    EditUserInfo(apiService)
-                }
+            // 修改个人信息
+            val user: User
+            val api = APIService(this)
+            MainScope().launch(Dispatchers.IO) {
+                EditUserInfo(apiService)
             }
+            Toast.makeText(this, "保存成功", Toast.LENGTH_SHORT).show()
         }
 
     }
@@ -63,11 +48,9 @@ class ProfileEditMyProfile : ActivityProfileItem() {
     private suspend fun EditUserInfo(apiService: APIService) {
         try {
             var user: ModifyProfileRequest
-            user.nickname = binding.myName.text.toString()
-            user.intro = binding.myIntro.text.toString()
             // TODO: 修改图片
+            apiService.modifyProfile(ModifyProfileRequest(nickname=binding.myName.text.toString(),intro=binding.myIntro.text.toString()))
 
-            apiService.modifyProfile(ModifyProfileRequest)
         } catch (e: Throwable) {
             e.printStackTrace()
         }
