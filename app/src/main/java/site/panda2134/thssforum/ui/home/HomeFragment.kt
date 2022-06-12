@@ -43,6 +43,7 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+<<<<<<< HEAD
 //        val viewModel =
 //            ViewModelProvider(this).get(HomeViewModel::class.java)
 
@@ -54,6 +55,33 @@ class HomeFragment : Fragment() {
         MainScope().launch(Dispatchers.IO) {
             loadUserInfo(apiService)
         }
+=======
+        val viewModel =
+            ViewModelProvider(this).get(HomeViewModel::class.java)
+
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+
+        // CommentItem的// TODO:之后删
+        //TODO("dynamic loading of CommentItem")
+        // 建议：先做发帖的动态加载（每次加载一天动态，如果返回空，则加载一个星期，再不行就提示“只能查看近一周动态”）
+        // comment的动态加载不急着做
+//        dataset = dataSource.getPosts().toMutableList()
+//        binding.recyclerComments.adapter = CommentItemAdapter(dataset)
+//        binding.recyclerComments.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                super.onScrolled(recyclerView, dx, dy)
+//                if (!recyclerView.canScrollVertically(1)) {
+//                    if (dataSource.hasNextPage) {
+//                        Log.i("dataset", "loaded")
+//                        val oldLen = dataset.size
+//                        dataset.addAll(dataSource.getPosts())
+//                        recyclerView.adapter?.notifyItemInserted(oldLen)
+//                    }
+//                }
+//            }
+//        })
+        // CommentItem的
+>>>>>>> b4b450e45b368d43885bb35d9952a220dcd4308f
 
         return binding.root
     }

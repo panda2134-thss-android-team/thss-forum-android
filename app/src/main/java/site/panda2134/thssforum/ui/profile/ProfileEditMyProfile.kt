@@ -13,7 +13,6 @@ import site.panda2134.thssforum.databinding.ProfileEditMyProfileBinding
 import site.panda2134.thssforum.models.ModifyProfileRequest
 import site.panda2134.thssforum.models.User
 
-<<<<<<< HEAD
 import android.R
 import android.os.Bundle
 import android.text.Editable
@@ -26,9 +25,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import site.panda2134.thssforum.api.APIService
 import site.panda2134.thssforum.api.downloadImage
-=======
-import android.os.Bundle
->>>>>>> 1e5741329102017cc2283872557b4a0230693426
 import site.panda2134.thssforum.databinding.ProfileEditMyProfileBinding
 import site.panda2134.thssforum.models.User
 
