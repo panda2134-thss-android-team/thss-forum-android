@@ -22,24 +22,28 @@ import site.panda2134.thssforum.databinding.RecyclerItemLoadingBinding
 import site.panda2134.thssforum.models.Post
 import site.panda2134.thssforum.models.User
 import site.panda2134.thssforum.ui.utils.RecyclerItemLoadingViewHolder
+import java.lang.Integer.min
 import java.time.Instant
 import java.time.temporal.ChronoUnit
+import kotlin.math.max
 
 class PostListRecyclerViewAdapter(val api: APIService, val fetchFollowing: Boolean = false): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val POST_ITEM = 0
     private val LIST_LOADING = 1
     private val LIST_END = 2
-    private var fetchTillInstant: Instant = Instant.now()
     private var recyclerView: RecyclerView? = null
     private val posts: ArrayList<Post> = arrayListOf()
     private val loadingLock = Mutex()
+    private var isEnded = false
+    private val POSTS_PER_FETCH = 20
 
-    private fun isEnded() = ChronoUnit.DAYS.between(fetchTillInstant, Instant.now()) >= 7
+    var sortBy: APIService.PostsSortBy = APIService.PostsSortBy.Time
 
     fun refresh(finishCallback: ()->Unit = {}) {
+        val removeCount = posts.size
         posts.clear()
-        notifyItemRangeRemoved(0, itemCount - 1) // list-end!
-        fetchTillInstant = Instant.now()
+        notifyItemRangeRemoved(0, removeCount) // list-end!
+        isEnded = false
         fetchMorePosts(finishCallback)
     }
 
@@ -53,10 +57,8 @@ class PostListRecyclerViewAdapter(val api: APIService, val fetchFollowing: Boole
                         notifyItemRemoved(bindingAdapterPosition)
                     }
                 }
-            LIST_END ->
-                RecyclerItemLoadingViewHolder(RecyclerItemLoadingBinding.inflate(layoutInflater, parent, false)).apply { setNoContent("只展示近14天动态") }
-            LIST_LOADING ->
-                RecyclerItemLoadingViewHolder(RecyclerItemLoadingBinding.inflate(layoutInflater, parent, false)).apply { setLoading() }
+            in listOf(LIST_END, LIST_LOADING) ->
+                RecyclerItemLoadingViewHolder(RecyclerItemLoadingBinding.inflate(layoutInflater, parent, false))
             else -> throw IllegalArgumentException("Unknown view type")
         }
     }
@@ -66,6 +68,14 @@ class PostListRecyclerViewAdapter(val api: APIService, val fetchFollowing: Boole
             POST_ITEM -> {
                 if(holder !is PostListRecyclerViewHolder) return
                 holder.setPost(posts[position])
+            }
+            LIST_END -> {
+                if(holder !is RecyclerItemLoadingViewHolder) return
+                holder.setNoContent()
+            }
+            LIST_LOADING -> {
+                if(holder !is RecyclerItemLoadingViewHolder) return
+                holder.setLoading()
             }
         }
     }
@@ -77,13 +87,11 @@ class PostListRecyclerViewAdapter(val api: APIService, val fetchFollowing: Boole
         }
     }
 
-    override fun getItemCount(): Int {
-        return posts.size + 1
-    }
+    override fun getItemCount() = posts.size + 1
 
     override fun getItemViewType(position: Int): Int {
         return if (position == posts.size) {
-            if (isEnded()) LIST_END
+            if (isEnded) LIST_END
             else LIST_LOADING
         }
         else POST_ITEM
@@ -91,36 +99,30 @@ class PostListRecyclerViewAdapter(val api: APIService, val fetchFollowing: Boole
 
     @SuppressLint("NotifyDataSetChanged")
     fun fetchMorePosts (finishCallback: ()->Unit = {}) {
-
         val scope = MainScope()
-        if (!isEnded()) {
+        if (!isEnded) {
             scope.launch(Dispatchers.IO) {
                 loadingLock.withLock {
-                    var postsToAdd: List<Post> = arrayListOf()
-                    while (!isEnded()) {
-                        postsToAdd = api.getPosts(
-                            end = fetchTillInstant,
-                            following = fetchFollowing,
-                            scope = scope
-                        )
-                        fetchTillInstant -= ChronoUnit.DAYS.duration // fetch 1 day each time
-                        if (postsToAdd.isNotEmpty()) {
-                            break
-                        }
+                    val initial = posts.size == 0
+                    var postsToAdd: List<Post> = api.getPosts( // +1 is necessary!
+                        skip = posts.size, limit = POSTS_PER_FETCH + 1, following = fetchFollowing, scope = scope,
+                        sortBy = sortBy
+                    )
+                    val insertedAt = posts.size
+                    if (postsToAdd.size <= POSTS_PER_FETCH) {
+                        isEnded = true
                     }
-                    val  insertedAt = posts.size
-                    posts.addAll(postsToAdd)
+                    postsToAdd = postsToAdd.subList(0, min(POSTS_PER_FETCH, postsToAdd.size))
+                    posts.addAll(insertedAt, postsToAdd)
                     withContext(Dispatchers.Main) {
-                        if (posts.size == postsToAdd.size) { // initial
+                        if (initial) { // initial
                             notifyDataSetChanged()
                         } else {
-                            // TODO: fix crashes caused by these
-//                            notifyItemRangeInserted(insertedAt, postsToAdd.size)
-                            notifyDataSetChanged()
+                            notifyItemRangeInserted(insertedAt, postsToAdd.size)
                         }
-                    }
-                    if (isEnded()) {
-                        fetchMorePosts()
+                        if (isEnded) {
+                            notifyItemChanged(posts.size)
+                        }
                     }
                 }
                 withContext(Dispatchers.IO) {
@@ -128,10 +130,7 @@ class PostListRecyclerViewAdapter(val api: APIService, val fetchFollowing: Boole
                 }
             }
         } else {
-            // TODO: fix crashes caused by these
-//                notifyItemRemoved(posts.size)
-//                notifyItemInserted(posts.size)
-                notifyDataSetChanged()
+            notifyItemChanged(posts.size)
             finishCallback()
         }
     }

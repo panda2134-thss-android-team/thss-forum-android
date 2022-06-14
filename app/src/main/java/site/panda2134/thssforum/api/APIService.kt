@@ -31,6 +31,7 @@ import java.lang.reflect.Type
 import java.time.Instant
 import java.time.format.DateTimeParseException
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 @Suppress("unused")
@@ -300,10 +301,19 @@ class APIService(private val context: Context) {
             .awaitObject(gsonFireDeserializer<NumOfLikesResponse>())
 
 
+    enum class PostsSortBy(val value: String) {
+        Time("time"),
+        Like("like")
+    }
+
     //获得动态列表
     suspend fun getPosts(
         start: Instant? = null,
         end: Instant? = null,
+        sortBy: PostsSortBy = PostsSortBy.Time,
+        skip: Int? = null,
+        limit: Int? = null,
+        types: List<PostType> = PostType.values().toList(),
         following: Boolean = false,
         scope: CoroutineScope = MainScope()
     ): List<Post> {
@@ -312,7 +322,11 @@ class APIService(private val context: Context) {
             listOf(
                 "start" to start?.toString(),
                 "end" to end?.toString(),
+                "sort_by" to sortBy.value,
+                "skip" to skip,
+                "limit" to limit
             ) + (if (following) listOf("following" to "True") else listOf())
+              + types.map { "type" to it.value }
         )
             .authentication()
             .bearer(token)
@@ -363,7 +377,7 @@ class APIService(private val context: Context) {
             .awaitUnit()
     }
 
-    enum class SortBy(val value: String) {
+    enum class CommentSortBy(val value: String) {
         NEWEST_FIRST("newest"),
         OLDEST_FIRST("oldest")
     }
@@ -374,7 +388,7 @@ class APIService(private val context: Context) {
         postId: String,
         skip: Int? = null,
         limit: Int? = null,
-        sortBy: SortBy? = SortBy.NEWEST_FIRST,
+        sortBy: CommentSortBy? = CommentSortBy.NEWEST_FIRST,
         scope: CoroutineScope = MainScope()
         ) =
         fuel.get(
