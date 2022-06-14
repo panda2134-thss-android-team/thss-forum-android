@@ -111,9 +111,13 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIServi
         binding.likeButton.setOnClickListener {
             MainScope().launch(Dispatchers.IO) {
                 try {
-                    val likeNum = api.likeThisPost(p.postContent.id!!)
+                    val likeNum = if (binding.likeButton.isChecked) {
+                        api.likeThisPost(p.postContent.id!!).count
+                    } else {
+                        api.unlikeThisPost(p.postContent.id!!).count
+                    }
                     withContext(Dispatchers.Main) {
-                        binding.likeNum.text = likeNum.count.toString()
+                        binding.likeNum.text = likeNum.toString()
                     }
                 } catch (e: Throwable) {
                     e.printStackTrace()

@@ -172,8 +172,8 @@
                 <ToggleButton
                     android:id="@+id/like_button"
                     app:layout_constraintEnd_toStartOf="@+id/comment_button"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:contentDescription="@string/likes"
                     android:textOn=""
                     android:textOff=""
@@ -185,8 +185,8 @@
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/comment_button"
-                    android:layout_width="20dp"
-                    android:layout_height="15dp"
+                    android:layout_width="24dp"
+                    android:layout_height="20dp"
                     app:cardBackgroundColor="@color/click_to_like_bg"
                     app:cardCornerRadius="3dp"
                     app:layout_constraintEnd_toStartOf="@+id/share_button"
@@ -196,8 +196,8 @@
                     tools:ignore="MissingConstraints">
 
                     <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:layout_gravity="center"
                         android:contentDescription="@string/drafts"
                         app:srcCompat="@drawable/to_like_dots"

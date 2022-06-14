@@ -268,7 +268,7 @@ class APIService(private val context: Context) {
         fuel.get("/posts/$post_id/like")
             .authentication()
             .bearer(token)
-            .awaitObject(gsonFireDeserializer<NumOfLikesResponse>())
+            .awaitObject(gsonFireDeserializer<LikeStatisticsResponse>())
 
 
     //给动态点赞
