@@ -4,6 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.VideoView
+import androidx.core.view.children
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
@@ -12,6 +15,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import site.panda2134.thssforum.R
 import site.panda2134.thssforum.api.APIService
 import site.panda2134.thssforum.databinding.PostItemBinding
 import site.panda2134.thssforum.databinding.RecyclerItemLoadingBinding
@@ -134,6 +138,11 @@ class PostListRecyclerViewAdapter(val api: APIService, val fetchFollowing: Boole
                 super.onScrolled(recyclerView, dx, dy)
                 if ((recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition() == (recyclerView.adapter?.itemCount ?: 0) - 1) { // last item
                     this@PostListRecyclerViewAdapter.fetchMorePosts()
+                }
+                for (index in 0..itemCount) {
+                    val holder = recyclerView.findViewHolderForAdapterPosition(index) ?: continue
+                    if (holder !is PostListRecyclerViewHolder) continue
+                    holder.mediaController?.hide()
                 }
             }
         })

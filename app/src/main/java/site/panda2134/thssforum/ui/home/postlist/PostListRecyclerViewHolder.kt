@@ -26,6 +26,8 @@ import java.util.*
 
 class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIService): RecyclerView.ViewHolder(binding.root), BGANinePhotoLayout.Delegate {
     private var post: Post? = null
+    var mediaController: MediaController? = null
+        private set
 
     fun setPost(p: Post) {
         post = p
@@ -41,6 +43,12 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIServi
 
         Glide.with(binding.root).load(p.author.avatar).placeholder(R.drawable.ic_baseline_account_circle_24).into(binding.userAvatar)
         binding.userName.text = p.author.nickname
+        binding.postDelete.visibility =
+            if (p.author.uid == api.currentUserId) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
         p.postContent.location?.let {
             binding.location.text = it.description
         }
@@ -61,7 +69,7 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIServi
                 binding.postContent.visibility = View.VISIBLE
                 binding.postImages.visibility = View.VISIBLE
                 binding.audioPlayer.visibility = View.GONE
-                binding.videoPlayer.visibility = View.GONE
+                binding.videoPlayerWrapper.visibility = View.GONE
                 binding.postImages.data = content.images
                 binding.postImages.setDelegate(this)
             }
@@ -71,7 +79,7 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIServi
                 binding.postContent.visibility = View.GONE
                 binding.postImages.visibility = View.GONE
                 binding.audioPlayer.visibility = View.VISIBLE
-                binding.videoPlayer.visibility = View.GONE
+                binding.videoPlayerWrapper.visibility = View.GONE
                 binding.audioPlayer.apply {
                     disableNextPrevButtons()
                     setProgressMessage(context.getString(R.string.loading))
@@ -98,12 +106,12 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIServi
                 binding.postContent.visibility = View.GONE
                 binding.postImages.visibility = View.GONE
                 binding.audioPlayer.visibility = View.GONE
-                binding.videoPlayer.visibility = View.VISIBLE
+                binding.videoPlayerWrapper.visibility = View.VISIBLE
                 binding.videoPlayer.setVideoURI(Uri.parse(content.media[0]))
                 binding.videoPlayer.seekTo(1)
 
-                val mediaController = MediaController(binding.videoPlayerWrapper.context)
-                mediaController.setAnchorView(binding.videoPlayer)
+                mediaController = MediaController(binding.videoPlayerWrapper.context)
+                mediaController!!.setAnchorView(binding.videoPlayer)
                 binding.videoPlayer.setMediaController(mediaController)
             }
         }

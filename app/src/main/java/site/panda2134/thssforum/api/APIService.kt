@@ -72,6 +72,18 @@ class APIService(private val context: Context) {
                 apply()
             }
         }
+    var currentUserId: String
+        get() = with(context) {
+            val pref = getSharedPreferences(getString(R.string.GLOBAL_SHARED_PREF), MODE_PRIVATE)
+            return pref.getString(getString(R.string.PREF_KEY_UID), "").toString() // don't use an empty string, avoiding 400
+        }
+        private set(it) = with(context) {
+            val pref = getSharedPreferences(getString(R.string.GLOBAL_SHARED_PREF), MODE_PRIVATE)
+            with(pref.edit()) {
+                this.putString(context.getString(R.string.PREF_KEY_UID), it)
+                apply()
+            }
+        }
     val isLoggedIn: Boolean get() = (token != noToken)
     private var ossToken: UploadTokenResponse? = null
 
@@ -249,6 +261,7 @@ class APIService(private val context: Context) {
             .jsonBody(body)
             .awaitObject(gsonFireDeserializer<LoginResponse>())
         token = response.token
+        currentUserId = response.uid
         return response
     }
 
