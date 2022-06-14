@@ -95,7 +95,9 @@ class PostListRecyclerViewAdapter(val api: APIService, val fetchFollowing: Boole
                         if (posts.size == postsToAdd.size) { // initial
                             notifyDataSetChanged()
                         } else {
-                            notifyItemRangeInserted(insertedAt, postsToAdd.size)
+                            // TODO: fix crashes caused by these
+//                            notifyItemRangeInserted(insertedAt, postsToAdd.size)
+                            notifyDataSetChanged()
                         }
                     }
                     if (isEnded()) {
@@ -105,8 +107,10 @@ class PostListRecyclerViewAdapter(val api: APIService, val fetchFollowing: Boole
             }
         } else {
             MainScope().launch {
-                notifyItemRemoved(posts.size)
-                notifyItemInserted(posts.size)
+//                notifyItemRemoved(posts.size)
+//                notifyItemInserted(posts.size)
+
+                notifyDataSetChanged()
             }
         }
     }

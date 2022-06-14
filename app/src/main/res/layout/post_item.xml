@@ -82,18 +82,38 @@
                 tools:text="发布内容区域发布内容区域发布内容区域发布内容区域发布内容区域发布内容区域发布内容区域发布内容区域发布内容区域" />
 
 
+            <!--图片动态-->
             <cn.bingoogolapple.photopicker.widget.BGANinePhotoLayout
                 android:id="@+id/post_images"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
+            <!--音频动态-->
             <com.arges.sepan.argmusicplayer.PlayerViews.ArgPlayerSmallView
                 android:id="@+id/audio_player"
                 android:visibility="gone"
                 tools:visibility="visible"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                />
+                >
+
+            </com.arges.sepan.argmusicplayer.PlayerViews.ArgPlayerSmallView>
+
+            <LinearLayout
+                android:id="@+id/video_player_wrapper"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/post_item_inside_margin"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <VideoView
+                    android:id="@+id/video_player"
+                    android:keepScreenOn="true"
+                    tools:layout_height="200dp"
+                    tools:layout_width="250dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="200dp" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/location"
@@ -101,10 +121,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/post_item_inside_margin"
-                tools:text="北京市 · 清华大学李文正馆"
-                android:textColor="@color/click_blue"
                 android:gravity="center_vertical"
-                tools:ignore="MissingConstraints" />
+                android:textColor="@color/click_blue"
+                tools:ignore="MissingConstraints"
+                tools:text="北京市 · 清华大学李文正馆" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"

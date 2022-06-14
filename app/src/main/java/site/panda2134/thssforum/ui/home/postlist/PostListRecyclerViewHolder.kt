@@ -1,7 +1,9 @@
 package site.panda2134.thssforum.ui.home.postlist
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.MediaController
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -53,7 +55,10 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIServi
                 val content = p.postContent.imageTextContent!!
                 binding.postTitle.text = content.title
                 binding.postContent.text = content.text
+                binding.postImages.visibility = View.VISIBLE
+                binding.postContent.visibility = View.VISIBLE
                 binding.audioPlayer.visibility = View.GONE
+                binding.videoPlayer.visibility = View.GONE
                 binding.postImages.data = content.images
                 binding.postImages.setDelegate(this)
             }
@@ -62,6 +67,7 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIServi
                 binding.postTitle.text = content.title
                 binding.postContent.visibility = View.GONE
                 binding.audioPlayer.visibility = View.VISIBLE
+                binding.videoPlayer.visibility = View.GONE
                 binding.audioPlayer.apply {
                     disableNextPrevButtons()
                     setProgressMessage(context.getString(R.string.loading))
@@ -83,7 +89,21 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIServi
                 }
                 binding.postImages.visibility = View.GONE
             }
-            else -> println("not implemented")
+            PostType.video -> {
+                val content = p.postContent.mediaContent!!
+                binding.postTitle.text = content.title
+                binding.postContent.visibility = View.GONE
+                binding.postImages.visibility = View.GONE
+                binding.audioPlayer.visibility = View.GONE
+                binding.videoPlayer.visibility = View.VISIBLE
+                binding.videoPlayer.setVideoURI(Uri.parse(content.media[0]))
+                binding.videoPlayer.setZOrderOnTop(true)
+                binding.videoPlayer.seekTo(1)
+
+                val mediaController = MediaController(binding.videoPlayerWrapper.context)
+                mediaController.setAnchorView(binding.videoPlayer)
+                binding.videoPlayer.setMediaController(mediaController)
+            }
         }
     }
 
