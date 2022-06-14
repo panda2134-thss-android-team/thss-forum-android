@@ -97,7 +97,7 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIServi
                 binding.audioPlayer.visibility = View.GONE
                 binding.videoPlayer.visibility = View.VISIBLE
                 binding.videoPlayer.setVideoURI(Uri.parse(content.media[0]))
-                binding.videoPlayer.setZOrderOnTop(true)
+//                binding.videoPlayer.setZOrderOnTop(true)
                 binding.videoPlayer.seekTo(1)
 
                 val mediaController = MediaController(binding.videoPlayerWrapper.context)

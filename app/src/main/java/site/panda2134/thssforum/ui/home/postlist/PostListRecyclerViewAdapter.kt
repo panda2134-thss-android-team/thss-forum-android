@@ -55,6 +55,7 @@ class PostListRecyclerViewAdapter(val api: APIService, val fetchFollowing: Boole
     override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
         if (holder is PostListRecyclerViewHolder) {
             holder.binding.audioPlayer.pause()
+            holder.binding.videoPlayer.pause()
         }
     }
 
@@ -89,7 +90,7 @@ class PostListRecyclerViewAdapter(val api: APIService, val fetchFollowing: Boole
                             break
                         }
                     }
-                    val insertedAt = posts.size
+                    val  insertedAt = posts.size
                     posts.addAll(postsToAdd)
                     withContext(Dispatchers.Main) {
                         if (posts.size == postsToAdd.size) { // initial
