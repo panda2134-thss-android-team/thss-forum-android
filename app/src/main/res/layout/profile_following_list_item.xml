@@ -13,6 +13,8 @@
             android:id="@+id/following_avatar"
             android:layout_width="@dimen/interest_list_pic"
             android:layout_height="@dimen/interest_list_pic"
+            android:background="@drawable/image_border"
+            android:padding="@dimen/image_border_w"
             />
             <TextView
                 android:id="@+id/following_nickname"

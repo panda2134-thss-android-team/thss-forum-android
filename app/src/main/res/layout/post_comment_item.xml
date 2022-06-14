@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:id="@+id/comment_item"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
     <TextView
         android:id="@+id/interval"
@@ -19,9 +20,9 @@
             android:layout_width="@dimen/commenter_pic"
             android:layout_height="@dimen/commenter_pic"
             android:contentDescription="@string/drafts"
-            app:srcCompat="@drawable/text_box_edit_outline"
-            android:background="@color/purple_200"
-            app:tint="#FFFFFF" />
+            tools:srcCompat="@drawable/text_box_edit_outline"
+            android:background="@drawable/image_border"
+            android:padding="@dimen/image_border_w"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

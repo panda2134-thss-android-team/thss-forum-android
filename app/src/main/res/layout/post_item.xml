@@ -19,7 +19,9 @@
             tools:src="@drawable/text_box_edit_outline"
             tools:tint="?colorPrimary"
             android:layout_width="50dp"
-            android:layout_height="50dp"/>
+            android:layout_height="50dp"
+            android:background="@drawable/image_border"
+            android:padding="@dimen/image_border_w"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -167,11 +169,23 @@
                     android:layout_marginEnd="@dimen/post_item_inside_margin"
                     app:tint="#708090"/>
 
-                <androidx.cardview.widget.CardView
+                <ImageView
                     android:id="@+id/like_button"
+                    app:layout_constraintEnd_toStartOf="@+id/comment_button"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:contentDescription="@string/drafts"
+                    app:srcCompat="@drawable/cancel_like"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginEnd="@dimen/post_item_inside_margin"
+                    app:tint="#708090"/>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/comment_button"
                     android:layout_width="20dp"
                     android:layout_height="15dp"
-                    android:layout_marginBottom="3dp"
                     app:cardBackgroundColor="@color/click_to_like_bg"
                     app:cardCornerRadius="3dp"
                     app:layout_constraintEnd_toStartOf="@+id/share_button"

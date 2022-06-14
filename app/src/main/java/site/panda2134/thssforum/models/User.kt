@@ -14,9 +14,15 @@ package site.panda2134.thssforum.models
 
 import com.google.gson.annotations.SerializedName
 /**
+<<<<<<< HEAD
  *
  * @param uid
  * @param nickname
+=======
+ * 
+ * @param uid 
+ * @param nickname 
+>>>>>>> b4b450e45b368d43885bb35d9952a220dcd4308f
  * @param email
  * @param avatar
  * @param intro

@@ -4,8 +4,8 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.*
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import site.panda2134.thssforum.R
 import site.panda2134.thssforum.api.APIService
+import site.panda2134.thssforum.api.downloadImage
 import site.panda2134.thssforum.data.CommentItemDataSource
 import site.panda2134.thssforum.databinding.FragmentHomeBinding
 import site.panda2134.thssforum.models.CommentResponse
@@ -22,6 +23,7 @@ import site.panda2134.thssforum.models.User
 class HomeFragment : Fragment() {
     private lateinit var tabAdapter: TabAdapter
     private lateinit var binding: FragmentHomeBinding
+    private lateinit var api: APIService
 
     // CommentItem的// TODO:之后删
     private val hasNext = true
@@ -32,6 +34,9 @@ class HomeFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private var bitmap: Bitmap? = null
+
+    private var is_time_seq = true // 右上角的展示顺序：默认是时间顺序
+    private var menu: Menu? = null
 
 
     override fun onCreateView(
@@ -45,27 +50,31 @@ class HomeFragment : Fragment() {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         // 载入顶部：我的头像、昵称和简介
-        val user: User
-        val apiService = APIService(requireActivity())
+        api = APIService(requireActivity())
         MainScope().launch(Dispatchers.IO) {
-            loadUserInfo(apiService)
+            loadUserInfo()
         }
 
         return binding.root
     }
 
-    private suspend fun loadUserInfo(apiService: APIService) {
+    private suspend fun loadUserInfo() {
         try {
-            val user: User = apiService.getProfile()
+            val user: User = api.getProfile()
             withContext(Dispatchers.Main) {
                 binding.myName.text = user.nickname
                 binding.myMotto.text = user.intro
-                Glide.with(requireActivity()).load(user.avatar).placeholder(R.drawable.ic_baseline_account_circle_24).into(binding.myAvatar)
+            }
+            // 画图
+            val bmp = downloadImage(user.avatar)
+            withContext(Dispatchers.Main) {
+                binding.myAvatar.setImageBitmap(bmp)
             }
         } catch (e: Throwable) {
             e.printStackTrace()
         }
     }
+
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -89,13 +98,25 @@ class HomeFragment : Fragment() {
     // 之后写点击事件的时候，直接对应重载就可以了
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.discover_searchswitch_menuicon, menu)
+        this.menu = menu
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.add_search_menu_item -> {
+            R.id.search_menu_item -> {
                 val intent = Intent(activity, DiscoverMenuSearch::class.java)
                 startActivity(intent)
+                true
+            }
+            R.id.seq_menu_item -> {
+                if(is_time_seq) {
+                    is_time_seq = false
+                    menu?.getItem(1)?.icon = ContextCompat.getDrawable(requireActivity(), R.drawable.ic_baseline_access_time_24);
+                }
+                else {
+                    is_time_seq = true
+                    menu?.getItem(1)?.icon = (ContextCompat.getDrawable(requireActivity(), R.drawable.ic_baseline_thumb_up_24));
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)

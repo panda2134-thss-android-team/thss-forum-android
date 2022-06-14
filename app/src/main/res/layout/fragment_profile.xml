@@ -27,7 +27,9 @@
                 android:layout_width="@dimen/my_pic"
                 android:layout_height="@dimen/my_pic"
                 android:contentDescription="@string/drafts"
-                tools:background="@color/click_blue" />
+                tools:background="@color/click_blue"
+                android:background="@drawable/image_border"
+                android:padding="@dimen/image_border_w"/>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

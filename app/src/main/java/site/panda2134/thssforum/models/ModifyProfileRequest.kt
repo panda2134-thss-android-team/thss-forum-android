@@ -18,6 +18,7 @@ import com.google.gson.annotations.SerializedName
  * @param nickname 
  * @param email 
  * @param avatar URL只能以本站允许域名开头
+ * @param intro
  */
 
 data class ModifyProfileRequest (
@@ -27,6 +28,8 @@ data class ModifyProfileRequest (
     val email: String? = null,
     /* URL只能以本站允许域名开头 */
     @SerializedName("avatar")
-    val avatar: String? = null
+    val avatar: String? = null,
+    @SerializedName("intro")
+    val intro: String? = null
 )
 

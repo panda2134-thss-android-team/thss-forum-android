@@ -4,6 +4,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.MediaController
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -55,10 +56,7 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIServi
                 val content = p.postContent.imageTextContent!!
                 binding.postTitle.text = content.title
                 binding.postContent.text = content.text
-                binding.postImages.visibility = View.VISIBLE
-                binding.postContent.visibility = View.VISIBLE
                 binding.audioPlayer.visibility = View.GONE
-                binding.videoPlayer.visibility = View.GONE
                 binding.postImages.data = content.images
                 binding.postImages.setDelegate(this)
             }
@@ -67,7 +65,6 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIServi
                 binding.postTitle.text = content.title
                 binding.postContent.visibility = View.GONE
                 binding.audioPlayer.visibility = View.VISIBLE
-                binding.videoPlayer.visibility = View.GONE
                 binding.audioPlayer.apply {
                     disableNextPrevButtons()
                     setProgressMessage(context.getString(R.string.loading))
@@ -105,6 +102,23 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIServi
                 binding.videoPlayer.setMediaController(mediaController)
             }
         }
+
+        binding.likeButton.setOnClickListener() {
+            // 修改个人信息
+            MainScope().launch(Dispatchers.IO) {
+                try {
+                    val user: User = apiService.likeThisPost(post_id)
+
+                    withContext(Dispatchers.Main) {
+                        binding.myName.text = user.nickname.toEditable()
+                        binding.myIntro.text = user.intro.toEditable()
+                    }
+                } catch (e: Throwable) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
     }
 
     override fun onClickNinePhotoItem(
