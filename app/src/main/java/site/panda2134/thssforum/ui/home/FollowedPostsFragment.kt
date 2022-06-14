@@ -18,7 +18,7 @@ class FollowedPostsFragment: Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentFollowedPostsBinding.inflate(inflater, container, false)
 
         // 把动态item中的每一项调用api填写
@@ -27,6 +27,11 @@ class FollowedPostsFragment: Fragment() {
         val adapter = PostListRecyclerViewAdapter(api, true)
         binding.followedPostsList.adapter = adapter
         adapter.setupRecyclerView(this.requireContext(), binding.followedPostsList)
+        binding.root.setOnRefreshListener {
+            adapter.refresh {
+                binding.root.isRefreshing = false
+            }
+        }
         return binding.root
     }
 }

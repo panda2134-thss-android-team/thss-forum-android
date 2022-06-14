@@ -20,6 +20,7 @@ import site.panda2134.thssforum.api.APIService
 import site.panda2134.thssforum.databinding.PostItemBinding
 import site.panda2134.thssforum.databinding.RecyclerItemLoadingBinding
 import site.panda2134.thssforum.models.Post
+import site.panda2134.thssforum.models.User
 import site.panda2134.thssforum.ui.utils.RecyclerItemLoadingViewHolder
 import java.time.Instant
 import java.time.temporal.ChronoUnit
@@ -29,16 +30,29 @@ class PostListRecyclerViewAdapter(val api: APIService, val fetchFollowing: Boole
     private val LIST_LOADING = 1
     private val LIST_END = 2
     private var fetchTillInstant: Instant = Instant.now()
+    private var recyclerView: RecyclerView? = null
     private val posts: ArrayList<Post> = arrayListOf()
     private val loadingLock = Mutex()
 
     private fun isEnded() = ChronoUnit.DAYS.between(fetchTillInstant, Instant.now()) >= 7
 
+    fun refresh(finishCallback: ()->Unit = {}) {
+        posts.clear()
+        notifyItemRangeRemoved(0, itemCount - 1) // list-end!
+        fetchTillInstant = Instant.now()
+        fetchMorePosts(finishCallback)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         return when(viewType) {
             POST_ITEM ->
-                PostListRecyclerViewHolder(PostItemBinding.inflate(layoutInflater, parent, false), api)
+                PostListRecyclerViewHolder(PostItemBinding.inflate(layoutInflater, parent, false), api).apply {
+                    onDeleteCallback = { _, bindingAdapterPosition ->
+                        posts.removeAt(bindingAdapterPosition)
+                        notifyItemRemoved(bindingAdapterPosition)
+                    }
+                }
             LIST_END ->
                 RecyclerItemLoadingViewHolder(RecyclerItemLoadingBinding.inflate(layoutInflater, parent, false)).apply { setNoContent("只展示近14天动态") }
             LIST_LOADING ->
@@ -76,7 +90,7 @@ class PostListRecyclerViewAdapter(val api: APIService, val fetchFollowing: Boole
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun fetchMorePosts () {
+    fun fetchMorePosts (finishCallback: ()->Unit = {}) {
 
         val scope = MainScope()
         if (!isEnded()) {
@@ -109,18 +123,21 @@ class PostListRecyclerViewAdapter(val api: APIService, val fetchFollowing: Boole
                         fetchMorePosts()
                     }
                 }
+                withContext(Dispatchers.IO) {
+                    finishCallback()
+                }
             }
         } else {
-            MainScope().launch {
+            // TODO: fix crashes caused by these
 //                notifyItemRemoved(posts.size)
 //                notifyItemInserted(posts.size)
-
                 notifyDataSetChanged()
-            }
+            finishCallback()
         }
     }
 
     fun setupRecyclerView (context: Context, recyclerView: RecyclerView) {
+        this.recyclerView = recyclerView
         recyclerView.adapter = this
         recyclerView.layoutManager = LinearLayoutManager(context)
 

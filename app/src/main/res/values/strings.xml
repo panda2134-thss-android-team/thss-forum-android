@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">THSSForum</string>
 
-    <string name="OSS_ENDPOINT">oss-cn-beijing.aliyuncs.com</string>
-    <string name="OSS_BUCKET_DOMAIN">thssforum.oss-cn-beijing.aliyuncs.com</string>
-    <string name="OSS_BUCKET">thssforum</string>
+    <string name="OSS_ENDPOINT" translatable="false">oss-cn-beijing.aliyuncs.com</string>
+    <string name="OSS_BUCKET_DOMAIN" translatable="false">thssforum.oss-cn-beijing.aliyuncs.com</string>
+    <string name="OSS_BUCKET" translatable="false">thssforum</string>
 
     <string name="TOAST_LOGIN_SUCCESS">登录成功</string>
     <string name="TOAST_NOT_LOGGED_IN">登录过期或未登录</string>
@@ -13,16 +13,17 @@
     <string name="TOAST_EMAIL_USED">此电子邮件已被注册</string>
     <string name="NO_MORE_CONTENT">没有更多内容了</string>
 
-    <string name="GLOBAL_SHARED_PREF">site.panda2134.thssforum.SHARED_PREF</string>
-    <string name="PREF_KEY_TOKEN">token</string>
-    <string name="PREF_KEY_UID">uid</string>
-    <string name="PREF_KEY_TOKEN_EXPIRE_AT">tokenExpiresAt</string>
+    <string name="GLOBAL_SHARED_PREF" translatable="false">site.panda2134.thssforum.SHARED_PREF</string>
+    <string name="PREF_KEY_TOKEN" translatable="false">token</string>
+    <string name="PREF_KEY_UID" translatable="false">uid</string>
+    <string name="PREF_KEY_TOKEN_EXPIRE_AT" translatable="false">tokenExpiresAt</string>
 
     <string name="RECYCLER_VIEW_NO_CONTENT">暂无内容</string>
 
     <string name="email">电子邮箱</string>
     <string name="password">密码</string>
     <string name="register">注册</string>
+    <string name="avatar">头像</string>
     <string name="login">登录</string>
     <string name="logout">登出</string>
     <string name="upload">上传</string>

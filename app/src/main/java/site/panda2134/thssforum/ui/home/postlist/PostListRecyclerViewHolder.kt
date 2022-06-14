@@ -26,6 +26,7 @@ import java.util.*
 
 class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIService): RecyclerView.ViewHolder(binding.root), BGANinePhotoLayout.Delegate {
     private var post: Post? = null
+    var onDeleteCallback: ((post: Post, bindingAdapterPosition: Int)->Unit)? = null
     var mediaController: MediaController? = null
         private set
 
@@ -35,15 +36,18 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIServi
         binding.likeButton.isChecked = false // default to false
         MainScope().launch {
             val likes = api.getNumOfLikes(p.postContent.id!!)
+            val followingUsers = api.getFollowingUsers()
             withContext(Dispatchers.Main) {
                 binding.likeNum.text = likes.count.toString()
                 binding.likeButton.isChecked = likes.likedByMe
+                binding.followedButton.visibility =
+                    if (followingUsers.contains(p.author)) View.VISIBLE else View.GONE
             }
         }
 
         Glide.with(binding.root).load(p.author.avatar).placeholder(R.drawable.ic_baseline_account_circle_24).into(binding.userAvatar)
         binding.userName.text = p.author.nickname
-        binding.postDelete.visibility =
+        binding.removePostButton.visibility =
             if (p.author.uid == api.currentUserId) {
                 View.VISIBLE
             } else {
@@ -133,6 +137,18 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIServi
             }
         }
 
+        binding.removePostButton.setOnClickListener {
+            MainScope().launch(Dispatchers.IO) {
+                try {
+                    api.deletePost(p.postContent.id!!)
+                    withContext(Dispatchers.Main) {
+                        onDeleteCallback?.invoke(p, bindingAdapterPosition)
+                    }
+                } catch (e: Throwable) {
+                    e.printStackTrace()
+                }
+            }
+        }
     }
 
     override fun onClickNinePhotoItem(

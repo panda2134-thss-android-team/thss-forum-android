@@ -78,4 +78,5 @@ dependencies {
     implementation 'io.gsonfire:gson-fire:1.8.5'
     implementation 'com.github.marlonlom:timeago:-SNAPSHOT'
     implementation 'com.github.panda2134:ArgPlayer:-SNAPSHOT'
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 }

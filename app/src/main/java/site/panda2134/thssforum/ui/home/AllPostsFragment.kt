@@ -27,7 +27,7 @@ class AllPostsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentAllPostsBinding.inflate(inflater, container, false)
 
         // 把动态item中的每一项调用api填写
@@ -36,6 +36,11 @@ class AllPostsFragment : Fragment() {
         val adapter = PostListRecyclerViewAdapter(api, false)
         binding.allPostsList.adapter = adapter
         adapter.setupRecyclerView(this.requireContext(), binding.allPostsList)
+        binding.root.setOnRefreshListener {
+            adapter.refresh {
+                binding.root.isRefreshing = false
+            }
+        }
         return binding.root
     }
 }
