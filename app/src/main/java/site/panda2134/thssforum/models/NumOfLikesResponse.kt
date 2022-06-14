@@ -18,8 +18,10 @@ import com.google.gson.annotations.SerializedName
  * @param count 
  */
 
-data class NumOfLikesResponse (
+data class NumOfLikesResponse(
     @SerializedName("count")
-    val count: Int
+    val count: Int,
+    @SerializedName("likedByMe")
+    val likedByMe: Boolean
 )
 

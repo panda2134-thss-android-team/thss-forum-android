@@ -26,4 +26,5 @@
     <color name="card_line">#696969</color>
     <color name="motto">#696969</color>
     <color name="image_border">#000000</color><!--个人-修改个人信息-头像的边框-->
+    <color name="like_color">#C00020</color>
 </resources>

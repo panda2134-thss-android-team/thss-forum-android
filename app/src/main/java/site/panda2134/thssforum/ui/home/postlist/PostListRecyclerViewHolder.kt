@@ -4,7 +4,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.MediaController
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -31,12 +30,15 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIServi
     fun setPost(p: Post) {
         post = p
 
+        binding.likeButton.isChecked = false // default to false
         MainScope().launch {
-            val likes = api.getNumOfLikes(p.postContent.id!!).count
+            val likes = api.getNumOfLikes(p.postContent.id!!)
             withContext(Dispatchers.Main) {
-                binding.likeNum.text = likes.toString()
+                binding.likeNum.text = likes.count.toString()
+                binding.likeButton.isChecked = likes.likedByMe
             }
         }
+
         Glide.with(binding.root).load(p.author.avatar).placeholder(R.drawable.ic_baseline_account_circle_24).into(binding.userAvatar)
         binding.userName.text = p.author.nickname
         p.postContent.location?.let {
@@ -56,7 +58,10 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIServi
                 val content = p.postContent.imageTextContent!!
                 binding.postTitle.text = content.title
                 binding.postContent.text = content.text
+                binding.postContent.visibility = View.VISIBLE
+                binding.postImages.visibility = View.VISIBLE
                 binding.audioPlayer.visibility = View.GONE
+                binding.videoPlayer.visibility = View.GONE
                 binding.postImages.data = content.images
                 binding.postImages.setDelegate(this)
             }
@@ -64,7 +69,9 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIServi
                 val content = p.postContent.mediaContent!!
                 binding.postTitle.text = content.title
                 binding.postContent.visibility = View.GONE
+                binding.postImages.visibility = View.GONE
                 binding.audioPlayer.visibility = View.VISIBLE
+                binding.videoPlayer.visibility = View.GONE
                 binding.audioPlayer.apply {
                     disableNextPrevButtons()
                     setProgressMessage(context.getString(R.string.loading))
@@ -84,7 +91,6 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIServi
                         }
                     }
                 }
-                binding.postImages.visibility = View.GONE
             }
             PostType.video -> {
                 val content = p.postContent.mediaContent!!
@@ -94,7 +100,6 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIServi
                 binding.audioPlayer.visibility = View.GONE
                 binding.videoPlayer.visibility = View.VISIBLE
                 binding.videoPlayer.setVideoURI(Uri.parse(content.media[0]))
-//                binding.videoPlayer.setZOrderOnTop(true)
                 binding.videoPlayer.seekTo(1)
 
                 val mediaController = MediaController(binding.videoPlayerWrapper.context)
@@ -103,15 +108,12 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIServi
             }
         }
 
-        binding.likeButton.setOnClickListener() {
-            // 修改个人信息
+        binding.likeButton.setOnClickListener {
             MainScope().launch(Dispatchers.IO) {
                 try {
-                    val user: User = apiService.likeThisPost(post_id)
-
+                    val likeNum = api.likeThisPost(p.postContent.id!!)
                     withContext(Dispatchers.Main) {
-                        binding.myName.text = user.nickname.toEditable()
-                        binding.myIntro.text = user.intro.toEditable()
+                        binding.likeNum.text = likeNum.count.toString()
                     }
                 } catch (e: Throwable) {
                     e.printStackTrace()
