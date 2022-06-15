@@ -35,8 +35,8 @@ import kotlin.collections.ArrayList
 
 
 @Suppress("unused")
-class APIService(private val context: Context) {
-    val noToken = "NO_TOKEN"
+class APIWrapper(private val context: Context) {
+    private val noToken = "NO_TOKEN"
     val gsonFireObject: Gson
 
     init {
@@ -61,12 +61,12 @@ class APIService(private val context: Context) {
 
     inline fun <reified T: Any> gsonFireDeserializer(): ResponseDeserializable<T> = gsonDeserializer<T>(gsonFireObject)
 
-    private var token: String
+    var token: String
         get() = with(context) {
             val pref = getSharedPreferences(getString(R.string.GLOBAL_SHARED_PREF), MODE_PRIVATE)
             return pref.getString(getString(R.string.PREF_KEY_TOKEN), noToken).toString() // don't use an empty string, avoiding 400
         }
-        set(it) = with(context) {
+        private set(it) = with(context) {
             val pref = getSharedPreferences(getString(R.string.GLOBAL_SHARED_PREF), MODE_PRIVATE)
             with(pref.edit()) {
                 this.putString(context.getString(R.string.PREF_KEY_TOKEN), it)
@@ -94,9 +94,7 @@ class APIService(private val context: Context) {
     }
 
     private val fuel: FuelManager = FuelManager().apply {
-        basePath = "https://lab.panda2134.site:20443"
-        timeoutInMillisecond = 5000
-        timeoutReadInMillisecond = 5000
+        basePath = context.getString(R.string.API_BASEPATH)
         addRequestInterceptor(LogRequestAsCurlInterceptor)
         addResponseInterceptor { next ->
             { request, response ->
@@ -226,7 +224,7 @@ class APIService(private val context: Context) {
             .awaitObject(gsonFireDeserializer<ArrayList<PostResponse>>())
         return posts.map { postResponse ->
             MainScope().async(Dispatchers.IO) {
-                Post(this@APIService.getUserInfo(postResponse.by), PostContent.fromPostResponse(postResponse))
+                Post(this@APIWrapper.getUserInfo(postResponse.by), PostContent.fromPostResponse(postResponse))
             }
         }.awaitAll()
     }
@@ -333,7 +331,7 @@ class APIService(private val context: Context) {
             .awaitObject(gsonFireDeserializer<ArrayList<PostResponse>>())
         return posts.map { postResponse ->
             scope.async(Dispatchers.IO) {
-                Post(this@APIService.getUserInfo(postResponse.by), PostContent.fromPostResponse(postResponse))
+                Post(this@APIWrapper.getUserInfo(postResponse.by), PostContent.fromPostResponse(postResponse))
             }
         }.awaitAll()
     }
@@ -347,7 +345,7 @@ class APIService(private val context: Context) {
             .bearer(token)
             .awaitObject(gsonFireDeserializer<PostResponse>())
             .run {
-                Post(this@APIService.getUserInfo(by), PostContent.fromPostResponse(this))
+                Post(this@APIWrapper.getUserInfo(by), PostContent.fromPostResponse(this))
             }
 
 
@@ -400,7 +398,7 @@ class APIService(private val context: Context) {
             .awaitObject(gsonFireDeserializer<ArrayList<CommentResponse>>())
             .map { commentResponse ->
                 scope.async(Dispatchers.IO) {
-                    Comment(this@APIService.getUserInfo(commentResponse.by), commentResponse)
+                    Comment(this@APIWrapper.getUserInfo(commentResponse.by), commentResponse)
                 }
             }.awaitAll()
 
@@ -421,7 +419,7 @@ class APIService(private val context: Context) {
             .bearer(token)
             .awaitObject(gsonFireDeserializer<CommentResponse>())
             .run {
-                Comment(this@APIService.getUserInfo(by), this)
+                Comment(this@APIWrapper.getUserInfo(by), this)
             }
 
 

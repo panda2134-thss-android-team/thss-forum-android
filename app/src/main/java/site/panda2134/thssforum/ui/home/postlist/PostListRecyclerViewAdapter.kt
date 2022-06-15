@@ -4,9 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.VideoView
-import androidx.core.view.children
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
@@ -15,19 +12,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
-import site.panda2134.thssforum.R
-import site.panda2134.thssforum.api.APIService
+import site.panda2134.thssforum.api.APIWrapper
 import site.panda2134.thssforum.databinding.PostItemBinding
 import site.panda2134.thssforum.databinding.RecyclerItemLoadingBinding
 import site.panda2134.thssforum.models.Post
-import site.panda2134.thssforum.models.User
 import site.panda2134.thssforum.ui.utils.RecyclerItemLoadingViewHolder
 import java.lang.Integer.min
-import java.time.Instant
-import java.time.temporal.ChronoUnit
-import kotlin.math.max
 
-class PostListRecyclerViewAdapter(val api: APIService, val fetchFollowing: Boolean = false): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class PostListRecyclerViewAdapter(val api: APIWrapper, val fetchFollowing: Boolean = false): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val POST_ITEM = 0
     private val LIST_LOADING = 1
     private val LIST_END = 2
@@ -37,7 +29,7 @@ class PostListRecyclerViewAdapter(val api: APIService, val fetchFollowing: Boole
     private var isEnded = false
     private val POSTS_PER_FETCH = 20
 
-    var sortBy: APIService.PostsSortBy = APIService.PostsSortBy.Time
+    var sortBy: APIWrapper.PostsSortBy = APIWrapper.PostsSortBy.Time
 
     fun refresh(finishCallback: ()->Unit = {}) {
         val removeCount = posts.size

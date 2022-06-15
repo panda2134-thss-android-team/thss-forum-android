@@ -13,6 +13,15 @@ package site.panda2134.thssforum.models
 
 
 import com.google.gson.annotations.SerializedName
+
+enum class NotificationType(val value: String){
+    @SerializedName(value="following_updated")  followingUpdated("following_updated"),
+    @SerializedName(value="post_liked")  postLiked("post_liked"),
+    @SerializedName(value="post_commented")  postCommented("post_commented"),
+    @SerializedName(value="comment_liked")  commentLiked("comment_liked"),
+    @SerializedName(value="comment_replied")  commentReplied("comment_replied");
+}
+
 /**
  * 
  * @param type 
@@ -22,34 +31,20 @@ import com.google.gson.annotations.SerializedName
  * @param postId 推送通知和动态有关时存在
  */
 
-data class WsPushNotification (
+data class WSPushNotification (
     @SerializedName("type")
-    val type: Type,
+    val type: NotificationType,
     /* 对于评论被回复的情况，此字段为回复的id */
     @SerializedName("comment_id")
-    val commentId: String,
+    val commentId: String?,
     /* 如给你点赞的人 */
     @SerializedName("uid")
-    val uid: String,
+    val uid: String?,
     /* 每个通知唯一 */
     @SerializedName("notification_id")
     val notificationId: String,
     /* 推送通知和动态有关时存在 */
     @SerializedName("post_id")
     val postId: String? = null
-) {
-
-    /**
-    * 
-    * Values: followingUpdated,postLiked,postCommented,commentLiked,commentReplied
-    */
-    
-    enum class Type(val value: String){
-        @SerializedName(value="following_updated")  followingUpdated("following_updated"),
-        @SerializedName(value="post_liked")  postLiked("post_liked"),
-        @SerializedName(value="post_commented")  postCommented("post_commented"),
-        @SerializedName(value="comment_liked")  commentLiked("comment_liked"),
-        @SerializedName(value="comment_replied")  commentReplied("comment_replied");
-    }
-}
+)
 

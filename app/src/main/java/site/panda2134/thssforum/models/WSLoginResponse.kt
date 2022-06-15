@@ -15,11 +15,22 @@ package site.panda2134.thssforum.models
 import com.google.gson.annotations.SerializedName
 /**
  * 
- * @param uid 
+ * @param type 
  */
 
-data class InlineResponse2013 (
-    @SerializedName("uid")
-    val uid: String
-)
+data class WSLoginResponse (
+    @SerializedName("type")
+    val type: WSLoginResponseType
+) {
+
+    /**
+    * 
+    * Values: success,error
+    */
+    
+    enum class WSLoginResponseType(val value: String){
+        @SerializedName(value="success")  success("success"),
+        @SerializedName(value="error")  error("error");
+    }
+}
 

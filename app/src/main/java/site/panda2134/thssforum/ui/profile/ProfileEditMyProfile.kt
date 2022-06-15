@@ -3,12 +3,11 @@ package site.panda2134.thssforum.ui.profile
 import android.os.Bundle
 import android.text.Editable
 import android.widget.Toast
-import android.widget.Toast.makeText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import site.panda2134.thssforum.api.APIService
+import site.panda2134.thssforum.api.APIWrapper
 import site.panda2134.thssforum.api.downloadImage
 import site.panda2134.thssforum.databinding.ProfileEditMyProfileBinding
 import site.panda2134.thssforum.models.ModifyProfileRequest
@@ -27,7 +26,7 @@ class ProfileEditMyProfile : ActivityProfileItem() {
 
         // 载入顶部：我的头像、昵称和简介
         val user: User
-        val apiService = APIService(this)
+        val apiService = APIWrapper(this)
         MainScope().launch(Dispatchers.IO) {
             loadUserInfo(apiService)
         }
@@ -36,7 +35,7 @@ class ProfileEditMyProfile : ActivityProfileItem() {
         save_button.setOnClickListener() {
             // 修改个人信息
             val user: User
-            val api = APIService(this)
+            val api = APIWrapper(this)
             MainScope().launch(Dispatchers.IO) {
                 EditUserInfo(apiService)
             }
@@ -45,20 +44,20 @@ class ProfileEditMyProfile : ActivityProfileItem() {
 
     }
 
-    private suspend fun EditUserInfo(apiService: APIService) {
+    private suspend fun EditUserInfo(apiWrapper: APIWrapper) {
         try {
             var user: ModifyProfileRequest
             // TODO: 修改图片
-            apiService.modifyProfile(ModifyProfileRequest(nickname=binding.myName.text.toString(),intro=binding.myIntro.text.toString()))
+            apiWrapper.modifyProfile(ModifyProfileRequest(nickname=binding.myName.text.toString(),intro=binding.myIntro.text.toString()))
 
         } catch (e: Throwable) {
             e.printStackTrace()
         }
     }
 
-    private suspend fun loadUserInfo(apiService: APIService) {
+    private suspend fun loadUserInfo(apiWrapper: APIWrapper) {
         try {
-            val user: User = apiService.getProfile()
+            val user: User = apiWrapper.getProfile()
             withContext(Dispatchers.Main) {
 
                 binding.myName.text = user.nickname.toEditable()

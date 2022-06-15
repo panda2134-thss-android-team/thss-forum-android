@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import site.panda2134.thssforum.MainActivity
 import site.panda2134.thssforum.R
-import site.panda2134.thssforum.api.APIService
+import site.panda2134.thssforum.api.APIWrapper
 import site.panda2134.thssforum.databinding.ActivityLoginBinding
 import site.panda2134.thssforum.models.LoginRequest
 import site.panda2134.thssforum.models.RegisterRequest
@@ -21,14 +21,14 @@ class LoginActivity : AppCompatActivity() {
     lateinit var binding: ActivityLoginBinding
     private val noError: Boolean
         get() = binding.editTextEmail.text.isNotBlank() && binding.editTextPassword.text.isNotBlank()
-    lateinit var api: APIService
+    lateinit var api: APIWrapper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        api = APIService(this)
+        api = APIWrapper(this)
 
         val updateButtonState = {
             binding.loginButton.isEnabled = noError

@@ -2,7 +2,6 @@ package site.panda2134.thssforum.ui.home
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import site.panda2134.thssforum.api.APIService
 
 class HomeTabAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
     override fun getItemCount(): Int = 2

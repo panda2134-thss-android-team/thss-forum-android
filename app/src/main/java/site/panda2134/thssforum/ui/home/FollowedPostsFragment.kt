@@ -6,14 +6,13 @@ import android.view.*
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import site.panda2134.thssforum.R
-import site.panda2134.thssforum.api.APIService
-import site.panda2134.thssforum.databinding.FragmentAllPostsBinding
+import site.panda2134.thssforum.api.APIWrapper
 import site.panda2134.thssforum.databinding.FragmentFollowedPostsBinding
 import site.panda2134.thssforum.ui.home.postlist.PostListRecyclerViewAdapter
 
 class FollowedPostsFragment: Fragment() {
     private lateinit var binding: FragmentFollowedPostsBinding
-    private lateinit var api: APIService
+    private lateinit var api: APIWrapper
     private lateinit var adapter: PostListRecyclerViewAdapter
 
     override fun onCreateView(
@@ -24,7 +23,7 @@ class FollowedPostsFragment: Fragment() {
         binding = FragmentFollowedPostsBinding.inflate(inflater, container, false)
 
         // 把动态item中的每一项调用api填写
-        api = APIService(requireActivity())
+        api = APIWrapper(requireActivity())
 
         adapter = PostListRecyclerViewAdapter(api, true)
         binding.followedPostsList.adapter = adapter
@@ -56,7 +55,7 @@ class FollowedPostsFragment: Fragment() {
                 isTimeSeq = !isTimeSeq
                 menu.findItem(R.id.seq_menu_item).icon = (ContextCompat.getDrawable(requireActivity(),
                     if (isTimeSeq) R.drawable.ic_baseline_access_time_24 else R.drawable.ic_baseline_thumb_up_24))
-                adapter.sortBy = if (isTimeSeq) APIService.PostsSortBy.Time else APIService.PostsSortBy.Like
+                adapter.sortBy = if (isTimeSeq) APIWrapper.PostsSortBy.Time else APIWrapper.PostsSortBy.Like
                 adapter.refresh()
                 true
             }

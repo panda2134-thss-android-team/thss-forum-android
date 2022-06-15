@@ -79,4 +79,8 @@ dependencies {
     implementation 'com.github.marlonlom:timeago:-SNAPSHOT'
     implementation 'com.github.panda2134:ArgPlayer:-SNAPSHOT'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+    implementation "io.ktor:ktor-client-core:2.0.2"
+    implementation "io.ktor:ktor-client-okhttp:2.0.2"
+    implementation "io.ktor:ktor-client-websockets:2.0.2"
+    implementation "io.ktor:ktor-serialization-gson:2.0.2"
 }

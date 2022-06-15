@@ -15,11 +15,14 @@ package site.panda2134.thssforum.models
 import com.google.gson.annotations.SerializedName
 /**
  * 
- * @param uid 
+ * @param token 
+ * @param uniqueId 可以参考 https://devnote.pro/posts/10000002731155 获得android_id 作为此字段取值
  */
 
-data class InlineResponse2015 (
-    @SerializedName("uid")
-    val uid: String
+data class WSLoginRequest (
+    @SerializedName("token")
+    val token: String,
+    @SerializedName("unique_id")
+    val uniqueId: String
 )
 

@@ -18,13 +18,13 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import site.panda2134.thssforum.R
-import site.panda2134.thssforum.api.APIService
+import site.panda2134.thssforum.api.APIWrapper
 import site.panda2134.thssforum.databinding.PostItemBinding
 import site.panda2134.thssforum.models.Post
 import site.panda2134.thssforum.models.PostType
 import java.util.*
 
-class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIService): RecyclerView.ViewHolder(binding.root), BGANinePhotoLayout.Delegate {
+class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIWrapper): RecyclerView.ViewHolder(binding.root), BGANinePhotoLayout.Delegate {
     private var post: Post? = null
     var onDeleteCallback: ((post: Post, bindingAdapterPosition: Int)->Unit)? = null
     var mediaController: MediaController? = null
@@ -34,6 +34,8 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIServi
         post = p
 
         binding.likeButton.isChecked = false // default to false
+        binding.location.text = ""
+        binding.location.visibility = View.GONE
         MainScope().launch {
             val likes = api.getNumOfLikes(p.postContent.id!!)
             val followingUsers = api.getFollowingUsers()

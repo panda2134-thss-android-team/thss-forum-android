@@ -1,9 +1,7 @@
 package site.panda2134.thssforum.ui.home
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.*
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.Dispatchers
@@ -11,7 +9,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import site.panda2134.thssforum.R
-import site.panda2134.thssforum.api.APIService
+import site.panda2134.thssforum.api.APIWrapper
 import site.panda2134.thssforum.api.downloadImage
 import site.panda2134.thssforum.databinding.FragmentHomeBinding
 import site.panda2134.thssforum.models.User
@@ -20,7 +18,7 @@ import site.panda2134.thssforum.models.User
 class HomeFragment : Fragment() {
     private lateinit var tabAdapter: HomeTabAdapter
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var api: APIService
+    private lateinit var api: APIWrapper
 
     private var isTimeSeq = true // 右上角的展示顺序：默认是时间顺序
 
@@ -33,7 +31,7 @@ class HomeFragment : Fragment() {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         // 载入顶部：我的头像、昵称和简介
-        api = APIService(requireActivity())
+        api = APIWrapper(requireActivity())
         MainScope().launch(Dispatchers.IO) {
             loadUserInfo()
         }

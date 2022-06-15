@@ -6,15 +6,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import site.panda2134.thssforum.api.APIService
+import site.panda2134.thssforum.api.APIWrapper
 import site.panda2134.thssforum.databinding.ProfileFollowingListBinding
 import site.panda2134.thssforum.ui.profile.ActivityProfileItem
 
 class ProfileFollowingList : ActivityProfileItem() {
     private lateinit var binding: ProfileFollowingListBinding
-    private val api = APIService(this)
+    private lateinit var api: APIWrapper
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        api = APIWrapper(this)
         super.onCreate(savedInstanceState)
 
         binding = ProfileFollowingListBinding.inflate(layoutInflater)

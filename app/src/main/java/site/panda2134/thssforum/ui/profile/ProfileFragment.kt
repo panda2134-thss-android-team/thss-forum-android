@@ -1,7 +1,6 @@
 package site.panda2134.thssforum.ui.profile
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
@@ -11,7 +10,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import site.panda2134.thssforum.R
-import site.panda2134.thssforum.api.APIService
+import site.panda2134.thssforum.api.APIWrapper
 import site.panda2134.thssforum.api.downloadImage
 import site.panda2134.thssforum.databinding.FragmentProfileBinding
 import site.panda2134.thssforum.models.User
@@ -20,7 +19,7 @@ import site.panda2134.thssforum.models.User
 class ProfileFragment : Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
-    private lateinit var api: APIService
+    private lateinit var api: APIWrapper
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -76,7 +75,7 @@ class ProfileFragment : Fragment() {
 
 
         // 载入顶部：我的头像、昵称和简介
-        api = APIService(requireActivity())
+        api = APIWrapper(requireActivity())
         MainScope().launch(Dispatchers.IO) {
             loadUserInfo()
         }

@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">THSSForum</string>
 
+    <string name="API_BASEPATH" translatable="false">https://lab.panda2134.site:20443</string>
+    <string name="WS_BASEPATH" translatable="false">wss://lab.panda2134.site:20443/notification/subscribe</string>
+
     <string name="OSS_ENDPOINT" translatable="false">oss-cn-beijing.aliyuncs.com</string>
     <string name="OSS_BUCKET_DOMAIN" translatable="false">thssforum.oss-cn-beijing.aliyuncs.com</string>
     <string name="OSS_BUCKET" translatable="false">thssforum</string>
@@ -8,12 +11,14 @@
     <string name="TOAST_LOGIN_SUCCESS">登录成功</string>
     <string name="TOAST_NOT_LOGGED_IN">登录过期或未登录</string>
     <string name="TOAST_PERMISSION_DENIED">没有此操作权限！</string>
+    <string name="TOAST_NOTIFICATION_SERVER_NO_CONNECTION">无法连接到通知服务器</string>
     <string name="TOAST_INTERNAL_SERVER_ERROR">服务器内部错误</string>
     <string name="TOAST_UNPROCESSABLE_ENTITY">校验失败</string>
     <string name="TOAST_EMAIL_USED">此电子邮件已被注册</string>
     <string name="NO_MORE_CONTENT">没有更多内容了</string>
 
     <string name="GLOBAL_SHARED_PREF" translatable="false">site.panda2134.thssforum.SHARED_PREF</string>
+    <string name="NOTIFICATION_SHARED_PREF" translatable="false">site.panda2134.thssforum.NOTIFICATION_SHARED_PREF</string>
     <string name="PREF_KEY_TOKEN" translatable="false">token</string>
     <string name="PREF_KEY_UID" translatable="false">uid</string>
     <string name="PREF_KEY_TOKEN_EXPIRE_AT" translatable="false">tokenExpiresAt</string>
@@ -48,8 +53,9 @@
     <string name="edit_my_profile">修改个人信息</string>
 
 
-    <string name="menusearch">搜索</string>
-    <string name="menubell">通知</string>
+    <string name="search">搜索</string>
+    <string name="notify">通知</string>
+    <string name="notify_description">来自其他用户的点赞、评论通知</string>
     <string name="menu_puretext">发布-纯文字</string>
     <string name="menu_textpicmix">发布-图文混合</string>
     <string name="menu_audio">发布-音频</string>
@@ -78,11 +84,36 @@
     <string name="notify_search_hint">查询通知内容…</string>
 
     <string name="like_time_switch">动态展示顺序</string>
-    <string name="search">搜索</string>
-    <string name="notify">通知</string>
     <string name="nickname">昵称</string>
     <string name="intro">简介</string>
     <string name="save">保存</string>
 
     <string name="followed">已关注</string>
+
+    <string name="notification_channel_following_updated">关注的人更新动态</string>
+    <string name="notification_channel_following_updated_description">关注的人更新动态时发送通知</string>
+    <string name="notification_following_updated" formatted="true">您关注的 %1$s 发布了新动态</string>
+
+    <string name="notification_channel_post_liked">发布的动态被点赞</string>
+    <string name="notification_channel_post_liked_description">您发布的动态被点赞时发送通知</string>
+    <string name="notification_post_liked" formatted="true">用户 %1$s 赞了您的动态 %2$s</string>
+
+    <string name="notification_channel_comment_liked">发布的评论被点赞</string>
+    <string name="notification_channel_comment_liked_description">您发布的评论被点赞时发送通知</string>
+    <string name="notification_comment_liked" formatted="true">用户 %1$s 赞了您的评论 %2$s</string>
+
+
+    <string name="notification_channel_post_commented">发布的动态被评论</string>
+    <string name="notification_channel_post_commented_description">您发布的动态有新评论时发送通知</string>
+    <string name="notification_post_commented" formatted="true">用户 %1$s 评论了您的动态 %2$s</string>
+
+    <string name="notification_channel_comment_replied">发布的评论被回复</string>
+    <string name="notification_channel_comment_replied_description">您发布的评论有新回复时发送通知</string>
+    <string name="notification_comment_replied" formatted="true">用户 %1$s 回复了您的评论 %2$s</string>
+
+    <string name="notification_channel_background">推送通知服务</string>
+    <string name="notification_channel_background_description">此通知频道用来保证推送通知服务的正常运行。</string>
+    <string name="notification_background" formatted="true">THSSForum 正在后台运行。</string>
+
+    <string name="unknown">未知</string>
 </resources>

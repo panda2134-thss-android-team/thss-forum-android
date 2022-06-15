@@ -70,5 +70,12 @@ class PostContent private constructor (
         fun fromPostResponse (response: PostResponse) =
             PostContent(response.type, response.location, response.imageTextContent, response.mediaContent, response.id, response.createdAt)
     }
+    fun getTitle () =
+        when (type) {
+            PostType.normal -> imageTextContent!!.title
+            in listOf(PostType.audio, PostType.video) -> mediaContent!!.title
+            else -> throw IllegalStateException("unknown post type")
+        }
+
 }
 

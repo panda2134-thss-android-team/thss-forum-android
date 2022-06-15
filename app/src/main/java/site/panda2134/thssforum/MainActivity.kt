@@ -4,21 +4,14 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
-import android.util.Log
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import site.panda2134.thssforum.R
-import site.panda2134.thssforum.api.APIService
+import site.panda2134.thssforum.api.APIWrapper
+import site.panda2134.thssforum.api.NotificationService
 import site.panda2134.thssforum.databinding.ActivityMainBinding
-import site.panda2134.thssforum.models.LoginRequest
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,10 +23,13 @@ class MainActivity : AppCompatActivity() {
         val appLocale = LocaleListCompat.forLanguageTags("zh-CN")
         AppCompatDelegate.setApplicationLocales(appLocale)
 
-        val apiService = APIService(this)
+        val apiService = APIWrapper(this)
         if (!apiService.isLoggedIn) {
             apiService.gotoLoginActivity()
             return
+        }
+        NotificationService.buildStartIntentFrom(this, apiService.token).also { intent ->
+            startForegroundService(intent)
         }
 
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -51,12 +47,5 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-//        val apiService = APIService(this)
-//        Log.d("MainActivity", "111")
-//        this.lifecycleScope.launch(Dispatchers.IO) {
-//            val loginResponse = apiService.login(LoginRequest(email = "user1@test.com", password = "password"))
-//            Log.d("MainActivity", "token = ${loginResponse.token}, uid = ${loginResponse.uid}")
-//        }
-//        Log.d("MainActivity", "222")
     }
 }
