@@ -21,17 +21,21 @@
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/activity_post_text_pic_mix.xml" value="0.1" />
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/activity_post_video.xml" value="0.1" />
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/activity_profile_interest_list.xml" value="0.1" />
+        <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/activity_profile_menu_bell.xml" value="0.34375" />
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/fragment_all_posts.xml" value="0.33" />
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/fragment_followed_posts.xml" value="0.29583333333333334" />
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/fragment_home.xml" value="0.15416666666666667" />
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/fragment_post.xml" value="0.1625" />
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/fragment_profile.xml" value="0.34375" />
+        <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/notification_item.xml" value="0.34375" />
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/post_item.xml" value="0.33" />
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/post_pure_text.xml" value="0.33" />
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/post_video.xml" value="0.1640625" />
+        <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/profile_bell_page.xml" value="0.34375" />
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/profile_following_list.xml" value="0.25" />
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/profile_following_list_item.xml" value="0.33559782608695654" />
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/profile_interest_list.xml" value="0.33559782608695654" />
+        <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/profile_notification_list.xml" value="0.19476268412438624" />
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/recycler_item_loading.xml" value="0.33559782608695654" />
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/menu/discover_searchswitch_menuicon.xml" value="0.18697916666666667" />
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/menu/profile_menu.xml" value="0.1640625" />

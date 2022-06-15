@@ -40,7 +40,7 @@
             android:value="a30817e0513e42453a3a838489950284" />
 
         <activity
-            android:name=".ui.profile.ProfileNotify"
+            android:name=".ui.profile.ProfileNotificationList"
             android:exported="true"
             android:label="@string/notify" />
         <activity

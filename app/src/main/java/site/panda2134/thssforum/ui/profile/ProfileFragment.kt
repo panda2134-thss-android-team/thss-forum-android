@@ -99,7 +99,7 @@ class ProfileFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.bell_menu -> {
-                val intent = Intent(activity, ProfileNotify::class.java)
+                val intent = Intent(activity, ProfileNotificationList::class.java)
                 startActivity(intent)
                 true
             }

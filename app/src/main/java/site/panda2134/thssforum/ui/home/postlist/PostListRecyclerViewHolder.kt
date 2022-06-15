@@ -13,22 +13,32 @@ import com.arges.sepan.argmusicplayer.Models.ArgAudio
 import com.bumptech.glide.Glide
 import com.github.marlonlom.utilities.timeago.TimeAgo
 import com.github.marlonlom.utilities.timeago.TimeAgoMessages
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import site.panda2134.thssforum.R
 import site.panda2134.thssforum.api.APIWrapper
 import site.panda2134.thssforum.databinding.PostItemBinding
 import site.panda2134.thssforum.models.Post
 import site.panda2134.thssforum.models.PostType
+import site.panda2134.thssforum.utils.toTimeAgo
 import java.util.*
 
 class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIWrapper): RecyclerView.ViewHolder(binding.root), BGANinePhotoLayout.Delegate {
     private var post: Post? = null
+    val refreshScope = MainScope()
     var onDeleteCallback: ((post: Post, bindingAdapterPosition: Int)->Unit)? = null
     var mediaController: MediaController? = null
         private set
+
+    init {
+        MainScope().launch {
+            while (true) {
+                delay(5 * 1000)
+                post?.run {
+                    binding.postTime.text = postContent.createdAt?.toTimeAgo() ?: return@run
+                }
+            }
+        }
+    }
 
     fun setPost(p: Post) {
         post = p
@@ -59,13 +69,7 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIWrapp
             binding.location.text = it.description
         }
         p.postContent.createdAt?.let {
-            val timeAgoMessages = AppCompatDelegate.getApplicationLocales()[0].let { firstLocale ->
-                TimeAgoMessages.Builder().withLocale(
-                     Locale.forLanguageTag(firstLocale?.language ?: "en")
-                )
-            }.build()
-
-            binding.postTime.text = TimeAgo.using(it.toEpochMilli(), timeAgoMessages)
+            binding.postTime.text = it.toTimeAgo()
         }
         when(p.postContent.type) {
             PostType.normal -> {

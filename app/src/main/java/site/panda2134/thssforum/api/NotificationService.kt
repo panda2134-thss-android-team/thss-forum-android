@@ -1,12 +1,8 @@
 package site.panda2134.thssforum.api
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Binder
 import android.os.IBinder
 import android.provider.Settings
@@ -26,7 +22,7 @@ import io.ktor.serialization.*
 import io.ktor.serialization.gson.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.*
-import okhttp3.OkHttpClient
+import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import site.panda2134.thssforum.R
 import site.panda2134.thssforum.models.NotificationType
 import site.panda2134.thssforum.models.WSLoginRequest
@@ -35,13 +31,121 @@ import site.panda2134.thssforum.models.WSPushNotification
 import java.nio.channels.ClosedChannelException
 import java.time.Instant
 import java.util.concurrent.atomic.AtomicInteger
-import kotlin.coroutines.CoroutineContext
 
 class NotificationService : Service() {
     companion object {
         fun buildStartIntentFrom(context: Context, token: String): Intent {
             return Intent(context, NotificationService::class.java).putExtra("token", token).putExtra("ssaid", Settings.Secure.ANDROID_ID)
         }
+    }
+
+    class NotificationStringBuilder(val context: Context) {
+        private val api = APIWrapper(context)
+        data class NotificationStringTuple (val title: String, val content: String)
+
+        suspend fun build(n: WSPushNotification) =
+            n.run {
+                when (type) {
+                    NotificationType.followingUpdated -> {
+                        var nickname = context.getString(R.string.unknown)
+                        try {
+                            nickname =
+                                api.getUserInfo(uid!!).nickname
+                        } catch (e: FuelError) {
+                            e.printStackTrace()
+                        }
+                        NotificationStringTuple(context.getString(R.string.notification_channel_following_updated),
+                            context.getString(
+                                R.string.notification_following_updated,
+                                nickname
+                            )
+                        )
+                    }
+                    NotificationType.postLiked -> {
+                        var nickname = context.getString(R.string.unknown)
+                        var postTitle = context.getString(R.string.unknown)
+                        try {
+                            nickname =
+                                api.getUserInfo(uid!!).nickname
+                            postTitle = api.getPostDetails(
+                                postId ?: ""
+                            ).postContent.getTitle()
+                        } catch (e: FuelError) {
+                            e.printStackTrace()
+                        }
+                        NotificationStringTuple(context.getString(R.string.notification_channel_post_liked),
+                            context.getString(
+                                R.string.notification_post_liked,
+                                nickname,
+                                postTitle
+                            )
+                        )
+                    }
+                    NotificationType.commentLiked -> {
+                        var nickname = context.getString(R.string.unknown)
+                        var commentContent = context.getString(R.string.unknown)
+                        try {
+                            nickname =
+                                api.getUserInfo(uid!!).nickname
+                            commentContent = api.getCommentInfo(
+                                postId!!,
+                                commentId!!
+                            ).data.content
+                        } catch (e: FuelError) {
+                            e.printStackTrace()
+                        }
+                        NotificationStringTuple(context.getString(R.string.notification_channel_comment_liked),
+                            context.getString(
+                                R.string.notification_comment_liked,
+                                nickname,
+                                commentContent
+                            )
+                        )
+                    }
+                    NotificationType.postCommented -> {
+                        var nickname = context.getString(R.string.unknown)
+                        var postTitle = context.getString(R.string.unknown)
+                        try {
+                            nickname =
+                                api.getUserInfo(uid!!).nickname
+                            postTitle = api.getPostDetails(
+                                postId ?: ""
+                            ).postContent.getTitle()
+                        } catch (e: FuelError) {
+                            e.printStackTrace()
+                        }
+                        NotificationStringTuple(context.getString(R.string.notification_channel_post_commented),
+                            context.getString(
+                                R.string.notification_post_commented,
+                                nickname,
+                                postTitle
+                            )
+                        )
+                    }
+                    NotificationType.commentReplied -> {
+                        var nickname = context.getString(R.string.unknown)
+                        var commentContent = context.getString(R.string.unknown)
+                        try {
+                            nickname =
+                                api.getUserInfo(uid!!).nickname
+                            commentContent = api.getCommentInfo(
+                                postId!!,
+                                commentId!!
+                            ).data.content
+                        } catch (e: FuelError) {
+                            e.printStackTrace()
+                        }
+                        NotificationStringTuple(context.getString(R.string.notification_channel_comment_replied),
+                            context.getString(
+                                R.string.notification_comment_replied,
+                                nickname,
+                                commentContent
+                            )
+                        )
+                    }
+                }
+            }
+
     }
 
     data class NotificationItem(
@@ -51,13 +155,13 @@ class NotificationService : Service() {
         var read: Boolean = false
     ) {
         @SerializedName("received_at")
-        val receivedAt = Instant.now()
+        val receivedAt: Instant = Instant.now()
     }
 
+    private val TAG = "THSSFORUM_NOTIFICATION_SERVICE"
     private lateinit var api: APIWrapper
     private val notifications = mutableSetOf<NotificationItem>()
     private val scope = MainScope()
-    private val gson = GsonBuilder().create()
     private val notificationCount = AtomicInteger(128)
     private lateinit var notificationManager: NotificationManagerCompat
     private var socketConnected = false
@@ -107,7 +211,7 @@ class NotificationService : Service() {
             notifications.addAll(all.values.map {
                 if (it !is String) return@map null
                 try {
-                    gson.fromJson(it, NotificationItem::class.java)
+                    api.gsonFireObject.fromJson(it, NotificationItem::class.java)
                 } catch (e: JsonSyntaxException) {
                     Log.d(javaClass.name, "failed to parse notification history")
                     null
@@ -121,185 +225,83 @@ class NotificationService : Service() {
             throw IllegalArgumentException("intent cannot be null")
         }
         if (socketConnected) {
-            Log.d("THSSFORUM_NOTIFICATION_SERVICE", "already started")
-        }
-        socketConnected = true
+            Log.d(TAG, "already started")
+        } else {
+            socketConnected = true
 
-        Toast.makeText(this@NotificationService, "starting...", Toast.LENGTH_LONG).show()
-        scope.launch(Dispatchers.IO) {
-            while (true) {
-                try {
-                    client.webSocket(urlString = getString(R.string.WS_BASEPATH)) {
-                        sendSerialized(
-                            WSLoginRequest(
-                                intent.getStringExtra("token")!!,
-                                intent.getStringExtra("ssaid")!!
-                            )
-                        )
-                        try {
-                            val response = receiveDeserialized<WSLoginResponse>()
-                            if (response.type == WSLoginResponse.WSLoginResponseType.error) {
-                                throw IllegalStateException()
-                            }
-                        } catch (e: Throwable) {
-                            socketConnected = false
-                            return@webSocket
-                        }
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(this@NotificationService, "connected", Toast.LENGTH_LONG)
-                                .show()
-                        }
-                        while (true) {
-                            try {
-                                val pushed = receiveDeserialized<WSPushNotification>()
-                                notifications.add(NotificationItem(pushed))
-                                val channel = channelMap[pushed.type] ?: continue
-                                val systemNotification = NotificationCompat
-                                    .Builder(this@NotificationService, channel.id)
-                                    .setSmallIcon(R.drawable.ic_notification)
-                                    .apply {
-                                        when (pushed.type) {
-                                            NotificationType.followingUpdated -> {
-                                                var nickname = getString(R.string.unknown)
-                                                try {
-                                                    nickname =
-                                                        api.getUserInfo(pushed.uid!!).nickname
-                                                } catch (e: FuelError) {
-                                                    e.printStackTrace()
-                                                }
-                                                setContentTitle(getString(R.string.notification_channel_following_updated))
-                                                setContentText(
-                                                    getString(
-                                                        R.string.notification_following_updated,
-                                                        nickname
-                                                    )
-                                                )
-                                            }
-                                            NotificationType.postLiked -> {
-                                                var nickname = getString(R.string.unknown)
-                                                var postTitle = getString(R.string.unknown)
-                                                try {
-                                                    nickname =
-                                                        api.getUserInfo(pushed.uid!!).nickname
-                                                    postTitle = api.getPostDetails(
-                                                        pushed.postId ?: ""
-                                                    ).postContent.getTitle()
-                                                } catch (e: FuelError) {
-                                                    e.printStackTrace()
-                                                }
-                                                setContentTitle(getString(R.string.notification_channel_post_liked))
-                                                setContentText(
-                                                    getString(
-                                                        R.string.notification_post_liked,
-                                                        nickname,
-                                                        postTitle
-                                                    )
-                                                )
-                                            }
-                                            NotificationType.commentLiked -> {
-                                                var nickname = getString(R.string.unknown)
-                                                var commentContent = getString(R.string.unknown)
-                                                try {
-                                                    nickname =
-                                                        api.getUserInfo(pushed.uid!!).nickname
-                                                    commentContent = api.getCommentInfo(
-                                                        pushed.postId!!,
-                                                        pushed.commentId!!
-                                                    ).data.content
-                                                } catch (e: FuelError) {
-                                                    e.printStackTrace()
-                                                }
-                                                setContentTitle(getString(R.string.notification_channel_comment_liked))
-                                                setContentText(
-                                                    getString(
-                                                        R.string.notification_comment_liked,
-                                                        nickname,
-                                                        commentContent
-                                                    )
-                                                )
-                                            }
-                                            NotificationType.postCommented -> {
-                                                var nickname = getString(R.string.unknown)
-                                                var postTitle = getString(R.string.unknown)
-                                                try {
-                                                    nickname =
-                                                        api.getUserInfo(pushed.uid!!).nickname
-                                                    postTitle = api.getPostDetails(
-                                                        pushed.postId ?: ""
-                                                    ).postContent.getTitle()
-                                                } catch (e: FuelError) {
-                                                    e.printStackTrace()
-                                                }
-                                                setContentTitle(getString(R.string.notification_channel_post_commented))
-                                                setContentText(
-                                                    getString(
-                                                        R.string.notification_post_commented,
-                                                        nickname,
-                                                        postTitle
-                                                    )
-                                                )
-                                            }
-                                            NotificationType.commentReplied -> {
-                                                var nickname = getString(R.string.unknown)
-                                                var commentContent = getString(R.string.unknown)
-                                                try {
-                                                    nickname =
-                                                        api.getUserInfo(pushed.uid!!).nickname
-                                                    commentContent = api.getCommentInfo(
-                                                        pushed.postId!!,
-                                                        pushed.commentId!!
-                                                    ).data.content
-                                                } catch (e: FuelError) {
-                                                    e.printStackTrace()
-                                                }
-                                                setContentTitle(getString(R.string.notification_channel_comment_replied))
-                                                setContentText(
-                                                    getString(
-                                                        R.string.notification_comment_replied,
-                                                        nickname,
-                                                        commentContent
-                                                    )
-                                                )
-                                            }
-                                        }
-                                    }
-                                    .build()
-                                notificationManager.notify(
-                                    notificationCount.getAndIncrement(),
-                                    systemNotification
+            Log.d(TAG, "notification: connecting to ws")
+            scope.launch(Dispatchers.IO) {
+                while (true) {
+                    try {
+                        client.webSocket(urlString = getString(R.string.WS_BASEPATH)) {
+                            sendSerialized(
+                                WSLoginRequest(
+                                    intent.getStringExtra("token")!!,
+                                    intent.getStringExtra("ssaid")!!
                                 )
-                            } catch (e: ClosedChannelException) {
+                            )
+                            try {
+                                val response = receiveDeserialized<WSLoginResponse>()
+                                if (response.type == WSLoginResponse.WSLoginResponseType.error) {
+                                    throw IllegalStateException()
+                                }
+                            } catch (e: Throwable) {
                                 socketConnected = false
                                 return@webSocket
-                            } catch (e: WebsocketDeserializeException) {
-                                // ignore this frame
-                            } catch (e: Throwable) {
-                                e.printStackTrace()
+                            }
+                            Log.d(TAG,"connected")
+                            while (true) {
+                                try {
+                                    val pushed = receiveDeserialized<WSPushNotification>()
+                                    val notificationItem = NotificationItem(pushed)
+                                    notifications.add(notificationItem)
+                                    with (getSharedPreferences(getString(R.string.NOTIFICATION_SHARED_PREF), MODE_PRIVATE).edit()) {
+                                        val j = api.gsonFireObject.toJson(notificationItem)
+                                        putString(pushed.notificationId, j)
+                                        apply()
+                                    }
+                                    val channel = channelMap[pushed.type] ?: continue
+                                    val s = NotificationStringBuilder(this@NotificationService).build(pushed)
+                                    val systemNotification = NotificationCompat
+                                        .Builder(this@NotificationService, channel.id)
+                                        .setSmallIcon(R.drawable.ic_notification)
+                                        .apply {
+                                            setContentTitle(s.title)
+                                            setContentText(s.content)
+                                        }
+                                        .build()
+                                    notificationManager.notify(
+                                        notificationCount.getAndIncrement(),
+                                        systemNotification
+                                    )
+                                } catch (e: ClosedReceiveChannelException) {
+                                    socketConnected = false
+                                    return@webSocket
+                                } catch (e: WebsocketDeserializeException) {
+                                    // ignore this frame
+                                } catch (e: Throwable) {
+                                    e.printStackTrace()
+                                }
                             }
                         }
+                    } catch (e: Throwable) {
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(
+                                this@NotificationService,
+                                R.string.TOAST_NOTIFICATION_SERVER_NO_CONNECTION,
+                                Toast.LENGTH_LONG
+                            )
+                        }
+                        e.printStackTrace()
                     }
-                } catch (e: Throwable) {
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(
-                            this@NotificationService,
-                            R.string.TOAST_NOTIFICATION_SERVER_NO_CONNECTION,
-                            Toast.LENGTH_LONG
-                        )
-                    }
-                    e.printStackTrace()
                 }
             }
         }
-        return START_STICKY
+        return START_REDELIVER_INTENT
     }
 
     override fun onDestroy() {
         scope.cancel()
-        with (getSharedPreferences(getString(R.string.NOTIFICATION_SHARED_PREF), MODE_PRIVATE).edit()) {
-            notifications.forEach {
-                putString(it.content.notificationId, gson.toJson(it))
-            }
-        }
     }
 
     inner class LocalBinder: Binder() {

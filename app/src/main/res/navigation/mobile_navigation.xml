@@ -85,7 +85,7 @@
         tools:layout="@layout/profile_following_list" />
     <activity
         android:id="@+id/profileNotify"
-        android:name="site.panda2134.thssforum.ui.profile.ProfileNotify"
+        android:name="site.panda2134.thssforum.ui.profile.ProfileNotificationList"
         android:label="activity_profile_menu_bell"
         tools:layout="@layout/activity_profile_menu_bell">
     </activity>

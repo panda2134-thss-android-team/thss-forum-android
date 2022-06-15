@@ -24,6 +24,7 @@ import com.google.gson.*
 import io.gsonfire.DateSerializationPolicy
 import io.gsonfire.GsonFireBuilder
 import kotlinx.coroutines.*
+import org.json.JSONStringer
 import site.panda2134.thssforum.R
 import site.panda2134.thssforum.models.*
 import site.panda2134.thssforum.ui.LoginActivity
@@ -43,7 +44,7 @@ class APIWrapper(private val context: Context) {
         val gsonFireBuilder: GsonFireBuilder = GsonFireBuilder()
             .dateSerializationPolicy(DateSerializationPolicy.rfc3339)
         val gsonBuilder = gsonFireBuilder.createGsonBuilder()
-            .registerTypeAdapter(Instant::class.java, object: JsonDeserializer<Instant> {
+            .registerTypeAdapter(Instant::class.java, object: JsonDeserializer<Instant>, JsonSerializer<Instant> {
                 override fun deserialize(
                     json: JsonElement?,
                     typeOfT: Type?,
@@ -53,6 +54,18 @@ class APIWrapper(private val context: Context) {
                         throw IllegalStateException("parsing Instant requires a string")
                     }
                     return Instant.parse(json.asString)
+                }
+
+                override fun serialize(
+                    src: Instant?,
+                    typeOfSrc: Type?,
+                    context: JsonSerializationContext?
+                ): JsonElement {
+                    return if (src == null) {
+                        JsonNull.INSTANCE
+                    } else {
+                        JsonPrimitive(src.toString())
+                    }
                 }
 
             })
