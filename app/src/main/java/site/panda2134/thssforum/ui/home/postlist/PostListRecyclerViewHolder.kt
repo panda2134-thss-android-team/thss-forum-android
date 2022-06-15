@@ -1,10 +1,15 @@
 package site.panda2134.thssforum.ui.home.postlist
 
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.MediaController
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import cn.bingoogolapple.photopicker.activity.BGAPhotoPreviewActivity
@@ -13,6 +18,7 @@ import com.arges.sepan.argmusicplayer.Models.ArgAudio
 import com.bumptech.glide.Glide
 import com.github.marlonlom.utilities.timeago.TimeAgo
 import com.github.marlonlom.utilities.timeago.TimeAgoMessages
+import com.loc.p
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -22,10 +28,13 @@ import site.panda2134.thssforum.api.APIService
 import site.panda2134.thssforum.databinding.PostItemBinding
 import site.panda2134.thssforum.models.Post
 import site.panda2134.thssforum.models.PostType
+import site.panda2134.thssforum.ui.profile.ProfileNotifySearch
+import site.panda2134.thssforum.ui.profile.ProfileUserHomepage
 import java.util.*
 
 class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIService): RecyclerView.ViewHolder(binding.root), BGANinePhotoLayout.Delegate {
     private var post: Post? = null
+    var postType = ""
     var onDeleteCallback: ((post: Post, bindingAdapterPosition: Int)->Unit)? = null
     var mediaController: MediaController? = null
         private set
@@ -65,6 +74,7 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIServi
 
             binding.postTime.text = TimeAgo.using(it.toEpochMilli(), timeAgoMessages)
         }
+        postType = p.postContent.type.toString() // 记录当前的post类型
         when(p.postContent.type) {
             PostType.normal -> {
                 val content = p.postContent.imageTextContent!!
@@ -149,7 +159,29 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIServi
                 }
             }
         }
+
+        binding.shareButton.setOnClickListener {
+            val intentBuilder = ShareCompat.IntentBuilder(itemView.context)
+            intentBuilder.setType("text/plain").setText(shareString).startChooser()
+            true
+        }
+
     }
+
+    // share的时候只分享文字部分
+    private val shareString: String
+        get() {
+            if(postType == "normal") {
+                if(binding.postContent.text!="") {
+                    return "${binding.userName.text} ：\n  标题：${binding.postTitle.text}\n  内容：${binding.postContent.text}\n  时间：${binding.postTime.text}"
+                }
+                else {
+                    return "${binding.userName.text} ：\n  标题：${binding.postTitle.text}\n  时间：${binding.postTime.text}"
+                }
+            } else{
+                return "${binding.userName.text} ：\n  标题：${binding.postTitle.text}\n  链接：${Uri.parse(post!!.postContent.mediaContent!!.media[0])}\n  时间：${binding.postTime.text}"
+            }
+        }
 
     override fun onClickNinePhotoItem(
         ninePhotoLayout: BGANinePhotoLayout?,

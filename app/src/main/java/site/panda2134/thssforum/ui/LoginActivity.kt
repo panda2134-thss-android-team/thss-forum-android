@@ -41,8 +41,12 @@ class LoginActivity : AppCompatActivity() {
                 try {
                     api.login(LoginRequest(binding.editTextEmail.text.toString(),
                         binding.editTextPassword.text.toString()))
-                    gotoMainActivity()
+
+
+                   gotoMainActivity()
+
                 } catch (e: FuelError) {
+                    e.printStackTrace()
                 }
             }
         }

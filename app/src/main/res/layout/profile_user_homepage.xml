@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/normal_margin"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/line_1"
+                android:layout_height="@dimen/card_line_height"
+                android:layout_width="@dimen/card_line_1_width"
+                android:layout_marginTop="@dimen/card_line_top"
+                android:background="@color/card_line" />
+
+            <ImageView
+                android:id="@+id/my_avatar"
+                android:layout_width="@dimen/my_pic"
+                android:layout_height="@dimen/my_pic"
+                android:contentDescription="@string/drafts"
+                tools:background="@color/click_blue"
+                android:background="@drawable/image_border"
+                android:padding="@dimen/image_border_w"
+            />
+
+            <LinearLayout android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/my_name"
+                    style="@style/TextAppearance.AppCompat.Headline"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/normal_margin"
+                    android:layout_marginTop="3dp"
+                    tools:text="移动应用" />
+
+                <TextView
+                    android:id="@+id/line_2"
+                    android:layout_height="@dimen/card_line_height"
+                    android:layout_width="@dimen/card_line_2_width"
+                    android:layout_marginTop="@dimen/small_margin"
+                    android:background="@color/card_line" />
+
+                <TextView
+                    android:id="@+id/my_motto"
+                    style="@style/TextAppearance.AppCompat.Body1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/motto"
+                    android:layout_marginLeft="@dimen/normal_margin"
+                    android:layout_marginTop="@dimen/small_margin"
+                    tools:text="希望可以早点写完大作业" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+</layout>

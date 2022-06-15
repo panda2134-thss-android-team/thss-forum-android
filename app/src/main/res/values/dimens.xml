@@ -25,8 +25,8 @@
     <dimen name="interest_list_name">18sp</dimen>
     <dimen name="interest_list_pic">40dp</dimen>
     <dimen name="card_line_height">1dp</dimen>
-    <dimen name="card_line_1_width">20dp</dimen>
-    <dimen name="card_line_2_width">260dp</dimen>
+    <dimen name="card_line_1_width">30dp</dimen>
+    <dimen name="card_line_2_width">350dp</dimen>
     <dimen name="card_line_top">40dp</dimen>
     <dimen name="my_pic">80dp</dimen>
 

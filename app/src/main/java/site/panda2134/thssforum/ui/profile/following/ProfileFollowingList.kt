@@ -1,5 +1,6 @@
 package site.panda2134.thssforum.ui.profile.following
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import kotlinx.coroutines.Dispatchers
@@ -9,6 +10,7 @@ import kotlinx.coroutines.withContext
 import site.panda2134.thssforum.api.APIService
 import site.panda2134.thssforum.databinding.ProfileFollowingListBinding
 import site.panda2134.thssforum.ui.profile.ActivityProfileItem
+import site.panda2134.thssforum.ui.profile.ProfileUserHomepage
 
 class ProfileFollowingList : ActivityProfileItem() {
     private lateinit var binding: ProfileFollowingListBinding
