@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginHorizontal="@dimen/normal_margin"
+    android:layout_marginTop="@dimen/normal_margin"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <EditText
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/medium_margin"
+        android:textColor="@color/black"
+        android:hint="@string/notify_search_hint"
+        android:inputType="textLongMessage" />
+    <TextView
+        android:id="@+id/types"
+        android:textSize="@dimen/types_size"
+        android:layout_marginTop="@dimen/small_margin"
+        android:layout_marginLeft="@dimen/pic_to_text_margin"
+        android:textColor="@color/types_color"
+        android:layout_gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/notify_type" />
+    <RadioGroup
+        android:id="@+id/rg_types"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/medium_margin"
+        android:orientation="vertical">
+        <RadioButton
+            android:id="@+id/rb_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/all" />
+        <RadioButton
+            android:id="@+id/rb_likes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/likes" />
+        <RadioButton
+            android:id="@+id/rb_comments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/comments" />
+        <RadioButton
+            android:id="@+id/rb_updates"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/updates" />
+        <RadioButton
+            android:id="@+id/rb_system_notify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/system_notify" />
+    </RadioGroup>
+
+</LinearLayout>

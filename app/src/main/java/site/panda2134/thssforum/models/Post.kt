@@ -12,42 +12,70 @@
 package site.panda2134.thssforum.models
 
 import com.google.gson.annotations.SerializedName
+import java.time.Instant
+
+
 /**
  * 
  * @param type 
- * @param id 字符串，新建动态时不发
- * @param by 字符串，新建时不发
+ * @param id
+ * @param by
  * @param location 
  * @param imageTextContent 
  * @param mediaContent 
  */
-
-data class Post (
+data class PostResponse (
     @SerializedName("type")
-    val type: Type,
-    /* 字符串，新建动态时不发 */
+    val type: PostType,
     @SerializedName("id")
-    val id: String? = null,
-    /* 字符串，新建时不发 */
+    val id: String,
     @SerializedName("by")
-    val by: String? = null,
+    val by: String,
     @SerializedName("location")
     val location: Location? = null,
     @SerializedName("imageTextContent")
     val imageTextContent: ImageTextPostContent? = null,
     @SerializedName("mediaContent")
-    val mediaContent: MediaPostContent? = null
-) {
+    val mediaContent: MediaPostContent? = null,
+    @SerializedName("createdAt")
+    val createdAt: Instant
+)
 
-    /**
-    * 
-    * Values: normal,audio,video
-    */
-    
-    enum class Type(val value: String){
-        @SerializedName(value="normal")  normal("normal"),
-        @SerializedName(value="audio")  audio("audio"),
-        @SerializedName(value="video")  video("video");
+data class Post (
+    val author: User,
+    val postContent: PostContent
+)
+
+class PostContent private constructor (
+    @SerializedName("type")
+    val type: PostType,
+    @SerializedName("location")
+    val location: Location? = null,
+    @SerializedName("imageTextContent")
+    val imageTextContent: ImageTextPostContent? = null,
+    @SerializedName("mediaContent")
+    val mediaContent: MediaPostContent? = null,
+    @Transient
+    val id: String? = null,
+    @Transient
+    val createdAt: Instant? = null
+)  {
+    companion object {
+        fun makeImageTextPost (content: ImageTextPostContent, location: Location? = null, createdAt: Instant) =
+            PostContent(PostType.normal, location, content, null, createdAt = createdAt)
+        fun makeAudioPost (content: MediaPostContent, location: Location? = null, createdAt: Instant) =
+            PostContent(PostType.audio, location, null, content, createdAt = createdAt)
+        fun makeVideoPost (content: MediaPostContent, location: Location? = null, createdAt: Instant) =
+            PostContent(PostType.video, location, null, content, createdAt = createdAt)
+        fun fromPostResponse (response: PostResponse) =
+            PostContent(response.type, response.location, response.imageTextContent, response.mediaContent, response.id, response.createdAt)
     }
+    fun getTitle () =
+        when (type) {
+            PostType.normal -> imageTextContent!!.title
+            in listOf(PostType.audio, PostType.video) -> mediaContent!!.title
+            else -> throw IllegalStateException("unknown post type")
+        }
+
 }
 

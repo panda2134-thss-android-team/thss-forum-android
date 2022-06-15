@@ -12,6 +12,7 @@
 package site.panda2134.thssforum.models
 
 import com.google.gson.annotations.SerializedName
+
 /**
  * 
  * @param type 
@@ -19,24 +20,21 @@ import com.google.gson.annotations.SerializedName
  * @param mediaContent 
  */
 
-data class ModifyPostRequest (
+class ModifyPostRequest private constructor (
     @SerializedName("type")
-    val type: Type,
+    val type: PostType,
     @SerializedName("imageTextContent")
     val imageTextContent: ImageTextPostContent? = null,
     @SerializedName("mediaContent")
     val mediaContent: MediaPostContent? = null
 ) {
-
-    /**
-    * 
-    * Values: normal,audio,video
-    */
-    
-    enum class Type(val value: String){
-        @SerializedName(value="normal")  normal("normal"),
-        @SerializedName(value="audio")  audio("audio"),
-        @SerializedName(value="video")  video("video");
+    companion object {
+        fun makeImageTextPostModifyRequest(imageTextContent: ImageTextPostContent) =
+            ModifyPostRequest(PostType.normal, imageTextContent = imageTextContent)
+        fun makeAudioContent(mediaContent: MediaPostContent) =
+            ModifyPostRequest(PostType.audio, mediaContent = mediaContent)
+        fun makeVideoContent(mediaContent: MediaPostContent) =
+            ModifyPostRequest(PostType.video, mediaContent = mediaContent)
     }
 }
 

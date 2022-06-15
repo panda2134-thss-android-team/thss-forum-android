@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="site.panda2134.thssforum.ui.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/navigation_post"
+        android:name="site.panda2134.thssforum.ui.post.SelectNewPostTypeFragment"
+        android:label="@string/title_post"
+        tools:layout="@layout/fragment_post" >
+        <action
+            android:id="@+id/action_navigation_post_to_postPureText"
+            app:destination="@id/postPureText" />
+        <action
+            android:id="@+id/action_navigation_post_to_postTextPicMix"
+            app:destination="@id/postTextPicMix" />
+        <action
+            android:id="@+id/action_navigation_post_to_postAudio"
+            app:destination="@id/postAudio" />
+        <action
+            android:id="@+id/action_navigation_post_to_postVideo"
+            app:destination="@id/postVideo" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="site.panda2134.thssforum.ui.profile.ProfileFragment"
+        android:label="@string/title_profile"
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_navigation_profile_to_profileEditMyProfile"
+            app:destination="@id/profileEditMyProfile" />
+        <action
+            android:id="@+id/action_navigation_profile_to_profileDrafts"
+            app:destination="@id/profileDrafts" />
+        <action
+            android:id="@+id/action_navigation_profile_to_profileFollowingList"
+            app:destination="@id/profileInterestList" />
+        <action
+            android:id="@+id/action_navigation_profile_to_profileNotify"
+            app:destination="@id/profileNotify" />
+    </fragment>
+    <activity
+        android:id="@+id/postPureText"
+        android:name="site.panda2134.thssforum.ui.post.ActivityNewPureTextPost"
+        android:label="activity_post_pure_text"
+        tools:layout="@layout/activity_post_pure_text" />
+    <activity
+        android:id="@+id/postTextPicMix"
+        android:name="site.panda2134.thssforum.ui.post.ActivityNewTextPicMixPost"
+        android:label="activity_post_text_pic_mix"
+        tools:layout="@layout/activity_post_text_pic_mix" />
+    <activity
+        android:id="@+id/postAudio"
+        android:name="site.panda2134.thssforum.ui.post.ActivityNewAudioPost"
+        android:label="activity_post_audio"
+        tools:layout="@layout/activity_post_audio" />
+    <activity
+        android:id="@+id/postVideo"
+        android:name="site.panda2134.thssforum.ui.post.ActivityNewVideoPost"
+        android:label="activity_post_video"
+        tools:layout="@layout/activity_post_video" />
+    <activity
+        android:id="@+id/profileEditMyProfile"
+        android:name="site.panda2134.thssforum.ui.profile.ProfileEditMyProfile"
+        android:label="activity_profile_edit_my_profile"
+        tools:layout="@layout/activity_profile_edit_my_profile" />
+    <activity
+        android:id="@+id/profileDrafts"
+        android:name="site.panda2134.thssforum.ui.profile.ProfileDrafts"
+        android:label="activity_profile_drafts"
+        tools:layout="@layout/activity_profile_drafts" />
+    <activity
+        android:id="@+id/profileInterestList"
+        android:name="site.panda2134.thssforum.ui.profile.following.ProfileFollowingList"
+        android:label="activity_profile_interest_list"
+        tools:layout="@layout/profile_following_list" />
+    <activity
+        android:id="@+id/profileNotify"
+        android:name="site.panda2134.thssforum.ui.profile.ProfileNotificationList"
+        android:label="activity_profile_menu_bell"
+        tools:layout="@layout/activity_profile_menu_bell">
+    </activity>
+</navigation>

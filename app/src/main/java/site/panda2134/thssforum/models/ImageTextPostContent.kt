@@ -24,7 +24,7 @@ data class ImageTextPostContent (
     @SerializedName("text")
     val text: String,
     @SerializedName("images")
-    val images: kotlin.Array<String>,
+    val images: ArrayList<String>,
     @SerializedName("title")
     val title: String
 )

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/comment_item"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/interval"
+        android:layout_height="@dimen/interval_height"
+        android:layout_width="match_parent"
+        android:background="@color/interval_line"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/post_item_inside_margin">
+        <ImageView
+            android:id="@+id/commenter_pic"
+            android:layout_width="@dimen/commenter_pic"
+            android:layout_height="@dimen/commenter_pic"
+            android:contentDescription="@string/drafts"
+            tools:srcCompat="@drawable/text_box_edit_outline"
+            android:background="@drawable/image_border"
+            android:padding="@dimen/image_border_w"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/pic_to_text_margin"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/following_nickname"
+                    android:textSize="@dimen/commenter_name"
+                    android:textColor="@color/click_blue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="用户D" />
+                <TextView
+                    android:id="@+id/commenter_text"
+                    android:textSize="@dimen/commenter_name"
+                    android:textColor="@color/black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/commenter_item_inside_margin"
+                    android:text="好！" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
