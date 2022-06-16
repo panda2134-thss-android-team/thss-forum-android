@@ -69,6 +69,7 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIWrapp
                 View.GONE
             }
         p.postContent.location?.let {
+            binding.location.visibility = View.VISIBLE
             binding.location.text = it.description
         }
         p.postContent.createdAt?.let {
