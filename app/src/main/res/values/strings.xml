@@ -53,8 +53,6 @@
     <string name="edit_my_profile">修改个人信息</string>
 
 
-    <string name="search">搜索</string>
-    <string name="notify">通知</string>
     <string name="notify_description">来自其他用户的点赞、评论通知</string>
     <string name="menu_puretext">发布-纯文字</string>
     <string name="menu_textpicmix">发布-图文混合</string>
@@ -84,6 +82,9 @@
     <string name="notify_search_hint">查询通知内容…</string>
 
     <string name="like_time_switch">动态展示顺序</string>
+    <string name="eye_switch">屏蔽与否</string>
+    <string name="search">搜索</string>
+    <string name="notify">通知</string>
     <string name="nickname">昵称</string>
     <string name="intro">简介</string>
     <string name="save">保存</string>

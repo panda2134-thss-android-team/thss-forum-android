@@ -4,15 +4,13 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.MediaController
-import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import cn.bingoogolapple.photopicker.activity.BGAPhotoPreviewActivity
 import cn.bingoogolapple.photopicker.widget.BGANinePhotoLayout
 import com.arges.sepan.argmusicplayer.Models.ArgAudio
 import com.bumptech.glide.Glide
-import com.github.marlonlom.utilities.timeago.TimeAgo
-import com.github.marlonlom.utilities.timeago.TimeAgoMessages
 import kotlinx.coroutines.*
 import site.panda2134.thssforum.R
 import site.panda2134.thssforum.api.APIWrapper
@@ -20,11 +18,9 @@ import site.panda2134.thssforum.databinding.PostItemBinding
 import site.panda2134.thssforum.models.Post
 import site.panda2134.thssforum.models.PostType
 import site.panda2134.thssforum.utils.toTimeAgo
-import java.util.*
 
 class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIWrapper): RecyclerView.ViewHolder(binding.root), BGANinePhotoLayout.Delegate {
     private var post: Post? = null
-    val refreshScope = MainScope()
     var onDeleteCallback: ((post: Post, bindingAdapterPosition: Int)->Unit)? = null
     var mediaController: MediaController? = null
         private set
@@ -155,7 +151,29 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIWrapp
                 }
             }
         }
+
+        binding.shareButton.setOnClickListener {
+            val intentBuilder = ShareCompat.IntentBuilder(itemView.context)
+            intentBuilder.setType("text/plain").setText(shareString).startChooser()
+            true
+        }
+
     }
+
+    // share的时候只分享文字部分
+    private val shareString: String
+        get() {
+            if(post!!.postContent.type == PostType.normal) {
+                if(binding.postContent.text.isNotBlank()) {
+                    return "${binding.userName.text} ：\n  标题：${binding.postTitle.text}\n  内容：${binding.postContent.text}\n  时间：${binding.postTime.text}"
+                }
+                else {
+                    return "${binding.userName.text} ：\n  标题：${binding.postTitle.text}\n  时间：${binding.postTime.text}"
+                }
+            } else{
+                return "${binding.userName.text} ：\n  标题：${binding.postTitle.text}\n  链接：${Uri.parse(post!!.postContent.mediaContent!!.media[0])}\n  时间：${binding.postTime.text}"
+            }
+        }
 
     override fun onClickNinePhotoItem(
         ninePhotoLayout: BGANinePhotoLayout?,
