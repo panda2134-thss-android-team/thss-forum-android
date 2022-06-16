@@ -5,10 +5,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.core.content.ContextCompat
 import site.panda2134.thssforum.R
-import site.panda2134.thssforum.api.APIService
-import site.panda2134.thssforum.databinding.ProfileNotifySearchPageBinding
 import site.panda2134.thssforum.databinding.ProfileUserHomepageBinding
-import site.panda2134.thssforum.models.Post
 
 
 class ProfileUserHomepage : ActivityProfileItem() {
@@ -39,11 +36,11 @@ class ProfileUserHomepage : ActivityProfileItem() {
             R.id.eye_menu_item -> {
                 if(isView) {
                     isView = false
-                    menu?.getItem(1)?.icon = ContextCompat.getDrawable(this, R.drawable.eye_off);
+                    menu.getItem(1)?.icon = ContextCompat.getDrawable(this, R.drawable.eye_off)
                 }
                 else {
                     isView = true
-                    menu?.getItem(1)?.icon = (ContextCompat.getDrawable(this, R.drawable.eye));
+                    menu.getItem(1)?.icon = (ContextCompat.getDrawable(this, R.drawable.eye))
                 }
                 true
             }

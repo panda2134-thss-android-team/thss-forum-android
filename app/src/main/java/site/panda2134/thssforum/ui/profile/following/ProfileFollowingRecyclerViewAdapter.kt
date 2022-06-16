@@ -24,7 +24,7 @@ class ProfileFollowingRecyclerViewAdapter(private val dataset: ArrayList<User>):
     }
 
     override fun onBindViewHolder(holder: ProfileFollowingViewHolder, position: Int) {
-        holder.binding.followingNickname.text = dataset[position].nickname
+        holder.binding.nickname.text = dataset[position].nickname
         MainScope().launch(Dispatchers.IO) {
             val bmp = downloadImage(dataset[position].avatar)
             withContext(Dispatchers.Main) {
@@ -33,15 +33,11 @@ class ProfileFollowingRecyclerViewAdapter(private val dataset: ArrayList<User>):
         }
 
         // 点击item跳转至对应的主页
-        MainScope().launch(Dispatchers.IO) {
-            holder.binding.commentItem.setOnClickListener {
-                println("在点击了！这里是：" + dataset[position].nickname)
-//            val author = dataset[position].uid
-//            val intent = Intent(holder.binding.root.context, ProfileUserHomepage::class.java)
-//            intent.putExtra("author", author)
-//            holder.binding.root.context.startActivity(intent)
-                true
-            }
+        holder.binding.followingItem.setOnClickListener {
+            println("在点击了！这里是：" + dataset[position].nickname)
+            val intent = Intent(holder.binding.root.context, ProfileUserHomepage::class.java)
+                            .putExtra("author", dataset[position].uid)
+            holder.binding.root.context.startActivity(intent)
         }
     }
 

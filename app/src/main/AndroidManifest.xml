@@ -39,6 +39,9 @@
             android:name="com.amap.api.v2.apikey"
             android:value="a30817e0513e42453a3a838489950284" />
 
+        <activity android:name=".ui.profile.ProfileUserHomepage"
+            android:exported="false"
+            android:label="@string/user_homepage" />
         <activity
             android:name=".ui.profile.ProfileNotificationList"
             android:exported="true"

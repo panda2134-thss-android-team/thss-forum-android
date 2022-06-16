@@ -62,6 +62,7 @@
 
     <string name="delete">删除</string>
     <string name="user_name">用户名</string>
+    <string name="user_homepage">用户主页</string>
     <string name="content">内容</string>
     <string name="title_name">动态名</string>
     <string name="title_content">动态名称 或 内容</string>
