@@ -47,22 +47,7 @@ class PostListRecyclerViewAdapter(val api: APIWrapper, val fetchFollowing: Boole
                 val commentAdapter = CommentRecyclerViewAdapter(api)
                 binding.commentView.adapter = commentAdapter
                 binding.commentView.layoutManager = LinearLayoutManager(parent.context)
-                binding.commentView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
-                    private var isLoading = false
-                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                        super.onScrolled(recyclerView, dx, dy)
-                        if (!isLoading) {
-                            if ((recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition() == (recyclerView.adapter?.itemCount
-                                    ?: 0) - 1
-                            ) { // last item
-                                isLoading = true
-                                commentAdapter.fetchMoreComments {
-                                    isLoading = false
-                                }
-                            }
-                        }
-                    }
-                })
+                commentAdapter.fetchComments()
                 PostListRecyclerViewHolder(binding, api).apply {
                     onDeleteCallback = { _, bindingAdapterPosition ->
                         posts.removeAt(bindingAdapterPosition)

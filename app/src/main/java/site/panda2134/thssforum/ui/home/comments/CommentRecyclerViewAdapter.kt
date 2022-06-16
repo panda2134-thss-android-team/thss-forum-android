@@ -13,9 +13,9 @@ import site.panda2134.thssforum.models.Comment
 
 class CommentRecyclerViewAdapter(private val api: APIWrapper): RecyclerView.Adapter<CommentRecyclerViewHolder>() {
     private val dataset = arrayListOf<Comment>()
-    private val COMMENTS_PER_LOAD = 25
+    private val COMMENTS_PER_LOAD = 1000000
     private var isEnded = false
-    var postId = ""
+    var postId: String? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentRecyclerViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -24,7 +24,9 @@ class CommentRecyclerViewAdapter(private val api: APIWrapper): RecyclerView.Adap
     }
 
     override fun onBindViewHolder(holder: CommentRecyclerViewHolder, position: Int) {
-        holder.bindComment(postId, dataset[position])
+        postId?.let {
+            holder.bindComment(it, dataset[position])
+        }
     }
 
     override fun getItemCount(): Int {
@@ -38,10 +40,12 @@ class CommentRecyclerViewAdapter(private val api: APIWrapper): RecyclerView.Adap
         isEnded = false
     }
 
-    fun fetchMoreComments(finishCallback: () -> Unit = {}) {
+    fun fetchComments(finishCallback: () -> Unit = {}) {
         if (isEnded) return
+        val postIdLocal = postId
+        if (postIdLocal == null) return
         MainScope().launch(Dispatchers.IO) {
-            val newComments = api.getPostComments(postId, skip = dataset.size, limit = COMMENTS_PER_LOAD + 1,
+            val newComments = api.getPostComments(postIdLocal, skip = dataset.size, limit = COMMENTS_PER_LOAD + 1,
                 sortBy = APIWrapper.CommentSortBy.OLDEST_FIRST)
             if (newComments.size < COMMENTS_PER_LOAD + 1) {
                 isEnded = true

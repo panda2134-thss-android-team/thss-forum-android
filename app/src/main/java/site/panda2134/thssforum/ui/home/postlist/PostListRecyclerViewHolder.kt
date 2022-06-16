@@ -49,7 +49,7 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIWrapp
         commentAdapter.clear()
 
         MainScope().launch {
-            commentAdapter.fetchMoreComments()
+            commentAdapter.fetchComments()
             val likes = api.getNumOfLikes(p.postContent.id)
             val followingUsers = api.getFollowingUsers()
             withContext(Dispatchers.Main) {

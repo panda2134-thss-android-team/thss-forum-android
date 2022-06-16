@@ -227,25 +227,13 @@
                         tools:text="35"
                         android:textColor="@color/click_blue"/>
             </LinearLayout>
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:paddingStart="16dp"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/comment_view"
+                android:nestedScrollingEnabled="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:ignore="RtlSymmetry">
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/comment_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:scrollbars="vertical"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constrainedHeight="true"
-                    app:layout_constraintHeight_max="200dp"
-                    tools:listitem="@layout/post_comment_item"
-                    tools:ignore="RtlSymmetry" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                tools:listitem="@layout/post_comment_item"
+                tools:ignore="RtlSymmetry" />
         </LinearLayout>
 
     </LinearLayout>
