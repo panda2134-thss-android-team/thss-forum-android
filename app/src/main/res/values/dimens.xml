@@ -45,6 +45,5 @@
 
     <dimen name="image_border_w">1dp</dimen>
 
-
-
+    <dimen name="bottom_navigation_bar_height">56dp</dimen>
 </resources>

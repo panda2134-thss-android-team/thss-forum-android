@@ -42,8 +42,7 @@ class CommentRecyclerViewAdapter(private val api: APIWrapper): RecyclerView.Adap
 
     fun fetchComments(finishCallback: () -> Unit = {}) {
         if (isEnded) return
-        val postIdLocal = postId
-        if (postIdLocal == null) return
+        val postIdLocal = postId ?: return
         MainScope().launch(Dispatchers.IO) {
             val newComments = api.getPostComments(postIdLocal, skip = dataset.size, limit = COMMENTS_PER_LOAD + 1,
                 sortBy = APIWrapper.CommentSortBy.OLDEST_FIRST)

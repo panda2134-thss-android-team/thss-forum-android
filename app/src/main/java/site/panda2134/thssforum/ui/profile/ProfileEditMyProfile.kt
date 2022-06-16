@@ -34,21 +34,24 @@ class ProfileEditMyProfile : ActivityProfileItem() {
         binding.saveButton.setOnClickListener() {
             // 修改个人信息
             MainScope().launch(Dispatchers.IO) {
-                EditUserInfo(apiService)
+                try {
+                    editUserInfo(apiService)
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@ProfileEditMyProfile, getString(R.string.save_success), Toast.LENGTH_SHORT).show()
+                        finish()
+                    }
+                } catch (e: Throwable) {
+                    e.printStackTrace()
+                }
             }
-            Toast.makeText(this, "保存成功", Toast.LENGTH_SHORT).show()
+
         }
 
     }
 
-    private suspend fun EditUserInfo(apiWrapper: APIWrapper) {
-        try {
-            // TODO: 修改图片
-            apiWrapper.modifyProfile(ModifyProfileRequest(nickname=binding.myName.text.toString(),intro=binding.myIntro.text.toString()))
-
-        } catch (e: Throwable) {
-            e.printStackTrace()
-        }
+    private suspend fun editUserInfo(apiWrapper: APIWrapper) {
+        // TODO: 修改图片
+        apiWrapper.modifyProfile(ModifyProfileRequest(nickname=binding.myName.text.toString(),intro=binding.myIntro.text.toString()))
     }
 
     private suspend fun loadUserInfo(apiWrapper: APIWrapper) {

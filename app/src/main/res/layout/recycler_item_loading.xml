@@ -1,29 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="wrap_content"
     android:layout_marginVertical="10dp"
     android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools">
-
-    <LinearLayout
-        android:orientation="vertical"
+    <ProgressBar
+        android:id="@+id/progress_bar"
         android:layout_width="match_parent"
-        android:layout_height="48dp">
+        android:layout_height="match_parent"/>
 
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-        <TextView
-            android:id="@+id/no_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textAlignment="center"
-            android:gravity="center"
-            android:visibility="gone"
-            tools:text="@string/NO_MORE_CONTENT"
-            />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/no_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:visibility="gone"
+        tools:text="@string/NO_MORE_CONTENT"
+        />
 </LinearLayout>
