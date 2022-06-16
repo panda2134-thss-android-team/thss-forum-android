@@ -10,6 +10,7 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.MenuItem
 import android.widget.MediaController
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.MutableLiveData
@@ -155,7 +156,7 @@ class ActivityNewVideoPost : ActivityNewPost() {
                         withContext(Dispatchers.Main) {
                             binding.title.text.clear()
                             videoPath.value = ""
-                            saveDraft() // remove draft
+                            Toast.makeText(this@ActivityNewVideoPost, R.string.post_success, Toast.LENGTH_SHORT).show()
                         }
                         finish()
                     }

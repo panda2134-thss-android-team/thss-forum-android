@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
@@ -12,6 +13,7 @@ import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import site.panda2134.thssforum.R
 import site.panda2134.thssforum.api.APIWrapper
 import site.panda2134.thssforum.databinding.PostPureTextBinding
@@ -100,10 +102,10 @@ class ActivityNewPureTextPost : ActivityNewPost() {
                 val imageTextPostContent = ImageTextPostContent(text = binding.content.text.toString(), arrayListOf<String>(), title = binding.title.text.toString())
                 val postContent = PostContent.makeImageTextPost(imageTextPostContent, location = location, createdAt = Instant.now())
                 this.lifecycleScope.launch(Dispatchers.IO) {
-                    val res = apiService.newPost(postContent)
-                    val post = apiService.getPostDetails(res.id)
-                    Log.d("newPost", "postId: ${res.id}")
-                    Log.d("newPost", "title: ${post.postContent.imageTextContent?.title}, text: ${post.postContent.imageTextContent?.text}")
+                    apiService.newPost(postContent)
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@ActivityNewPureTextPost, R.string.post_success, Toast.LENGTH_SHORT).show()
+                    }
                 }
                 binding.title.text?.clear()
                 binding.content.text?.clear()
