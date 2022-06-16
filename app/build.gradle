@@ -83,4 +83,5 @@ dependencies {
     implementation "io.ktor:ktor-client-okhttp:2.0.2"
     implementation "io.ktor:ktor-client-websockets:2.0.2"
     implementation "io.ktor:ktor-serialization-gson:2.0.2"
+    implementation "com.github.yshrsmz:KeyboardVisibilityEvent:v3.0.0-RC3"
 }

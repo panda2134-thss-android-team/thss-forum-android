@@ -1,10 +1,13 @@
 package site.panda2134.thssforum.ui.home.postlist
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.*
@@ -18,7 +21,8 @@ import site.panda2134.thssforum.ui.home.comments.CommentRecyclerViewAdapter
 import site.panda2134.thssforum.ui.utils.RecyclerItemLoadingViewHolder
 import java.lang.Integer.min
 
-class PostListRecyclerViewAdapter(val api: APIWrapper, val fetchFollowing: Boolean = false): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class PostListRecyclerViewAdapter(val api: APIWrapper, val fetchFollowing: Boolean = false,
+                                  val activity: Activity, val lifecycleOwner: LifecycleOwner): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val POST_ITEM = 0
     private val LIST_LOADING = 1
     private val LIST_END = 2
@@ -48,7 +52,7 @@ class PostListRecyclerViewAdapter(val api: APIWrapper, val fetchFollowing: Boole
                 binding.commentView.adapter = commentAdapter
                 binding.commentView.layoutManager = LinearLayoutManager(parent.context)
                 commentAdapter.fetchComments()
-                PostListRecyclerViewHolder(binding, api).apply {
+                PostListRecyclerViewHolder(binding, api, recyclerView!!, activity, lifecycleOwner).apply {
                     onDeleteCallback = { _, bindingAdapterPosition ->
                         posts.removeAt(bindingAdapterPosition)
                         notifyItemRemoved(bindingAdapterPosition)
@@ -114,10 +118,10 @@ class PostListRecyclerViewAdapter(val api: APIWrapper, val fetchFollowing: Boole
                     postsToAdd = postsToAdd.subList(0, min(POSTS_PER_FETCH, postsToAdd.size))
                     posts.addAll(insertedAt, postsToAdd)
                     withContext(Dispatchers.Main) {
-                        if (initial) { // initial
-                            notifyDataSetChanged()
-                        } else {
-                            notifyItemRangeInserted(insertedAt, postsToAdd.size)
+                        notifyItemRangeInserted(insertedAt, postsToAdd.size)
+                        if (initial) {
+                            // TODO: fix glitches
+                            (recyclerView!!.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(0, 0)
                         }
                         if (isEnded) {
                             notifyItemChanged(posts.size)
@@ -139,14 +143,6 @@ class PostListRecyclerViewAdapter(val api: APIWrapper, val fetchFollowing: Boole
         recyclerView.adapter = this
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        registerAdapterDataObserver(object: RecyclerView.AdapterDataObserver() {
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                super.onItemRangeInserted(positionStart, itemCount)
-                if (positionStart == 0) {
-                    recyclerView.layoutManager!!.scrollToPosition(0)
-                }
-            }
-        })
         recyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
             private var isLoading = false
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -156,8 +152,10 @@ class PostListRecyclerViewAdapter(val api: APIWrapper, val fetchFollowing: Boole
                             ?: 0) - 1
                     ) { // last item
                         isLoading = true
-                        this@PostListRecyclerViewAdapter.fetchMorePosts {
-                            isLoading = false
+                        recyclerView.post {
+                            this@PostListRecyclerViewAdapter.fetchMorePosts {
+                                isLoading = false
+                            }
                         }
                     }
                 }

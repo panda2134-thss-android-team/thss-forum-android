@@ -227,13 +227,25 @@
                         tools:text="35"
                         android:textColor="@color/click_blue"/>
             </LinearLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/comment_view"
                 android:nestedScrollingEnabled="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:listitem="@layout/post_comment_item"
+                tools:itemCount="2"
                 tools:ignore="RtlSymmetry" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/comment_input"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:inputType="text"
+                android:imeOptions="actionSend"
+                android:hint="@string/write_your_comment" />
         </LinearLayout>
 
     </LinearLayout>

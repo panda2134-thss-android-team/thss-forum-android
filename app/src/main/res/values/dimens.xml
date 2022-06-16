@@ -18,7 +18,7 @@
     <dimen name="publisher_pic">50dp</dimen>
     <dimen name="publisher_name">15sp</dimen>
     <dimen name="commenter_pic">30dp</dimen>
-    <dimen name="commenter_name">11sp</dimen>
+    <dimen name="comment_text">14sp</dimen>
     <dimen name="commenter_item_inside_margin">1dp</dimen>
     <dimen name="text_down_line_height">1dp</dimen>
     <dimen name="text_down_line_h_margin">10dp</dimen>

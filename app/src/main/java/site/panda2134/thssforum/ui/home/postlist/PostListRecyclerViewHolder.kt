@@ -1,30 +1,41 @@
 package site.panda2134.thssforum.ui.home.postlist
 
+import android.app.Activity
+import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.MediaController
+import android.widget.Toast
 import androidx.core.app.ShareCompat
+import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import cn.bingoogolapple.photopicker.activity.BGAPhotoPreviewActivity
 import cn.bingoogolapple.photopicker.widget.BGANinePhotoLayout
 import com.arges.sepan.argmusicplayer.Models.ArgAudio
 import com.bumptech.glide.Glide
+import com.github.kittinunf.fuel.core.FuelError
 import kotlinx.coroutines.*
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import site.panda2134.thssforum.R
 import site.panda2134.thssforum.api.APIWrapper
 import site.panda2134.thssforum.databinding.PostItemBinding
-import site.panda2134.thssforum.models.Post
-import site.panda2134.thssforum.models.PostType
+import site.panda2134.thssforum.models.*
 import site.panda2134.thssforum.ui.home.comments.CommentRecyclerViewAdapter
 import site.panda2134.thssforum.utils.toTimeAgo
 
-class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIWrapper): RecyclerView.ViewHolder(binding.root), BGANinePhotoLayout.Delegate {
+class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIWrapper, val recyclerView: RecyclerView,
+                                 val activity: Activity, val lifecycleOwner: LifecycleOwner): RecyclerView.ViewHolder(binding.root), BGANinePhotoLayout.Delegate {
     private var post: Post? = null
     var onDeleteCallback: ((post: Post, bindingAdapterPosition: Int)->Unit)? = null
     var mediaController: MediaController? = null
         private set
+    private var replyTo: Comment? = null
+    private val inputMethodManager = ContextCompat.getSystemService(binding.root.context, InputMethodManager::class.java)!!
 
     init {
         MainScope().launch {
@@ -43,6 +54,8 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIWrapp
         binding.likeButton.isChecked = false // default to false
         binding.location.text = ""
         binding.location.visibility = View.GONE
+        binding.commentInput.text?.clear()
+        binding.commentInput.visibility = View.GONE
 
         val commentAdapter = (binding.commentView.adapter as CommentRecyclerViewAdapter)
         commentAdapter.postId = p.postContent.id!!
@@ -75,6 +88,7 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIWrapp
         p.postContent.createdAt?.let {
             binding.postTime.text = it.toTimeAgo()
         }
+
         when(p.postContent.type) {
             PostType.normal -> {
                 val content = p.postContent.imageTextContent!!
@@ -127,6 +141,11 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIWrapp
                 mediaController = MediaController(binding.videoPlayerWrapper.context)
                 mediaController!!.setAnchorView(binding.videoPlayer)
                 binding.videoPlayer.setMediaController(mediaController)
+                binding.videoPlayer.setOnPreparedListener {
+                    binding.videoPlayer.postDelayed({
+                        mediaController!!.hide()
+                    },1)
+                }
             }
         }
 
@@ -165,6 +184,71 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIWrapp
             intentBuilder.setType("text/plain").setText(shareString).startChooser()
         }
 
+        commentAdapter.commentClickedHandler = { comment, _ ->
+            replyTo = comment
+            showCommentEditText()
+        }
+
+        binding.commentButton.setOnClickListener {
+            showCommentEditText()
+        }
+
+        binding.commentInput.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEND) {
+                MainScope().launch(Dispatchers.IO) {
+                    try {
+                        api.newComment(post!!.postContent.id!!, NewCommentRequest(
+                            binding.commentInput.text.toString(),
+                            replyTo?.data?.id
+                        ))
+                        replyTo = null
+                        withContext(Dispatchers.Main) {
+                            hideCommentEditText()
+                            (binding.commentView.adapter as? CommentRecyclerViewAdapter)?.apply {
+                                clear()
+                                fetchComments {
+                                    Toast.makeText(binding.root.context, R.string.comment_success, Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+                    } catch (e: FuelError) {
+                        e.printStackTrace()
+                    }
+                }
+                return@setOnEditorActionListener true
+            }
+            false
+        }
+
+        KeyboardVisibilityEvent.setEventListener(activity, lifecycleOwner) { visible ->
+            if (!visible) {
+                hideCommentEditText()
+            }
+        }
+    }
+
+
+    private fun showCommentEditText() {
+        binding.commentInput.visibility = View.VISIBLE
+        MainScope().launch {
+            delay(50)
+            binding.commentInput.requestFocus()
+            inputMethodManager.showSoftInput(binding.commentInput, 0)
+            if (bindingAdapterPosition != bindingAdapter!!.itemCount - 2) {
+                recyclerView.scrollToPosition(bindingAdapterPosition + 1)
+            }
+            delay(50)
+            if (bindingAdapterPosition == bindingAdapter!!.itemCount - 2) {
+                recyclerView.scrollToPosition(bindingAdapterPosition + 1)
+            } else {
+                recyclerView.scrollBy(0, -100)
+            }
+        }
+    }
+
+    private fun hideCommentEditText() {
+        binding.commentInput.visibility = View.GONE
+        inputMethodManager.hideSoftInputFromWindow(binding.root.windowToken, 0)
     }
 
     // share的时候只分享文字部分

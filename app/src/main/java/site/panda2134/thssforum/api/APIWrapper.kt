@@ -108,7 +108,7 @@ class APIWrapper(private val context: Context) {
 
     private val fuel: FuelManager = FuelManager().apply {
         basePath = context.getString(R.string.API_BASEPATH)
-        addRequestInterceptor(LogRequestAsCurlInterceptor)
+//        addRequestInterceptor(LogRequestAsCurlInterceptor)
         addResponseInterceptor { next ->
             { request, response ->
                 val toastMessage = when (response.statusCode) {

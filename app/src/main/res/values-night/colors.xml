@@ -10,7 +10,7 @@
     <!--    <color name="background_color_light">#F5F5F5</color>-->
     <!--    <color name="padding_color">#EDEDED</color>-->
 
-    <color name="interval_line">#DCDCDC</color>
+    <color name="interval_line">#7c7c7c</color>
     <color name="click_blue">#1976D2</color>
     <color name="word_grey">#696969</color>
     <color name="followed_button_bg">#FFE699</color>

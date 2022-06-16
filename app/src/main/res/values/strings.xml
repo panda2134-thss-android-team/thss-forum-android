@@ -119,6 +119,8 @@
 
     <string name="unknown">未知</string>
     <string name="reply">回复</string>
+    <string name="write_your_comment">写下您的评论</string>
 
     <string name="save_success">保存成功</string>
+    <string name="comment_success">评论成功</string>
 </resources>

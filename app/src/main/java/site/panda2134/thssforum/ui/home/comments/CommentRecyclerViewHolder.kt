@@ -15,7 +15,7 @@ import site.panda2134.thssforum.models.Comment
 import site.panda2134.thssforum.models.User
 import site.panda2134.thssforum.ui.profile.ProfileUserHomepage
 
-class CommentRecyclerViewHolder(private val binding: PostCommentItemBinding,
+class CommentRecyclerViewHolder(val binding: PostCommentItemBinding,
                                 private val api: APIWrapper): RecyclerView.ViewHolder(binding.root) {
     private lateinit var by: User
     private var replyTo: User? = null
@@ -38,7 +38,7 @@ class CommentRecyclerViewHolder(private val binding: PostCommentItemBinding,
                     val parentComment = api.getCommentInfo(postId, parentCommentId)
                     withContext(Dispatchers.Main) {
                         replyTo = parentComment.user
-                        binding.nicknameReplyTo.text = parentComment.user.avatar
+                        binding.nicknameReplyTo.text = parentComment.user.nickname
                     }
                 }
             }

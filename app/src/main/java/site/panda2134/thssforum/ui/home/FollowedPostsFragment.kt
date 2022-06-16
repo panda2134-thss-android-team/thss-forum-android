@@ -25,7 +25,7 @@ class FollowedPostsFragment: Fragment() {
         // 把动态item中的每一项调用api填写
         api = APIWrapper(requireActivity())
 
-        adapter = PostListRecyclerViewAdapter(api, true)
+        adapter = PostListRecyclerViewAdapter(api, true, requireActivity(), this)
         binding.followedPostsList.adapter = adapter
         adapter.setupRecyclerView(this.requireContext(), binding.followedPostsList)
         binding.root.setOnRefreshListener {

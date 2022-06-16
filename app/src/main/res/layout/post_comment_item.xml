@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:id="@+id/following_item"
     android:orientation="vertical">
-    <TextView
+    <View
         android:id="@+id/interval"
         android:layout_height="@dimen/interval_height"
         android:layout_width="match_parent"
@@ -34,7 +34,7 @@
                     android:orientation="horizontal">
                     <TextView
                         android:id="@+id/nickname"
-                        android:textSize="@dimen/commenter_name"
+                        android:textSize="@dimen/comment_text"
                         android:textColor="@color/click_blue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -46,12 +46,12 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="@dimen/commenter_name"
+                            android:textSize="@dimen/comment_text"
                             android:layout_marginHorizontal="@dimen/small_margin"
                             android:text="@string/reply"/>
                         <TextView
                             android:id="@+id/nicknameReplyTo"
-                            android:textSize="@dimen/commenter_name"
+                            android:textSize="@dimen/comment_text"
                             android:textColor="@color/click_blue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -65,8 +65,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/commenter_item_inside_margin"
                 style="@style/TextAppearance.AppCompat.Body2"
-                android:textSize="@dimen/commenter_name"
-                tools:text="@tools:sample/lorem/random" />
+                android:textSize="@dimen/comment_text"
+                tools:text="@tools:sample/lorem[15]" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

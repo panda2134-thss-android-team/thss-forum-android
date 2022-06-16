@@ -1,6 +1,7 @@
 package site.panda2134.thssforum.ui.home.comments
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
@@ -16,6 +17,7 @@ class CommentRecyclerViewAdapter(private val api: APIWrapper): RecyclerView.Adap
     private val COMMENTS_PER_LOAD = 1000000
     private var isEnded = false
     var postId: String? = null
+    var commentClickedHandler: ((Comment, View)->Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentRecyclerViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -26,6 +28,11 @@ class CommentRecyclerViewAdapter(private val api: APIWrapper): RecyclerView.Adap
     override fun onBindViewHolder(holder: CommentRecyclerViewHolder, position: Int) {
         postId?.let {
             holder.bindComment(it, dataset[position])
+            holder.binding.root.setOnClickListener {
+                commentClickedHandler?.apply {
+                    invoke(dataset[position], it)
+                }
+            }
         }
     }
 
