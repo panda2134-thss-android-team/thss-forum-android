@@ -1,14 +1,18 @@
 package site.panda2134.thssforum.api
 
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.core.content.ContextCompat.startActivity
+import com.alibaba.sdk.android.oss.ClientException
 import com.alibaba.sdk.android.oss.OSSClient
+import com.alibaba.sdk.android.oss.ServiceException
 import com.alibaba.sdk.android.oss.callback.OSSProgressCallback
 import com.alibaba.sdk.android.oss.common.auth.OSSStsTokenCredentialProvider
 import com.alibaba.sdk.android.oss.model.PutObjectRequest
@@ -21,6 +25,7 @@ import com.github.kittinunf.fuel.coroutines.awaitObject
 import com.github.kittinunf.fuel.gson.gsonDeserializer
 import com.github.kittinunf.fuel.gson.jsonBody
 import com.google.gson.*
+import com.loc.e
 import io.gsonfire.DateSerializationPolicy
 import io.gsonfire.GsonFireBuilder
 import kotlinx.coroutines.*
@@ -455,16 +460,20 @@ class APIService(private val context: Context) {
         val myProfile = getProfile()
         val uidReversed = myProfile.uid.reversed()
 
-        if (localOSSToken == null || tokenExpired) {
+//        if (localOSSToken == null || tokenExpired) {
             localOSSToken = getUploadToken()
             ossToken = localOSSToken
-        }
+//        }
         val ossEndpoint = context.getString(R.string.OSS_ENDPOINT)
         val bucketDomain = context.getString(R.string.OSS_BUCKET_DOMAIN)
         val credProvider = OSSStsTokenCredentialProvider(localOSSToken.accessKeyId, localOSSToken.accessKeySecret, localOSSToken.securityToken)
         val oss = OSSClient(context, ossEndpoint, credProvider)
-        val extension = MimeTypeMap.getFileExtensionFromUrl(uri.toString())
+        val cR: ContentResolver = context.contentResolver
+        val mime = MimeTypeMap.getSingleton()
+        val extension = mime.getExtensionFromMimeType(cR.getType(uri))
+        Log.d("APIService", "extension: $extension")
         val objectKey = "upload/${uidReversed.substring(0..1)}/${myProfile.uid}/${UUID.randomUUID()}.$extension"
+//        val objectKey = "upload/test.mp4"
         withContext(Dispatchers.IO) {
             val req = PutObjectRequest(
                 context.getString(R.string.OSS_BUCKET),
@@ -478,7 +487,22 @@ class APIService(private val context: Context) {
                     }
                 }
             }
-            oss.putObject(req)
+            Log.d("APIService", "I'm OK")
+            try {
+                oss.putObject(req)
+            } catch (e: ClientException) {
+                // 客户端异常，例如网络异常等。
+                Log.e("APIService", e.toString())
+                e.printStackTrace();
+            } catch (e: ServiceException) {
+                // 服务端异常。
+                Log.e("APIService", "ServiceException")
+                Log.e("RequestId", e.getRequestId());
+                Log.e("ErrorCode", e.getErrorCode());
+                Log.e("HostId", e.getHostId());
+                Log.e("RawMessage", e.getRawMessage());
+            }
+            Log.d("APIService", "I'm OK")
         }
         return Uri.parse("https://$bucketDomain/$objectKey")
     }

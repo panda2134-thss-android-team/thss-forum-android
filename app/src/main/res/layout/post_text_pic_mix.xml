@@ -2,6 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
     <EditText
         android:id="@+id/title"
@@ -23,14 +25,37 @@
         android:textColor="@color/black"
         android:hint="@string/content_hint"
         android:inputType="textLongMessage" />
-    <TextView
-        android:id="@+id/pics_text"
-        android:textSize="@dimen/types_size"
-        android:layout_marginTop="@dimen/small_margin"
-        android:layout_marginLeft="@dimen/pic_to_text_margin"
-        android:textColor="@color/pics_color"
-        android:layout_gravity="center_vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/pics" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/select_picture"
+            app:icon="@drawable/ic_baseline_add_24"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteY="659dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_picture" />
+
+        <Space
+            android:id="@+id/space"
+            app:layout_constraintLeft_toRightOf="@id/select_picture"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/shoot_picture"
+            app:icon="@drawable/ic_baseline_add_24"
+            app:layout_constraintLeft_toRightOf="@id/space"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteY="659dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/shoot_picture" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </LinearLayout>

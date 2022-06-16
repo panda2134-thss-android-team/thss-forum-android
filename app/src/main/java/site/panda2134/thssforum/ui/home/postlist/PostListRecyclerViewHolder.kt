@@ -34,6 +34,7 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIServi
         post = p
 
         binding.likeButton.isChecked = false // default to false
+        binding.location.text = ""
         MainScope().launch {
             val likes = api.getNumOfLikes(p.postContent.id!!)
             val followingUsers = api.getFollowingUsers()
