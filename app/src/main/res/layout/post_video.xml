@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable
-            name="activityNewVideoPost"
+            name="v"
             type="site.panda2134.thssforum.ui.post.ActivityNewVideoPost" />
+        <import type="android.view.View"/>
     </data>
     <LinearLayout android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,47 +23,49 @@
             android:hint="@string/title_hint"
             android:inputType="textLongMessage" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
+            android:visibility="@{v.videoPath.length() > 0 || v.uploading ? View.GONE : View.VISIBLE}"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <Button
                 android:id="@+id/select_video"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/select_video"
+                style="@style/Widget.Material3.Button.IconButton"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:icon="@drawable/ic_baseline_add_24"
-                tools:layout_editor_absoluteY="659dp" />
-
-            <View
-                android:id="@+id/space"
-                android:layout_width="30dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintLeft_toRightOf="@id/select_video"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_marginEnd="@dimen/small_margin"
+                app:icon="@drawable/ic_baseline_photo_album_24" />
 
             <Button
                 android:id="@+id/shoot_video"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintLeft_toRightOf="@id/space"
+                app:layout_constraintLeft_toRightOf="@id/select_video"
                 app:layout_constraintTop_toTopOf="parent"
-                android:text="@string/shoot_video"
-                app:icon="@drawable/ic_baseline_add_24"
+                style="@style/Widget.Material3.Button.IconButton"
+                app:icon="@drawable/ic_baseline_camera_24"
                 tools:layout_editor_absoluteY="659dp" />
 
-            <TextView
-                android:id="@+id/videoPath"
+        </LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="220dp">
+            <ProgressBar
+                android:max="100"
+                android:layout_centerInParent="true"
+                android:indeterminate="false"
+                android:visibility="@{v.uploading ? View.VISIBLE : View.GONE}"
+                android:progress="@{v.progress}"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/select_video"
-                app:layout_constraintLeft_toLeftOf="parent"
-                android:text="@={activityNewVideoPost.videoPath}"
-                />
+                android:layout_height="wrap_content" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
+            <VideoView
+                android:id="@+id/videoPreview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="@{(!v.uploading &amp;&amp; v.videoPath.length() > 0) ? View.VISIBLE : View.GONE}" />
+        </RelativeLayout>
     </LinearLayout>
 </layout>

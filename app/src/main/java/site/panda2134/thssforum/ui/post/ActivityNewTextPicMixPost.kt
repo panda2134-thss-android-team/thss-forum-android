@@ -25,7 +25,7 @@ class ActivityNewTextPicMixPost : ActivityNewPost() {
     // TODO
     private lateinit var binding: PostTextPicMixBinding
     private lateinit var api: APIWrapper
-    private var videoPath: String? = null
+    private var imagePath: String? = null
     private val tag = "newVideoPost"
     private val permission = Manifest.permission.CAMERA
     private val alertDialog: AlertDialog
@@ -41,8 +41,8 @@ class ActivityNewTextPicMixPost : ActivityNewPost() {
                 val uri = result.data?.data
                 uri?.let{
                     this.lifecycleScope.launch(Dispatchers.IO) {
-                        videoPath = api.uploadFileToOSS(uri).toString()
-                        Log.d(tag, "videoPath = $videoPath")
+                        imagePath = api.uploadFileToOSS(uri).toString()
+                        Log.d(tag, "imagePath = $imagePath")
                     }
                 }
             }
@@ -70,8 +70,8 @@ class ActivityNewTextPicMixPost : ActivityNewPost() {
         //将相册中选择的uri上传至oss
         result?.let {
             this.lifecycleScope.launch(Dispatchers.IO) {
-                videoPath = api.uploadFileToOSS(result).toString()
-                Log.d(tag, videoPath!!)
+                imagePath = api.uploadFileToOSS(result).toString()
+                Log.d(tag, imagePath!!)
             }
         }
     }
@@ -81,15 +81,15 @@ class ActivityNewTextPicMixPost : ActivityNewPost() {
         val draftTitle = pref.getString(getString(R.string.PREF_KEY_VIDEO_TITLE), "")
         val draftPath = pref.getString(getString(R.string.PREF_KEY_VIDEO_PATH), "")
         binding.title.setText(draftTitle)
-        videoPath = draftPath
-        Log.d(tag, "videoPath = $videoPath")
+        imagePath = draftPath
+        Log.d(tag, "imagePath = $imagePath")
     }
 
     private fun saveDraft() {
         val pref = getSharedPreferences(getString(R.string.GLOBAL_SHARED_PREF), MODE_PRIVATE)
         with(pref.edit()) {
             this.putString(getString(R.string.PREF_KEY_VIDEO_TITLE), binding.title.text.toString())
-            this.putString(getString(R.string.PREF_KEY_VIDEO_PATH), videoPath)
+            this.putString(getString(R.string.PREF_KEY_VIDEO_PATH), imagePath)
             apply()
         }
     }
@@ -100,7 +100,7 @@ class ActivityNewTextPicMixPost : ActivityNewPost() {
         setContentView(binding.root)
         binding.selectPicture.setOnClickListener {
             Log.d(tag, "Click")
-            mActLauncherAlbum.launch("video/*")
+            mActLauncherAlbum.launch("image/*")
         }
         loadDraft()
         binding.shootPicture.setOnClickListener {
@@ -117,20 +117,20 @@ class ActivityNewTextPicMixPost : ActivityNewPost() {
         return when (item.itemId) {
             R.id.send_menu_item -> {
                 Log.d(tag, "item clicked")
-                if(videoPath == "") {
+                if(imagePath == "") {
                     alertDialog.show()
                 }
                 else {
                     this.lifecycleScope.launch(Dispatchers.IO){
-                        Log.d(tag, "videoPath: $videoPath")
-                        val videoPostContent = MediaPostContent(binding.title.text.toString(), arrayOf(videoPath!!))
+                        Log.d(tag, "imagePath: $imagePath")
+                        val videoPostContent = MediaPostContent(binding.title.text.toString(), arrayOf(imagePath!!))
                         val postContent = PostContent.makeVideoPost(videoPostContent, createdAt = Instant.now())
                         val res = api.newPost(postContent)
                         val post = api.getPostDetails(res.id)
                         Log.d(tag, "postId: ${res.id}")
                         Log.d(tag, "title: ${post.postContent.mediaContent?.title}")
                         binding.title.text?.clear()
-                        videoPath = ""
+                        imagePath = ""
                         finish()
                     }
                 }

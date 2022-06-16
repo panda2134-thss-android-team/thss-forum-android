@@ -134,4 +134,7 @@
 
     <string name="no_photo">还没有照片</string>
     <string name="please_shot_or_choose_a_photo">请拍摄或从相册选择一张照片👀</string>
+
+    <string name="no_video">还没有视频</string>
+    <string name="please_shot_or_choose_a_video">请拍摄或从相册选择一段视频👀</string>
 </resources>
