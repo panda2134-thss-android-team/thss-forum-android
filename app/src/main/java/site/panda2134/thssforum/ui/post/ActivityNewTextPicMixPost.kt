@@ -24,15 +24,15 @@ import java.time.Instant
 class ActivityNewTextPicMixPost : ActivityNewPost() {
     // TODO
     private lateinit var binding: PostTextPicMixBinding
-    private val api = APIWrapper(this)
-    private var videoPath: String? = ""
+    private lateinit var api: APIWrapper
+    private var videoPath: String? = null
     private val tag = "newVideoPost"
     private val permission = Manifest.permission.CAMERA
-    private val alertDialog = AlertDialog.Builder(this)
-        .setTitle("还没有照片")
-        .setMessage("请拍摄或从相册选择一个视频👀")
-        .setPositiveButton("好的", null)
-        .create()
+    private val alertDialog: AlertDialog
+        get() = AlertDialog.Builder(this)
+            .setTitle(getString(R.string.no_photo))
+            .setMessage(R.string.please_shot_or_choose_a_photo)
+            .create()
     private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         //将从camera拍摄的视频uri上传到oss
         run {
@@ -56,7 +56,7 @@ class ActivityNewTextPicMixPost : ActivityNewPost() {
         if (it.equals(true)) {
             Log.d(tag, "permission OK")
             try {
-                startForResult.launch(Intent(MediaStore.ACTION_VIDEO_CAPTURE))
+                startForResult.launch(Intent(MediaStore.ACTION_IMAGE_CAPTURE))
             } catch (e: Exception) {
                 Log.d(tag, e.toString())
             }
@@ -95,6 +95,7 @@ class ActivityNewTextPicMixPost : ActivityNewPost() {
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        api = APIWrapper(this)
         binding = PostTextPicMixBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.selectPicture.setOnClickListener {
@@ -121,7 +122,6 @@ class ActivityNewTextPicMixPost : ActivityNewPost() {
                 }
                 else {
                     this.lifecycleScope.launch(Dispatchers.IO){
-                        Log.d(tag, "onOptionsItemSelected")
                         Log.d(tag, "videoPath: $videoPath")
                         val videoPostContent = MediaPostContent(binding.title.text.toString(), arrayOf(videoPath!!))
                         val postContent = PostContent.makeVideoPost(videoPostContent, createdAt = Instant.now())
@@ -129,7 +129,7 @@ class ActivityNewTextPicMixPost : ActivityNewPost() {
                         val post = api.getPostDetails(res.id)
                         Log.d(tag, "postId: ${res.id}")
                         Log.d(tag, "title: ${post.postContent.mediaContent?.title}")
-                        binding.title.setText("")
+                        binding.title.text?.clear()
                         videoPath = ""
                         finish()
                     }

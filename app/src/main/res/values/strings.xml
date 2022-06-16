@@ -131,4 +131,7 @@
 
     <string name="save_success">保存成功</string>
     <string name="comment_success">评论成功</string>
+
+    <string name="no_photo">还没有照片</string>
+    <string name="please_shot_or_choose_a_photo">请拍摄或从相册选择一张照片👀</string>
 </resources>

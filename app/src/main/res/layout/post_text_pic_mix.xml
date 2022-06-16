@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingHorizontal="@dimen/medium_margin"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
@@ -10,9 +11,7 @@
         android:layout_marginTop="@dimen/normal_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/medium_margin"
         style="@style/TextAppearance.AppCompat.Headline"
-        android:textColor="@color/black"
         android:textStyle="bold"
         android:hint="@string/title_hint"
         android:inputType="textLongMessage" />
@@ -20,11 +19,11 @@
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="top|start"
         android:layout_marginTop="@dimen/small_margin"
-        android:layout_marginHorizontal="@dimen/medium_margin"
-        android:textColor="@color/black"
         android:hint="@string/content_hint"
-        android:inputType="textLongMessage" />
+        android:minLines="10"
+        android:singleLine="false"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -40,7 +39,7 @@
             android:layout_height="wrap_content"
             android:text="@string/select_picture" />
 
-        <Space
+        <View
             android:id="@+id/space"
             app:layout_constraintLeft_toRightOf="@id/select_picture"
             app:layout_constraintTop_toTopOf="parent"

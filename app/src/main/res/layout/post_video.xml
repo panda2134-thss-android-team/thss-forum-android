@@ -18,7 +18,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/TextAppearance.AppCompat.Headline"
-            android:textColor="@color/black"
             android:textStyle="bold"
             android:hint="@string/title_hint"
             android:inputType="textLongMessage" />
@@ -37,7 +36,7 @@
                 app:icon="@drawable/ic_baseline_add_24"
                 tools:layout_editor_absoluteY="659dp" />
 
-            <Space
+            <View
                 android:id="@+id/space"
                 android:layout_width="30dp"
                 android:layout_height="wrap_content"

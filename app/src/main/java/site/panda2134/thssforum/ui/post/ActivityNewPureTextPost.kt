@@ -81,16 +81,6 @@ class ActivityNewPureTextPost : ActivityNewPost() {
         val draftContent = pref.getString(getString(R.string.PREF_KEY_PURE_TEXT_CONTENT), "")
         binding.title.setText(draftTitle)
         binding.content.setText(draftContent)
-        val alertDialog = AlertDialog.Builder(this)
-            //标题
-            .setTitle("title")
-            //内容
-            .setMessage("message")
-            //图标
-            .setPositiveButton("确认", null)
-            .create()
-        alertDialog.show()
-
     }
 
     override fun finish() {
@@ -115,8 +105,8 @@ class ActivityNewPureTextPost : ActivityNewPost() {
                     Log.d("newPost", "postId: ${res.id}")
                     Log.d("newPost", "title: ${post.postContent.imageTextContent?.title}, text: ${post.postContent.imageTextContent?.text}")
                 }
-                binding.title.setText("")
-                binding.content.setText("")
+                binding.title.text?.clear()
+                binding.content.text?.clear()
                 finish()
                 true
             }

@@ -508,10 +508,10 @@ class APIWrapper(private val context: Context) {
             } catch (e: ServiceException) {
                 // 服务端异常。
                 Log.e("APIService", "ServiceException")
-                Log.e("RequestId", e.getRequestId())
-                Log.e("ErrorCode", e.getErrorCode())
-                Log.e("HostId", e.getHostId())
-                Log.e("RawMessage", e.getRawMessage())
+                Log.e("RequestId", e.requestId)
+                Log.e("ErrorCode", e.errorCode)
+                Log.e("HostId", e.hostId)
+                Log.e("RawMessage", e.rawMessage)
             }
             Log.d("APIService", "Upload succedded: $objectKey")
         }

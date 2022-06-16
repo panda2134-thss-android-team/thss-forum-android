@@ -11,7 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/TextAppearance.AppCompat.Headline"
-        android:textColor="@color/black"
         android:textStyle="bold"
         android:hint="@string/title_hint"
         android:inputType="textLongMessage" />
@@ -24,8 +23,7 @@
         android:gravity="top|start"
         android:hint="@string/content_hint"
         android:minLines="10"
-        android:singleLine="false"
-        android:textColor="@color/black" />
+        android:singleLine="false"/>
 
     <Button
         android:id="@+id/add_location"

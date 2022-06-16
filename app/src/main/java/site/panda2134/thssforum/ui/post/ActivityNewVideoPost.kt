@@ -32,7 +32,7 @@ import java.time.Instant
 
 class ActivityNewVideoPost : ActivityNewPost() {
     private lateinit var binding: PostVideoBinding
-    private val api = APIWrapper(this)
+    private lateinit var api: APIWrapper
     var videoPath: String? = ""
     private val tag = "newVideoPost"
     private val permission = Manifest.permission.CAMERA
@@ -107,6 +107,7 @@ class ActivityNewVideoPost : ActivityNewPost() {
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        api = APIWrapper(this)
         binding = PostVideoBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.lifecycleOwner = this
