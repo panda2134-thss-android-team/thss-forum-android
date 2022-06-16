@@ -17,6 +17,7 @@ import site.panda2134.thssforum.api.APIWrapper
 import site.panda2134.thssforum.databinding.PostItemBinding
 import site.panda2134.thssforum.models.Post
 import site.panda2134.thssforum.models.PostType
+import site.panda2134.thssforum.ui.home.comments.CommentRecyclerViewAdapter
 import site.panda2134.thssforum.utils.toTimeAgo
 
 class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIWrapper): RecyclerView.ViewHolder(binding.root), BGANinePhotoLayout.Delegate {
@@ -42,8 +43,14 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIWrapp
         binding.likeButton.isChecked = false // default to false
         binding.location.text = ""
         binding.location.visibility = View.GONE
+
+        val commentAdapter = (binding.commentView.adapter as CommentRecyclerViewAdapter)
+        commentAdapter.postId = p.postContent.id!!
+        commentAdapter.clear()
+
         MainScope().launch {
-            val likes = api.getNumOfLikes(p.postContent.id!!)
+            commentAdapter.fetchMoreComments()
+            val likes = api.getNumOfLikes(p.postContent.id)
             val followingUsers = api.getFollowingUsers()
             withContext(Dispatchers.Main) {
                 binding.likeNum.text = likes.count.toString()
@@ -126,9 +133,9 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIWrapp
             MainScope().launch(Dispatchers.IO) {
                 try {
                     val likeNum = if (binding.likeButton.isChecked) {
-                        api.likeThisPost(p.postContent.id!!).count
+                        api.likeThisPost(p.postContent.id).count
                     } else {
-                        api.unlikeThisPost(p.postContent.id!!).count
+                        api.unlikeThisPost(p.postContent.id).count
                     }
                     withContext(Dispatchers.Main) {
                         binding.likeNum.text = likeNum.toString()
@@ -142,7 +149,7 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIWrapp
         binding.removePostButton.setOnClickListener {
             MainScope().launch(Dispatchers.IO) {
                 try {
-                    api.deletePost(p.postContent.id!!)
+                    api.deletePost(p.postContent.id)
                     withContext(Dispatchers.Main) {
                         onDeleteCallback?.invoke(p, bindingAdapterPosition)
                     }
@@ -155,7 +162,6 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIWrapp
         binding.shareButton.setOnClickListener {
             val intentBuilder = ShareCompat.IntentBuilder(itemView.context)
             intentBuilder.setType("text/plain").setText(shareString).startChooser()
-            true
         }
 
     }

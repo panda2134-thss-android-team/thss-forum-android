@@ -20,7 +20,7 @@
             android:layout_width="@dimen/commenter_pic"
             android:layout_height="@dimen/commenter_pic"
             android:contentDescription="@string/drafts"
-            tools:srcCompat="@drawable/text_box_edit_outline"
+            tools:srcCompat="@tools:sample/avatars"
             android:background="@drawable/image_border"
             android:padding="@dimen/image_border_w"/>
         <LinearLayout
@@ -28,21 +28,45 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/pic_to_text_margin"
             android:orientation="vertical">
-                <TextView
-                    android:id="@+id/nickname"
-                    android:textSize="@dimen/commenter_name"
-                    android:textColor="@color/click_blue"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="用户D" />
-                <TextView
-                    android:id="@+id/comment_content"
-                    android:textSize="@dimen/commenter_name"
-                    android:textColor="@color/black"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/commenter_item_inside_margin"
-                    tools:text="好！" />
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/nickname"
+                        android:textSize="@dimen/commenter_name"
+                        android:textColor="@color/click_blue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="@tools:sample/first_names" />
+                    <LinearLayout
+                        android:id="@+id/reply_wrapper"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/commenter_name"
+                            android:layout_marginHorizontal="@dimen/small_margin"
+                            android:text="@string/reply"/>
+                        <TextView
+                            android:id="@+id/nicknameReplyTo"
+                            android:textSize="@dimen/commenter_name"
+                            android:textColor="@color/click_blue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="@tools:sample/first_names" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            <TextView
+                android:id="@+id/comment_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/commenter_item_inside_margin"
+                style="@style/TextAppearance.AppCompat.Body2"
+                android:textSize="@dimen/commenter_name"
+                tools:text="@tools:sample/lorem/random" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

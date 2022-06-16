@@ -2,6 +2,7 @@ package site.panda2134.thssforum.ui.home.postlist
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,6 +14,7 @@ import site.panda2134.thssforum.api.APIWrapper
 import site.panda2134.thssforum.databinding.PostItemBinding
 import site.panda2134.thssforum.databinding.RecyclerItemLoadingBinding
 import site.panda2134.thssforum.models.Post
+import site.panda2134.thssforum.ui.home.comments.CommentRecyclerViewAdapter
 import site.panda2134.thssforum.ui.utils.RecyclerItemLoadingViewHolder
 import java.lang.Integer.min
 
@@ -24,7 +26,7 @@ class PostListRecyclerViewAdapter(val api: APIWrapper, val fetchFollowing: Boole
     private val posts: ArrayList<Post> = arrayListOf()
     private val loadingLock = Mutex()
     private var isEnded = false
-    private val POSTS_PER_FETCH = 20
+    private val POSTS_PER_FETCH = 5
 
     var sortBy: APIWrapper.PostsSortBy = APIWrapper.PostsSortBy.Time
 
@@ -39,13 +41,35 @@ class PostListRecyclerViewAdapter(val api: APIWrapper, val fetchFollowing: Boole
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         return when(viewType) {
-            POST_ITEM ->
-                PostListRecyclerViewHolder(PostItemBinding.inflate(layoutInflater, parent, false), api).apply {
+            POST_ITEM -> {
+                val binding =
+                    PostItemBinding.inflate(layoutInflater, parent, false)
+                val commentAdapter = CommentRecyclerViewAdapter(api)
+                binding.commentView.adapter = commentAdapter
+                binding.commentView.layoutManager = LinearLayoutManager(parent.context)
+                binding.commentView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+                    private var isLoading = false
+                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                        super.onScrolled(recyclerView, dx, dy)
+                        if (!isLoading) {
+                            if ((recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition() == (recyclerView.adapter?.itemCount
+                                    ?: 0) - 1
+                            ) { // last item
+                                isLoading = true
+                                commentAdapter.fetchMoreComments {
+                                    isLoading = false
+                                }
+                            }
+                        }
+                    }
+                })
+                PostListRecyclerViewHolder(binding, api).apply {
                     onDeleteCallback = { _, bindingAdapterPosition ->
                         posts.removeAt(bindingAdapterPosition)
                         notifyItemRemoved(bindingAdapterPosition)
                     }
                 }
+            }
             in listOf(LIST_END, LIST_LOADING) ->
                 RecyclerItemLoadingViewHolder(RecyclerItemLoadingBinding.inflate(layoutInflater, parent, false))
             else -> throw IllegalArgumentException("Unknown view type")
@@ -92,6 +116,7 @@ class PostListRecyclerViewAdapter(val api: APIWrapper, val fetchFollowing: Boole
         if (!isEnded) {
             scope.launch(Dispatchers.IO) {
                 loadingLock.withLock {
+                    Log.d("PostLoad", "loading...")
                     val initial = posts.size == 0
                     var postsToAdd: List<Post> = api.getPosts( // +1 is necessary!
                         skip = posts.size, limit = POSTS_PER_FETCH + 1, following = fetchFollowing, scope = scope,
@@ -137,12 +162,19 @@ class PostListRecyclerViewAdapter(val api: APIWrapper, val fetchFollowing: Boole
                 }
             }
         })
-        fetchMorePosts()
         recyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            private var isLoading = false
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if ((recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition() == (recyclerView.adapter?.itemCount ?: 0) - 1) { // last item
-                    this@PostListRecyclerViewAdapter.fetchMorePosts()
+                if (!isLoading) {
+                    if ((recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition() == (recyclerView.adapter?.itemCount
+                            ?: 0) - 1
+                    ) { // last item
+                        isLoading = true
+                        this@PostListRecyclerViewAdapter.fetchMorePosts {
+                            isLoading = false
+                        }
+                    }
                 }
                 for (index in 0..itemCount) {
                     val holder = recyclerView.findViewHolderForAdapterPosition(index) ?: continue

@@ -17,8 +17,7 @@
         <ImageView
             android:contentDescription="@string/avatar"
             android:id="@+id/user_avatar"
-            tools:src="@drawable/text_box_edit_outline"
-            tools:tint="?colorPrimary"
+            tools:srcCompat="@tools:sample/avatars"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:background="@drawable/image_border"
@@ -40,7 +39,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    tools:text="用户A"/>
+                    tools:text="@tools:sample/first_names"/>
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/followed_button"
@@ -127,7 +126,7 @@
                 android:layout_marginTop="@dimen/post_item_inside_margin"
                 android:gravity="center_vertical"
                 android:textColor="@color/click_blue"
-                tools:text="北京市 · 清华大学李文正馆" />
+                tools:text="@tools:sample/cities" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -228,7 +227,25 @@
                         tools:text="35"
                         android:textColor="@color/click_blue"/>
             </LinearLayout>
-
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:paddingStart="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:ignore="RtlSymmetry">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/comment_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constrainedHeight="true"
+                    app:layout_constraintHeight_max="200dp"
+                    tools:listitem="@layout/post_comment_item"
+                    tools:ignore="RtlSymmetry" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
 
     </LinearLayout>
