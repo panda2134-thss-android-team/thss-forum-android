@@ -4,6 +4,7 @@ import android.os.Bundle
 import site.panda2134.thssforum.databinding.PostAudioBinding
 
 class ActivityNewAudioPost : ActivityNewPost() {
+    // TODO
     private lateinit var binding: PostAudioBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

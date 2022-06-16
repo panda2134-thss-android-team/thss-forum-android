@@ -22,6 +22,10 @@
     <string name="PREF_KEY_TOKEN" translatable="false">token</string>
     <string name="PREF_KEY_UID" translatable="false">uid</string>
     <string name="PREF_KEY_TOKEN_EXPIRE_AT" translatable="false">tokenExpiresAt</string>
+    <string name="PREF_KEY_PURE_TEXT_TITLE" translatable="false">pureTextTitle</string>
+    <string name="PREF_KEY_PURE_TEXT_CONTENT" translatable="false">pureTextContent</string>
+    <string name="PREF_KEY_VIDEO_TITLE" translatable="false">videoTitle</string>
+    <string name="PREF_KEY_VIDEO_PATH" translatable="false">videoPath</string>
 
     <string name="RECYCLER_VIEW_NO_CONTENT">暂无内容</string>
 
@@ -61,8 +65,8 @@
     <string name="menu_notify_search">通知-搜索</string>
 
     <string name="delete">删除</string>
-    <string name="user_name">用户名</string>
     <string name="user_homepage">用户主页</string>
+    <string name="user_name">用户名</string>
     <string name="content">内容</string>
     <string name="title_name">动态名</string>
     <string name="title_content">动态名称 或 内容</string>
@@ -76,6 +80,10 @@
 
     <string name="test_sentence">测试</string>
     <string name="add_location">添加定位信息</string>
+    <string name="select_video">从相册选择视频</string>
+    <string name="shoot_video">拍摄视频</string>
+    <string name="select_picture">从相册选择照片</string>
+    <string name="shoot_picture">拍摄照片</string>
 
     <string name="content_hint">请输入你想要发表的内容…</string>
     <string name="title_hint">请输入动态标题…</string>

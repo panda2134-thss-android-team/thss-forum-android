@@ -21,9 +21,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/small_margin"
+        android:gravity="top|start"
         android:hint="@string/content_hint"
         android:minLines="10"
-        android:gravity="top|start"
         android:singleLine="false"
         android:textColor="@color/black" />
 
@@ -32,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/add_location"
-        app:icon="@drawable/ic_baseline_add_location_24"/>
+        app:icon="@drawable/ic_baseline_add_location_24" />
     <TextView
         android:id="@+id/location"
         android:layout_width="wrap_content"
