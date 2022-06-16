@@ -471,10 +471,10 @@ class APIWrapper(private val context: Context) {
         val myProfile = getProfile()
         val uidReversed = myProfile.uid.reversed()
 
-//        if (localOSSToken == null || tokenExpired) {
+        if (localOSSToken == null || tokenExpired) {
             localOSSToken = getUploadToken()
             ossToken = localOSSToken
-//        }
+        }
         val ossEndpoint = context.getString(R.string.OSS_ENDPOINT)
         val bucketDomain = context.getString(R.string.OSS_BUCKET_DOMAIN)
         val credProvider = OSSStsTokenCredentialProvider(localOSSToken.accessKeyId, localOSSToken.accessKeySecret, localOSSToken.securityToken)
