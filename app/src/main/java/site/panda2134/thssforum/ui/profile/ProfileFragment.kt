@@ -3,6 +3,7 @@ package site.panda2134.thssforum.ui.profile
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
+import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
@@ -40,6 +41,19 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    private suspend fun getUid() {
+        try {
+            val user: User = api.getProfile()
+            withContext(Dispatchers.Main) {
+                val intent = Intent(binding.root.context, ProfileUserHomepage::class.java)
+                .putExtra("author", user.uid).putExtra("is_current_user", true)
+                binding.root.context.startActivity(intent)
+            }
+        } catch (e: Throwable) {
+            e.printStackTrace()
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -57,6 +71,12 @@ class ProfileFragment : Fragment() {
 //        }
 
         // set jump
+        binding.myHomepage.setOnClickListener {
+            api = APIWrapper(requireActivity())
+            MainScope().launch(Dispatchers.IO) {
+                getUid()
+            }
+        }
         binding.drafts.setOnClickListener {
             requireView().findNavController().navigate(R.id.action_navigation_profile_to_profileDrafts)
         }

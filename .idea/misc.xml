@@ -3,6 +3,23 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/THSSForum/app/src/main/res/drawable/eye.xml" value="0.118" />
+        <entry key="..\:/THSSForum/app/src/main/res/drawable/eye_off.xml" value="0.118" />
+        <entry key="..\:/THSSForum/app/src/main/res/layout/fragment_all_posts.xml" value="0.11684782608695653" />
+        <entry key="..\:/THSSForum/app/src/main/res/layout/fragment_followed_posts.xml" value="0.11684782608695653" />
+        <entry key="..\:/THSSForum/app/src/main/res/layout/fragment_home.xml" value="0.1" />
+        <entry key="..\:/THSSForum/app/src/main/res/layout/fragment_profile.xml" value="0.325" />
+        <entry key="..\:/THSSForum/app/src/main/res/layout/homepage_post_item.xml" value="0.15833333333333333" />
+        <entry key="..\:/THSSForum/app/src/main/res/layout/post_comment_item.xml" value="0.11005434782608696" />
+        <entry key="..\:/THSSForum/app/src/main/res/layout/post_item.xml" value="0.1" />
+        <entry key="..\:/THSSForum/app/src/main/res/layout/profile_drafts.xml" value="0.121875" />
+        <entry key="..\:/THSSForum/app/src/main/res/layout/profile_edit_my_profile.xml" value="0.11684782608695653" />
+        <entry key="..\:/THSSForum/app/src/main/res/layout/profile_following_list.xml" value="0.1" />
+        <entry key="..\:/THSSForum/app/src/main/res/layout/profile_following_list_item.xml" value="0.1" />
+        <entry key="..\:/THSSForum/app/src/main/res/layout/profile_notification_list.xml" value="0.1421875" />
+        <entry key="..\:/THSSForum/app/src/main/res/layout/profile_user_homepage.xml" value="0.31345565749235477" />
+        <entry key="..\:/THSSForum/app/src/main/res/layout/recycler_item_loading.xml" value="0.1" />
+        <entry key="..\:/THSSForum/app/src/main/res/menu/following_eyeswitch_menuicon.xml" value="0.1421875" />
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/drawable-v24/search_switch_change.xml" value="0.1755" />
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/drawable/account_star.xml" value="0.173" />
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/drawable/cancel_like.xml" value="0.1895" />

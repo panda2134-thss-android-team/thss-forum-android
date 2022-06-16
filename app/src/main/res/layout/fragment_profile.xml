@@ -65,6 +65,39 @@
             android:layout_height="@dimen/profile_interval"
             android:layout_width="match_parent"/>
         <LinearLayout
+            android:id="@+id/my_homepage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="?attr/colorSurface"
+            android:paddingVertical="@dimen/my_profile_gap"
+            android:layout_marginHorizontal="@dimen/profile_line_margin">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="@string/drafts"
+                app:srcCompat="@drawable/ic_baseline_dashboard_24"
+                app:tint="#4169E1" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/profile_line_margin"
+                android:text="@string/my_homepage"
+                android:layout_weight="1"
+                android:textSize="15sp"/>
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                app:srcCompat="@drawable/ic_baseline_arrow_forward_ios_24"
+                app:tint="#A8A8A8" />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/interval_0"
+            android:layout_height="@dimen/profile_interval"
+            android:layout_width="match_parent"/>
+        <LinearLayout
             android:id="@+id/drafts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -72,7 +105,6 @@
             android:background="?attr/colorSurface"
             android:paddingVertical="@dimen/my_profile_gap"
             android:layout_marginHorizontal="@dimen/profile_line_margin">
-
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
@@ -147,7 +179,7 @@
                 android:layout_height="24dp"
                 android:contentDescription="@string/drafts"
                 app:srcCompat="@drawable/text_box_edit_outline"
-                app:tint="#696969" />
+                app:tint="#CD853F" />
 
             <TextView
                 android:layout_width="0dp"
