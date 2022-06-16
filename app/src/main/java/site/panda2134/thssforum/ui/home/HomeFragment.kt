@@ -20,8 +20,6 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var api: APIWrapper
 
-    private var isTimeSeq = true // 右上角的展示顺序：默认是时间顺序
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -76,21 +74,4 @@ class HomeFragment : Fragment() {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
-
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        return when (item.itemId) {
-//            R.id.search_menu_item -> {
-//                val intent = Intent(activity, DiscoverMenuSearch::class.java)
-//                startActivity(intent)
-//                true
-//            }
-//            R.id.seq_menu_item -> {
-//                isTimeSeq = !isTimeSeq
-//                menu.getItem(1)?.icon = (ContextCompat.getDrawable(requireActivity(),
-//                    if (isTimeSeq) R.drawable.ic_baseline_access_time_24 else R.drawable.ic_baseline_thumb_up_24));
-//                true
-//            }
-//            else -> super.onOptionsItemSelected(item)
-//        }
-//    }
 }
