@@ -21,7 +21,8 @@
             style="@style/TextAppearance.AppCompat.Headline"
             android:textStyle="bold"
             android:hint="@string/title_hint"
-            android:inputType="textLongMessage" />
+            android:inputType="textLongMessage"
+            android:importantForAutofill="no" />
 
         <LinearLayout
             android:visibility="@{v.videoPath.length() > 0 || v.uploading ? View.GONE : View.VISIBLE}"
@@ -36,6 +37,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginEnd="@dimen/small_margin"
+                android:contentDescription="@string/select_video"
                 app:icon="@drawable/ic_baseline_photo_album_24" />
 
             <Button
@@ -46,6 +48,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 style="@style/Widget.Material3.Button.IconButton"
                 app:icon="@drawable/ic_baseline_camera_24"
+                android:contentDescription="@string/shoot_video"
                 tools:layout_editor_absoluteY="659dp" />
 
         </LinearLayout>
@@ -57,7 +60,7 @@
                 android:layout_centerInParent="true"
                 android:indeterminate="false"
                 android:visibility="@{v.uploading ? View.VISIBLE : View.GONE}"
-                android:progress="@{v.progress}"
+                android:progress="@{v.progressPercentage}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 

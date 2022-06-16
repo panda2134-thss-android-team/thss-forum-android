@@ -24,6 +24,9 @@
     <string name="PREF_KEY_TOKEN_EXPIRE_AT" translatable="false">tokenExpiresAt</string>
     <string name="PREF_KEY_PURE_TEXT_TITLE" translatable="false">pureTextTitle</string>
     <string name="PREF_KEY_PURE_TEXT_CONTENT" translatable="false">pureTextContent</string>
+    <string name="PREF_KEY_IMAGE_TITLE" translatable="false">imageTitle</string>
+    <string name="PREF_KEY_IMAGE_CONTENT" translatable="false">pureTextContent</string>
+    <string name="PREF_KEY_IMAGE_PATH_LIST" translatable="false">imagePathList</string>
     <string name="PREF_KEY_VIDEO_TITLE" translatable="false">videoTitle</string>
     <string name="PREF_KEY_VIDEO_PATH" translatable="false">videoPath</string>
 
@@ -130,6 +133,7 @@
     <string name="write_your_comment">写下您的评论</string>
 
     <string name="save_success">保存成功</string>
+    <string name="post_success">发布成功</string>
     <string name="comment_success">评论成功</string>
 
     <string name="no_photo">还没有照片</string>

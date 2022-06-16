@@ -23,6 +23,24 @@ data class MediaPostContent (
     @SerializedName("title")
     val title: String,
     @SerializedName("media")
-    val media: kotlin.Array<String>
-)
+    val media: Array<String>
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as MediaPostContent
+
+        if (title != other.title) return false
+        if (!media.contentEquals(other.media)) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = title.hashCode()
+        result = 31 * result + media.contentHashCode()
+        return result
+    }
+}
 

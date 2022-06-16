@@ -3,26 +3,17 @@ package site.panda2134.thssforum.ui.post
 //import android.app.Activity
 import android.Manifest
 import android.app.Activity
-import android.app.Instrumentation
-import android.content.ContentResolver
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.nfc.Tag
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.MenuItem
-import android.webkit.MimeTypeMap
 import android.widget.MediaController
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
-import com.alibaba.sdk.android.oss.callback.OSSProgressCallback
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -41,7 +32,7 @@ class ActivityNewVideoPost : ActivityNewPost() {
     val videoPath = MutableLiveData<String?>(null)
     val uploading = MutableLiveData(false)
 
-    val progress = MutableLiveData<Int>(0)
+    val progressPercentage = MutableLiveData<Int>(0)
     private val tag = "newVideoPost"
     private val permission = Manifest.permission.CAMERA
     private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -85,8 +76,8 @@ class ActivityNewVideoPost : ActivityNewPost() {
                 uploading.value = true
                 val uploadedPath = withContext(Dispatchers.IO) {
                     api.uploadFileToOSS(result) { request, currentSize, totalSize ->
-                        progress.value = (currentSize * 100 / totalSize).toInt()
-                        Log.d(tag, progress.value.toString())
+                        progressPercentage.value = (currentSize * 100 / totalSize).toInt()
+                        Log.d(tag, progressPercentage.value.toString())
                     }.toString()
                 }
                 uploading.value = false

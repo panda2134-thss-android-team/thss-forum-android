@@ -20,16 +20,13 @@ import com.github.kittinunf.fuel.core.FuelManager
 import com.github.kittinunf.fuel.core.ResponseDeserializable
 import com.github.kittinunf.fuel.core.awaitUnit
 import com.github.kittinunf.fuel.core.extensions.authentication
-import com.github.kittinunf.fuel.core.interceptors.LogRequestAsCurlInterceptor
 import com.github.kittinunf.fuel.coroutines.awaitObject
 import com.github.kittinunf.fuel.gson.gsonDeserializer
 import com.github.kittinunf.fuel.gson.jsonBody
 import com.google.gson.*
-import com.loc.e
 import io.gsonfire.DateSerializationPolicy
 import io.gsonfire.GsonFireBuilder
 import kotlinx.coroutines.*
-import org.json.JSONStringer
 import site.panda2134.thssforum.R
 import site.panda2134.thssforum.models.*
 import site.panda2134.thssforum.ui.LoginActivity
@@ -456,9 +453,9 @@ class APIWrapper(private val context: Context) {
             .bearer(token)
             .awaitObject(gsonFireDeserializer<UploadTokenResponse>())
 
-    suspend fun uploadFileToOSS(uri: Uri): Uri = this.uploadFileToOSS(uri, null)
+    suspend fun uploadFileToOSS(uri: Uri, useContentResolver: Boolean = true): Uri = this.uploadFileToOSS(uri, useContentResolver,null)
 
-    suspend fun uploadFileToOSS(uri: Uri, progressCallback: OSSProgressCallback<PutObjectRequest>?): Uri {
+    suspend fun uploadFileToOSS(uri: Uri, useContentResolver: Boolean = true, progressCallback: OSSProgressCallback<PutObjectRequest>?): Uri {
         var localOSSToken = ossToken
         var tokenExpired = true
         try {
@@ -479,10 +476,14 @@ class APIWrapper(private val context: Context) {
         val bucketDomain = context.getString(R.string.OSS_BUCKET_DOMAIN)
         val credProvider = OSSStsTokenCredentialProvider(localOSSToken.accessKeyId, localOSSToken.accessKeySecret, localOSSToken.securityToken)
         val oss = OSSClient(context, ossEndpoint, credProvider)
-        val cR: ContentResolver = context.contentResolver
-        val mime = MimeTypeMap.getSingleton()
-        val extension = mime.getExtensionFromMimeType(cR.getType(uri))
-        Log.d("APIService", "extension: $extension")
+
+        val extension = if (useContentResolver) {
+            val contentResolver: ContentResolver = context.contentResolver
+            val mime = MimeTypeMap.getSingleton()
+            mime.getExtensionFromMimeType(contentResolver.getType(uri))
+        } else {
+            uri.toString().split('.').lastOrNull()
+        } ?: "unknown"
         val objectKey = "upload/${uidReversed.substring(0..1)}/${myProfile.uid}/${UUID.randomUUID()}.$extension"
 
         withContext(Dispatchers.IO) {
