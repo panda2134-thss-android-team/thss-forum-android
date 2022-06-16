@@ -4,12 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import kotlinx.coroutines.CoroutineName
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.plus
 import site.panda2134.thssforum.R
-import site.panda2134.thssforum.api.downloadImage
 import site.panda2134.thssforum.databinding.PostCommentItemBinding
 import site.panda2134.thssforum.models.Comment
 

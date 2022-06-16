@@ -3,12 +3,13 @@ package site.panda2134.thssforum.ui.profile
 import android.os.Bundle
 import android.text.Editable
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import site.panda2134.thssforum.R
 import site.panda2134.thssforum.api.APIWrapper
-import site.panda2134.thssforum.api.downloadImage
 import site.panda2134.thssforum.databinding.ProfileEditMyProfileBinding
 import site.panda2134.thssforum.models.ModifyProfileRequest
 import site.panda2134.thssforum.models.User
@@ -25,17 +26,13 @@ class ProfileEditMyProfile : ActivityProfileItem() {
         setContentView(binding.root)
 
         // 载入顶部：我的头像、昵称和简介
-        val user: User
         val apiService = APIWrapper(this)
         MainScope().launch(Dispatchers.IO) {
             loadUserInfo(apiService)
         }
 
-        val save_button = binding.saveButton
-        save_button.setOnClickListener() {
+        binding.saveButton.setOnClickListener() {
             // 修改个人信息
-            val user: User
-            val api = APIWrapper(this)
             MainScope().launch(Dispatchers.IO) {
                 EditUserInfo(apiService)
             }
@@ -46,7 +43,6 @@ class ProfileEditMyProfile : ActivityProfileItem() {
 
     private suspend fun EditUserInfo(apiWrapper: APIWrapper) {
         try {
-            var user: ModifyProfileRequest
             // TODO: 修改图片
             apiWrapper.modifyProfile(ModifyProfileRequest(nickname=binding.myName.text.toString(),intro=binding.myIntro.text.toString()))
 
@@ -65,9 +61,10 @@ class ProfileEditMyProfile : ActivityProfileItem() {
             }
             // 画图
 
-            val bmp = downloadImage(user.avatar)
             withContext(Dispatchers.Main) {
-                binding.myImage.setImageBitmap(bmp)
+                Glide.with(binding.root).load(user.avatar)
+                    .placeholder(R.drawable.ic_baseline_account_circle_24)
+                    .into(binding.myImage)
             }
         } catch (e: Throwable) {
             e.printStackTrace()

@@ -5,13 +5,13 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import com.bumptech.glide.Glide
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import site.panda2134.thssforum.R
 import site.panda2134.thssforum.api.APIWrapper
-import site.panda2134.thssforum.api.downloadImage
 import site.panda2134.thssforum.databinding.FragmentProfileBinding
 import site.panda2134.thssforum.models.User
 
@@ -32,11 +32,8 @@ class ProfileFragment : Fragment() {
             withContext(Dispatchers.Main) {
                 binding.name.text = user.nickname
                 binding.motto.text = user.intro
-            }
-            // 画图
-            val bmp = downloadImage(user.avatar)
-            withContext(Dispatchers.Main) {
-                binding.image.setImageBitmap(bmp)
+                Glide.with(binding.root).load(user.avatar)
+                    .placeholder(R.drawable.ic_baseline_account_circle_24).into(binding.image)
             }
         } catch (e: Throwable) {
             e.printStackTrace()

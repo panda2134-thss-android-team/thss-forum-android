@@ -3,6 +3,7 @@ package site.panda2134.thssforum.ui.home
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -10,7 +11,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import site.panda2134.thssforum.R
 import site.panda2134.thssforum.api.APIWrapper
-import site.panda2134.thssforum.api.downloadImage
 import site.panda2134.thssforum.databinding.FragmentHomeBinding
 import site.panda2134.thssforum.models.User
 
@@ -47,9 +47,10 @@ class HomeFragment : Fragment() {
                 binding.myMotto.text = user.intro
             }
             // 画图
-            val bmp = downloadImage(user.avatar)
             withContext(Dispatchers.Main) {
-                binding.myAvatar.setImageBitmap(bmp)
+                Glide.with(binding.root).load(user.avatar)
+                    .placeholder(R.drawable.ic_baseline_account_circle_24)
+                    .into(binding.myAvatar)
             }
         } catch (e: Throwable) {
             e.printStackTrace()
