@@ -110,9 +110,7 @@
         <TextView
             android:id="@+id/interval_0"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/profile_interval"
-            android:visibility="gone" />
-        <!--上下两个组件改为gone，因为草稿箱合并到发布页面了-->
+            android:layout_height="@dimen/profile_interval"/>
         <LinearLayout
             android:id="@+id/drafts"
             android:layout_width="match_parent"
@@ -120,8 +118,7 @@
             android:layout_marginHorizontal="@dimen/profile_line_margin"
             android:background="?attr/colorSurface"
             android:orientation="horizontal"
-            android:paddingVertical="@dimen/my_profile_gap"
-            android:visibility="gone">
+            android:paddingVertical="@dimen/my_profile_gap">
 
             <ImageView
                 android:layout_width="24dp"

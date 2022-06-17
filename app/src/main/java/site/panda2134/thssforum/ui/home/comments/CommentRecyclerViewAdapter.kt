@@ -22,7 +22,12 @@ class CommentRecyclerViewAdapter(private val api: APIWrapper): RecyclerView.Adap
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentRecyclerViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = PostCommentItemBinding.inflate(layoutInflater, parent, false)
-        return CommentRecyclerViewHolder(binding, api)
+        return CommentRecyclerViewHolder(binding, api).apply {
+            onDeleteCallback = { _, _, bindingIndex ->
+                dataset.removeAt(bindingIndex)
+                notifyItemRemoved(bindingIndex)
+            }
+        }
     }
 
     override fun onBindViewHolder(holder: CommentRecyclerViewHolder, position: Int) {

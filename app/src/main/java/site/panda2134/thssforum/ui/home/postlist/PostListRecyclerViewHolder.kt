@@ -182,6 +182,7 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIWrapp
                 try {
                     api.deletePost(p.postContent.id)
                     withContext(Dispatchers.Main) {
+                        Toast.makeText(binding.root.context, R.string.delete_success, Toast.LENGTH_SHORT).show()
                         onDeleteCallback?.invoke(p, bindingAdapterPosition)
                     }
                 } catch (e: Throwable) {
