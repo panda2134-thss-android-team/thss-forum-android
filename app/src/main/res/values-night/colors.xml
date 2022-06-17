@@ -26,4 +26,6 @@
     <color name="card_line">#696969</color>
     <color name="motto">#696969</color>
     <color name="like_color">#C00020</color>
+
+    <color name="bga_pp_eighteen_maskColor">#00000000</color>
 </resources>
