@@ -27,6 +27,7 @@
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/activity_post_video.xml" value="0.1" />
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/activity_profile_interest_list.xml" value="0.1" />
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/activity_profile_menu_bell.xml" value="0.34375" />
+        <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/draft_item.xml" value="0.28205128205128205" />
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/fragment_all_posts.xml" value="0.33" />
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/fragment_followed_posts.xml" value="0.29583333333333334" />
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/fragment_home.xml" value="0.15416666666666667" />
@@ -40,6 +41,7 @@
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/post_text_pic_mix.xml" value="0.28205128205128205" />
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/post_video.xml" value="0.33" />
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/profile_bell_page.xml" value="0.34375" />
+        <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/profile_drafts.xml" value="0.2829059829059829" />
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/profile_edit_my_profile.xml" value="0.67" />
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/profile_following_list.xml" value="0.25" />
         <entry key="..\:/Users/panda2134/StudioProjects/thss-forum-android/app/src/main/res/layout/profile_following_list_item.xml" value="0.33559782608695654" />

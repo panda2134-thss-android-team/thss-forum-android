@@ -18,6 +18,7 @@
     <string name="NO_MORE_CONTENT">没有更多内容了</string>
 
     <string name="GLOBAL_SHARED_PREF" translatable="false">site.panda2134.thssforum.SHARED_PREF</string>
+    <string name="DRAFT_SHARED_PREF" translatable="false">site.panda2134.thssforum.DRAFT_SHARED_REF</string>
     <string name="NOTIFICATION_SHARED_PREF" translatable="false">site.panda2134.thssforum.NOTIFICATION_SHARED_PREF</string>
     <string name="PREF_KEY_TOKEN" translatable="false">token</string>
     <string name="PREF_KEY_UID" translatable="false">uid</string>
@@ -25,12 +26,13 @@
     <string name="PREF_KEY_PURE_TEXT_TITLE" translatable="false">pureTextTitle</string>
     <string name="PREF_KEY_PURE_TEXT_CONTENT" translatable="false">pureTextContent</string>
     <string name="PREF_KEY_IMAGE_TITLE" translatable="false">imageTitle</string>
-    <string name="PREF_KEY_IMAGE_CONTENT" translatable="false">pureTextContent</string>
+    <string name="PREF_KEY_IMAGE_CONTENT" translatable="false">imageContent</string>
     <string name="PREF_KEY_IMAGE_PATH_LIST" translatable="false">imagePathList</string>
     <string name="PREF_KEY_VIDEO_TITLE" translatable="false">videoTitle</string>
     <string name="PREF_KEY_VIDEO_PATH" translatable="false">videoPath</string>
     <string name="PREF_KEY_AUDIO_TITLE" translatable="false">audioTitle</string>
     <string name="PREF_KEY_AUDIO_PATH" translatable="false">audioPath</string>
+    <string name="PREF_KEY_DRAFT_SET" translatable="false">draft</string>
 
     <string name="RECYCLER_VIEW_NO_CONTENT">暂无内容</string>
 
@@ -158,4 +160,10 @@
 
     <string name="uploaded_preview">上传预览</string>
 
+    <string name="empty_title">空标题</string>
+    <string name="are_you_sure_to_delete">您确定删除吗？</string>
+    <string name="delete_lose_forever">选择的内容将永久删除</string>
+
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
 </resources>

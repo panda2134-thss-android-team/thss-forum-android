@@ -17,21 +17,28 @@ import androidx.lifecycle.lifecycleScope
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.arges.sepan.argmusicplayer.Models.ArgAudio
+import com.google.gson.JsonObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import site.panda2134.thssforum.R
 import site.panda2134.thssforum.api.APIWrapper
+import site.panda2134.thssforum.api.gsonFireObject
 import site.panda2134.thssforum.databinding.PostAudioBinding
 import site.panda2134.thssforum.models.Location
 import site.panda2134.thssforum.models.MediaPostContent
 import site.panda2134.thssforum.models.PostContent
 import java.lang.Exception
-import java.math.BigDecimal
 import java.time.Instant
 
-class ActivityNewAudioPost : ActivityNewPost() {
-    // TODO
+class ActivityNewAudioPost : ActivityNewPostWithDraft<ActivityNewAudioPost.AudioDraftHolder>() {
+    data class AudioDraftHolder(
+        override val title: String,
+        val audioPath: String?
+    ): ActivityNewPostWithDraft.DraftHolder() {
+        override fun getActivityClassName(): String = ActivityNewAudioPost::class.java.name
+    }
+
     private lateinit var binding: PostAudioBinding
     private lateinit var api: APIWrapper
     val audioPath = MutableLiveData<String?>(null)
@@ -166,24 +173,6 @@ class ActivityNewAudioPost : ActivityNewPost() {
         }
     }
 
-    private fun loadDraft() {
-        val pref = getSharedPreferences(getString(R.string.GLOBAL_SHARED_PREF), MODE_PRIVATE)
-        val draftTitle = pref.getString(getString(R.string.PREF_KEY_AUDIO_TITLE), "")
-        val draftPath = pref.getString(getString(R.string.PREF_KEY_AUDIO_PATH), null)
-        binding.title.setText(draftTitle)
-        audioPath.value = draftPath
-        Log.d(tag, "audioPath = ${audioPath.value}")
-    }
-
-    private fun saveDraft() {
-        val pref = getSharedPreferences(getString(R.string.GLOBAL_SHARED_PREF), MODE_PRIVATE)
-        with(pref.edit()) {
-            this.putString(getString(R.string.PREF_KEY_AUDIO_TITLE), binding.title.text.toString())
-            this.putString(getString(R.string.PREF_KEY_AUDIO_PATH), audioPath.value)
-            apply()
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         api = APIWrapper(this)
@@ -191,10 +180,13 @@ class ActivityNewAudioPost : ActivityNewPost() {
         setContentView(binding.root)
         binding.lifecycleOwner = this
         binding.v = this
+        draftHolder?.let { holder ->
+            binding.title.setText(holder.title)
+            audioPath.value = holder.audioPath
+        }
         binding.selectAudio.setOnClickListener {
             mActLauncherAlbum.launch("audio/*")
         }
-        loadDraft()
         binding.recordAudio.setOnClickListener {
             requestPermissionLauncher.launch(permission)
         }
@@ -204,9 +196,8 @@ class ActivityNewAudioPost : ActivityNewPost() {
         }
     }
 
-    override fun finish() {
-        super.finish()
-        saveDraft()
+    override fun saveDraft() {
+        draftHolder = AudioDraftHolder(binding.title.text.toString(), audioPath.value)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -225,6 +216,7 @@ class ActivityNewAudioPost : ActivityNewPost() {
                         Log.d(tag, "postId: ${res.id}")
                         withContext(Dispatchers.Main) {
                             Toast.makeText(this@ActivityNewAudioPost, R.string.post_success, Toast.LENGTH_SHORT).show()
+                            isPostSent = true
                             binding.title.text.clear()
                             audioPath.value = ""
                         }
@@ -235,5 +227,10 @@ class ActivityNewAudioPost : ActivityNewPost() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun deserializeDraftJson(j: JsonObject): AudioDraftHolder = gsonFireObject.fromJson(j, AudioDraftHolder::class.java)
+    override fun serializeDraftJson(holder: AudioDraftHolder): JsonObject = gsonFireObject.run {
+        fromJson(toJson(holder), JsonObject::class.java)
     }
 }

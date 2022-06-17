@@ -40,39 +40,6 @@ import kotlin.collections.ArrayList
 @Suppress("unused")
 class APIWrapper(private val context: Context) {
     private val noToken = "NO_TOKEN"
-    val gsonFireObject: Gson
-
-    init {
-        val gsonFireBuilder: GsonFireBuilder = GsonFireBuilder()
-            .dateSerializationPolicy(DateSerializationPolicy.rfc3339)
-        val gsonBuilder = gsonFireBuilder.createGsonBuilder()
-            .registerTypeAdapter(Instant::class.java, object: JsonDeserializer<Instant>, JsonSerializer<Instant> {
-                override fun deserialize(
-                    json: JsonElement?,
-                    typeOfT: Type?,
-                    context: JsonDeserializationContext?
-                ): Instant {
-                    if (json !is JsonPrimitive || ! json.isString) {
-                        throw IllegalStateException("parsing Instant requires a string")
-                    }
-                    return Instant.parse(json.asString)
-                }
-
-                override fun serialize(
-                    src: Instant?,
-                    typeOfSrc: Type?,
-                    context: JsonSerializationContext?
-                ): JsonElement {
-                    return if (src == null) {
-                        JsonNull.INSTANCE
-                    } else {
-                        JsonPrimitive(src.toString())
-                    }
-                }
-
-            })
-        gsonFireObject = gsonBuilder.create()
-    }
 
     inline fun <reified T: Any> gsonFireDeserializer(): ResponseDeserializable<T> = gsonDeserializer<T>(gsonFireObject)
 

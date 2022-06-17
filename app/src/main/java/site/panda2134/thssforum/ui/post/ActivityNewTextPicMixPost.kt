@@ -17,9 +17,11 @@ import cn.bingoogolapple.photopicker.activity.BGAPhotoPickerPreviewActivity
 import cn.bingoogolapple.photopicker.widget.BGASortableNinePhotoLayout
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
+import com.google.gson.JsonObject
 import kotlinx.coroutines.*
 import site.panda2134.thssforum.R
 import site.panda2134.thssforum.api.APIWrapper
+import site.panda2134.thssforum.api.gsonFireObject
 import site.panda2134.thssforum.databinding.PostTextPicMixBinding
 import site.panda2134.thssforum.models.ImageTextPostContent
 import site.panda2134.thssforum.models.Location
@@ -29,7 +31,36 @@ import java.math.BigDecimal
 import java.time.Instant
 
 
-class ActivityNewTextPicMixPost : ActivityNewPost(), BGASortableNinePhotoLayout.Delegate {
+class ActivityNewTextPicMixPost : ActivityNewPostWithDraft<ActivityNewTextPicMixPost.TextPicMixDraftHolder>(), BGASortableNinePhotoLayout.Delegate {
+
+    data class TextPicMixDraftHolder(
+        override val title: String,
+        val content: String,
+        val images: Array<String>
+    ): ActivityNewPostWithDraft.DraftHolder() {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as TextPicMixDraftHolder
+
+            if (title != other.title) return false
+            if (content != other.content) return false
+            if (!images.contentEquals(other.images)) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = title.hashCode()
+            result = 31 * result + content.hashCode()
+            result = 31 * result + images.contentHashCode()
+            return result
+        }
+
+        override fun getActivityClassName(): String = ActivityNewTextPicMixPost::class.java.name
+    }
+
     private lateinit var binding: PostTextPicMixBinding
     lateinit var locationClient: AMapLocationClient
     private var location: Location? = null
@@ -113,32 +144,6 @@ class ActivityNewTextPicMixPost : ActivityNewPost(), BGASortableNinePhotoLayout.
         binding.photoPicker.data = BGAPhotoPickerActivity.getSelectedPhotos(it.data)
     }
 
-    private fun loadDraft() {
-        val pref = getSharedPreferences(getString(R.string.GLOBAL_SHARED_PREF), MODE_PRIVATE)
-        val draftTitle = pref.getString(getString(R.string.PREF_KEY_IMAGE_TITLE), "")
-        val draftContent = pref.getString(getString(R.string.PREF_KEY_IMAGE_CONTENT), "")
-        val draftImages = api.gsonFireObject.fromJson(pref.getString(getString(R.string.PREF_KEY_IMAGE_PATH_LIST), "[]"), Array<String>::class.java)
-        binding.title.setText(draftTitle)
-        binding.content.setText(draftContent)
-        binding.photoPicker.apply {
-            while (data.size > 0) {
-                removeItem(0)
-            }
-            addMoreData(draftImages.toCollection(ArrayList()))
-        }
-        Log.d(tag, "imagePath = ${binding.photoPicker.data}")
-    }
-
-    private fun saveDraft() {
-        val pref = getSharedPreferences(getString(R.string.GLOBAL_SHARED_PREF), MODE_PRIVATE)
-        with(pref.edit()) {
-            putString(getString(R.string.PREF_KEY_IMAGE_TITLE), binding.title.text.toString())
-            putString(getString(R.string.PREF_KEY_IMAGE_CONTENT), binding.content.text.toString())
-            putString(getString(R.string.PREF_KEY_IMAGE_PATH_LIST), api.gsonFireObject.toJson(binding.photoPicker.data.toTypedArray()))
-            apply()
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         api = APIWrapper(this)
@@ -146,7 +151,6 @@ class ActivityNewTextPicMixPost : ActivityNewPost(), BGASortableNinePhotoLayout.
         binding.p = this
         setContentView(binding.root)
         locationInit()
-        loadDraft()
         binding.photoPicker.apply {
             maxItemCount = 9
             isSortable = true
@@ -155,11 +159,19 @@ class ActivityNewTextPicMixPost : ActivityNewPost(), BGASortableNinePhotoLayout.
 
             setDelegate(this@ActivityNewTextPicMixPost)
         }
+        draftHolder?.let { holder ->
+            binding.title.setText(holder.title)
+            binding.content.setText(holder.content)
+            binding.photoPicker.addMoreData(holder.images.toCollection(ArrayList()))
+        }
     }
 
-    override fun finish() {
-        super.finish()
-        saveDraft()
+    override fun saveDraft() {
+        draftHolder = TextPicMixDraftHolder(
+            binding.title.text.toString(),
+            binding.content.text.toString(),
+            binding.photoPicker.data.toTypedArray()
+        )
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -208,6 +220,7 @@ class ActivityNewTextPicMixPost : ActivityNewPost(), BGASortableNinePhotoLayout.
                         binding.content.text?.clear()
                         binding.photoPicker.data.clear()
                         Toast.makeText(this@ActivityNewTextPicMixPost, R.string.post_success, Toast.LENGTH_SHORT).show()
+                        isPostSent = true
                         finish()
                     }
                 }
@@ -260,5 +273,10 @@ class ActivityNewTextPicMixPost : ActivityNewPost(), BGASortableNinePhotoLayout.
         toPosition: Int,
         models: ArrayList<String>?
     ) {
+    }
+
+    override fun deserializeDraftJson(j: JsonObject): TextPicMixDraftHolder = gsonFireObject.fromJson(j, TextPicMixDraftHolder::class.java)
+    override fun serializeDraftJson(holder: TextPicMixDraftHolder): JsonObject = gsonFireObject.run {
+        fromJson(toJson(holder), JsonObject::class.java)
     }
 }

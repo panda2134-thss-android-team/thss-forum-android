@@ -10,11 +10,13 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
+import com.google.gson.JsonObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import site.panda2134.thssforum.R
 import site.panda2134.thssforum.api.APIWrapper
+import site.panda2134.thssforum.api.gsonFireObject
 import site.panda2134.thssforum.databinding.PostPureTextBinding
 import site.panda2134.thssforum.models.ImageTextPostContent
 import site.panda2134.thssforum.models.Location
@@ -23,7 +25,10 @@ import java.math.BigDecimal
 import java.time.Instant
 
 
-class ActivityNewPureTextPost : ActivityNewPost() {
+class ActivityNewPureTextPost : ActivityNewPostWithDraft<ActivityNewPureTextPost.PureTextDraftHolder>() {
+    data class PureTextDraftHolder (override val title: String, val content: String): ActivityNewPostWithDraft.DraftHolder() {
+        override fun getActivityClassName(): String = ActivityNewPureTextPost::class.java.name
+    }
     private lateinit var binding: PostPureTextBinding
     lateinit var locationClient: AMapLocationClient
     private var location: Location? = null
@@ -52,7 +57,7 @@ class ActivityNewPureTextPost : ActivityNewPost() {
         locationClient.setLocationListener {
             binding.location.visibility = View.VISIBLE
             binding.location.text = it.address
-            location = Location(it.address, BigDecimal(it.longitude), BigDecimal(it.latitude))
+            location = Location(it.address, it.longitude.toBigDecimal(), it.latitude.toBigDecimal())
         }
         locationClient.setLocationOption(AMapLocationClientOption()
             .apply {
@@ -74,6 +79,7 @@ class ActivityNewPureTextPost : ActivityNewPost() {
             .setTitle(getString(R.string.no_content))
             .setMessage(R.string.please_add_content)
             .create()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -81,21 +87,15 @@ class ActivityNewPureTextPost : ActivityNewPost() {
         setContentView(binding.root)
         locationInit()
 
-        val pref = getSharedPreferences(getString(R.string.GLOBAL_SHARED_PREF), MODE_PRIVATE)
-        val draftTitle = pref.getString(getString(R.string.PREF_KEY_PURE_TEXT_TITLE), "")
-        val draftContent = pref.getString(getString(R.string.PREF_KEY_PURE_TEXT_CONTENT), "")
-        binding.title.setText(draftTitle)
-        binding.content.setText(draftContent)
+        draftHolder?.let { holder ->
+            binding.title.setText(holder.title)
+            binding.content.setText(holder.content)
+        }
     }
 
-    override fun finish() {
-        super.finish()
-        val pref = getSharedPreferences(getString(R.string.GLOBAL_SHARED_PREF), MODE_PRIVATE)
-        with(pref.edit()) {
-            this.putString(getString(R.string.PREF_KEY_PURE_TEXT_TITLE), binding.title.text.toString())
-            this.putString(getString(R.string.PREF_KEY_PURE_TEXT_CONTENT), binding.content.text.toString())
-            apply()
-        }
+    override fun saveDraft() {
+        draftHolder = PureTextDraftHolder(binding.title.text.toString(),
+            binding.content.text.toString())
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -127,6 +127,7 @@ class ActivityNewPureTextPost : ActivityNewPost() {
                                 R.string.post_success,
                                 Toast.LENGTH_SHORT
                             ).show()
+                            isPostSent = true
                         }
                     }
                     binding.title.text?.clear()
@@ -137,5 +138,10 @@ class ActivityNewPureTextPost : ActivityNewPost() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun deserializeDraftJson(j: JsonObject): PureTextDraftHolder = gsonFireObject.fromJson(j, PureTextDraftHolder::class.java)
+    override fun serializeDraftJson(holder: PureTextDraftHolder): JsonObject = gsonFireObject.run {
+        fromJson(toJson(holder), JsonObject::class.java)
     }
 }

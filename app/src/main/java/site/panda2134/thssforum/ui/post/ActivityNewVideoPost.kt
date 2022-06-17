@@ -29,8 +29,17 @@ import java.time.Instant
 import android.view.View
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
+import com.google.gson.JsonObject
+import site.panda2134.thssforum.api.gsonFireObject
 
-class ActivityNewVideoPost : ActivityNewPost() {
+class ActivityNewVideoPost: ActivityNewPostWithDraft<ActivityNewVideoPost.VideoDraftHolder>() {
+    data class VideoDraftHolder (
+        override val title: String,
+        val videoPath: String?
+    ): ActivityNewPostWithDraft.DraftHolder() {
+        override fun getActivityClassName(): String = ActivityNewVideoPost::class.java.name
+    }
+
     private lateinit var binding: PostVideoBinding
     private lateinit var api: APIWrapper
     val videoPath = MutableLiveData<String?>(null)
@@ -139,23 +148,6 @@ class ActivityNewVideoPost : ActivityNewPost() {
         }
     }
 
-    private fun loadDraft() {
-        val pref = getSharedPreferences(getString(R.string.GLOBAL_SHARED_PREF), MODE_PRIVATE)
-        val draftTitle = pref.getString(getString(R.string.PREF_KEY_VIDEO_TITLE), "")
-        val draftPath = pref.getString(getString(R.string.PREF_KEY_VIDEO_PATH), null)
-        binding.title.setText(draftTitle)
-        videoPath.value = draftPath
-        Log.d(tag, "videoPath = ${videoPath.value}")
-    }
-
-    private fun saveDraft() {
-        val pref = getSharedPreferences(getString(R.string.GLOBAL_SHARED_PREF), MODE_PRIVATE)
-        with(pref.edit()) {
-            this.putString(getString(R.string.PREF_KEY_VIDEO_TITLE), binding.title.text.toString())
-            this.putString(getString(R.string.PREF_KEY_VIDEO_PATH), videoPath.value)
-            apply()
-        }
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         api = APIWrapper(this)
@@ -163,10 +155,13 @@ class ActivityNewVideoPost : ActivityNewPost() {
         setContentView(binding.root)
         binding.lifecycleOwner = this
         binding.v = this
+        draftHolder?.let { holder ->
+            binding.title.setText(holder.title)
+            videoPath.value = holder.videoPath
+        }
         binding.selectVideo.setOnClickListener {
             mActLauncherAlbum.launch("video/*")
         }
-        loadDraft()
         binding.shootVideo.setOnClickListener {
             requestPermissionLauncher.launch(Manifest.permission.CAMERA)
         }
@@ -176,9 +171,11 @@ class ActivityNewVideoPost : ActivityNewPost() {
         binding.videoPreview.setMediaController(mediaController)
     }
 
-    override fun finish() {
-        super.finish()
-        saveDraft()
+    override fun saveDraft() {
+        draftHolder = VideoDraftHolder(
+            binding.title.text.toString(),
+            videoPath.value
+        )
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -203,6 +200,7 @@ class ActivityNewVideoPost : ActivityNewPost() {
                             binding.title.text.clear()
                             videoPath.value = ""
                             Toast.makeText(this@ActivityNewVideoPost, R.string.post_success, Toast.LENGTH_SHORT).show()
+                            isPostSent = true
                         }
                         finish()
                     }
@@ -211,5 +209,10 @@ class ActivityNewVideoPost : ActivityNewPost() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun deserializeDraftJson(j: JsonObject): VideoDraftHolder = gsonFireObject.fromJson(j, VideoDraftHolder::class.java)
+    override fun serializeDraftJson(holder: VideoDraftHolder): JsonObject = gsonFireObject.run {
+        fromJson(toJson(holder), JsonObject::class.java)
     }
 }
