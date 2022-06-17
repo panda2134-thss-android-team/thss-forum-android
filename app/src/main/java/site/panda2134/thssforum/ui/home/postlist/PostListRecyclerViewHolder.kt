@@ -1,6 +1,7 @@
 package site.panda2134.thssforum.ui.home.postlist
 
 import android.app.Activity
+import android.content.Intent
 import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
@@ -26,6 +27,7 @@ import site.panda2134.thssforum.api.APIWrapper
 import site.panda2134.thssforum.databinding.PostItemBinding
 import site.panda2134.thssforum.models.*
 import site.panda2134.thssforum.ui.home.comments.CommentRecyclerViewAdapter
+import site.panda2134.thssforum.ui.profile.ProfileUserHomepage
 import site.panda2134.thssforum.utils.toTimeAgo
 
 class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIWrapper, val recyclerView: RecyclerView,
@@ -88,6 +90,15 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIWrapp
         p.postContent.createdAt?.let {
             binding.postTime.text = it.toTimeAgo()
         }
+        val gotoPostAuthorPage = {
+            post?.let {
+                val intent = Intent(binding.root.context, ProfileUserHomepage::class.java)
+                    .putExtra("author", it.author.uid)
+                binding.root.context.startActivity(intent)
+            }
+        }
+        binding.userAvatar.setOnClickListener { gotoPostAuthorPage() }
+        binding.userName.setOnClickListener { gotoPostAuthorPage() }
 
         when(p.postContent.type) {
             PostType.normal -> {

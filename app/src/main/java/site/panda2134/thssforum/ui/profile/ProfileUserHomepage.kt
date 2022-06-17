@@ -2,8 +2,8 @@ package site.panda2134.thssforum.ui.profile
 
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +15,6 @@ import site.panda2134.thssforum.api.APIWrapper
 import site.panda2134.thssforum.databinding.ProfileUserHomepageBinding
 import site.panda2134.thssforum.models.User
 import site.panda2134.thssforum.ui.home.postlist.PostListRecyclerViewAdapter
-import site.panda2134.thssforum.ui.home.postlist.UserHomepageRecyclerViewAdapter
 
 
 class ProfileUserHomepage : ActivityProfileItem() {
@@ -24,8 +23,8 @@ class ProfileUserHomepage : ActivityProfileItem() {
     private lateinit var menu: Menu
     private lateinit var uid : String // 本界面展示的作者的uid
     private lateinit var api: APIWrapper
-    private lateinit var adapter: UserHomepageRecyclerViewAdapter
-    private var is_current_user = false // 如果是当前用户的话就没有 ”屏蔽与否“，默认不是
+    private lateinit var adapter: PostListRecyclerViewAdapter
+    private var isCurrentUser = false // 如果是当前用户的话就没有 ”屏蔽与否/关注“，默认不是
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,9 +40,10 @@ class ProfileUserHomepage : ActivityProfileItem() {
             loadUserInfo(uid)
         }
 
-        is_current_user = intent.getSerializableExtra("is_current_user") as? Boolean == true
+        isCurrentUser = (uid == api.currentUserId)
+        binding.followedButton.visibility = if (isCurrentUser) View.GONE else View.VISIBLE
 
-        adapter = UserHomepageRecyclerViewAdapter(api, uid)
+        adapter = PostListRecyclerViewAdapter(api, uid = uid, activity = this, lifecycleOwner = this)
         binding.hpPostsList.adapter = adapter
         adapter.setupRecyclerView(this, binding.hpPostsList)
 
@@ -93,7 +93,7 @@ class ProfileUserHomepage : ActivityProfileItem() {
     // activity的menubar
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
-        if(!is_current_user) { // 如果不是当前用户
+        if(!isCurrentUser) { // 如果不是当前用户
             inflater.inflate(R.menu.following_eyeswitch_menuicon, menu)
             this.menu = menu
         }

@@ -21,7 +21,7 @@ import site.panda2134.thssforum.ui.home.comments.CommentRecyclerViewAdapter
 import site.panda2134.thssforum.ui.utils.RecyclerItemLoadingViewHolder
 import java.lang.Integer.min
 
-class PostListRecyclerViewAdapter(val api: APIWrapper, val fetchFollowing: Boolean = false,
+class PostListRecyclerViewAdapter(val api: APIWrapper, val fetchFollowing: Boolean = false, val uid: String? = null,
                                   val activity: Activity, val lifecycleOwner: LifecycleOwner): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val POST_ITEM = 0
     private val LIST_LOADING = 1
@@ -107,10 +107,17 @@ class PostListRecyclerViewAdapter(val api: APIWrapper, val fetchFollowing: Boole
                 loadingLock.withLock {
                     Log.d("PostLoad", "loading...")
                     val initial = posts.size == 0
-                    var postsToAdd: List<Post> = api.getPosts( // +1 is necessary!
-                        skip = posts.size, limit = POSTS_PER_FETCH + 1, following = fetchFollowing, scope = scope,
-                        sortBy = sortBy
-                    )
+                    var postsToAdd: List<Post> = if (uid == null) {
+                        api.getPosts( // +1 is necessary!
+                            skip = posts.size, limit = POSTS_PER_FETCH + 1, following = fetchFollowing, scope = scope,
+                            sortBy = sortBy
+                        )
+                    } else {
+                        api.getUserPosts( // +1 is necessary!
+                            skip = posts.size, limit = POSTS_PER_FETCH + 1, uid = uid, scope = scope,
+                            sortBy = sortBy
+                        )
+                    }
                     val insertedAt = posts.size
                     if (postsToAdd.size <= POSTS_PER_FETCH) {
                         isEnded = true

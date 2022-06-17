@@ -228,17 +228,29 @@ class APIWrapper(private val context: Context) {
     suspend fun getUserPosts(
         uid: String,
         start: Instant? = null,
-        end: Instant? = null
+        end: Instant? = null,
+        sortBy: PostsSortBy = PostsSortBy.Time,
+        skip: Int? = null,
+        limit: Int? = null,
+        types: List<PostType> = PostType.values().toList(),
+        scope: CoroutineScope = MainScope()
     ): List<Post> {
         val posts = fuel.get(
             "/users/$uid/posts?",
-            listOf("start" to start?.toString(), "end" to end?.toString())
+            listOf(
+                "start" to start?.toString(),
+                "end" to end?.toString(),
+                "sort_by" to sortBy.value,
+                "skip" to skip,
+                "limit" to limit
+            )
+                    + types.map { "type" to it.value }
         )
             .authentication()
             .bearer(token)
             .awaitObject(gsonFireDeserializer<ArrayList<PostResponse>>())
         return posts.map { postResponse ->
-            MainScope().async(Dispatchers.IO) {
+            scope.async(Dispatchers.IO) {
                 Post(this@APIWrapper.getUserInfo(postResponse.by), PostContent.fromPostResponse(postResponse))
             }
         }.awaitAll()
