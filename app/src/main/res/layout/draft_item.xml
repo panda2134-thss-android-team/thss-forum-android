@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<site.panda2134.thssforum.ui.utils.SwipeLayout
+<com.zerobranch.layout.SwipeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -69,4 +69,4 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-</site.panda2134.thssforum.ui.utils.SwipeLayout>
+</com.zerobranch.layout.SwipeLayout>

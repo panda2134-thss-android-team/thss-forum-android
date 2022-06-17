@@ -38,7 +38,7 @@
     <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
         android:id="@+id/save_button"
         android:layout_marginTop="@dimen/medium_margin"
-        android:backgroundTint="@color/purple_200"
+        android:backgroundTint="@color/purple_500"
         android:textColor="@color/white"
         android:text="@string/save"
         android:textSize="@dimen/profile_button_save_ts"

@@ -78,23 +78,25 @@ class ProfileEditMyProfile : ActivityProfileItem() {
             MainScope().launch(Dispatchers.IO) {
                 try {
                     val uploadedAvatar = newImageLocalPath?.let {
-                        withContext(Dispatchers.Main) {
-                            suspendCoroutine<Unit> { continuation ->
+                        suspendCoroutine<Unit> { continuation ->
+                            binding.saveButton.post {
                                 binding.saveButton.startAnimation { continuation.resume(Unit) }
                             }
                         }
-                        try {
-                            api.uploadFileToOSS(
-                                Uri.fromFile(File(it)),
-                                false
-                            ) { _, currentBytes, totalBytes ->
-                                binding.saveButton.post {
-                                    binding.saveButton.setProgress(currentBytes * 100.0f / totalBytes)
-                                }
+                        api.uploadFileToOSS(
+                            Uri.fromFile(File(it)),
+                            false
+                        ) { _, currentBytes, totalBytes ->
+                            binding.saveButton.post {
+                                binding.saveButton.setProgress(currentBytes * 100.0f / totalBytes)
                             }
-                        } catch (e: Throwable) {
-                            binding.saveButton.revertAnimation()
-                            throw e
+                        }
+                    }
+                    if (uploadedAvatar == null) {
+                        suspendCoroutine<Unit> { continuation ->
+                            binding.saveButton.post {
+                                binding.saveButton.startAnimation { continuation.resume(Unit) }
+                            }
                         }
                     }
                     val req = ModifyProfileRequest(
@@ -123,6 +125,7 @@ class ProfileEditMyProfile : ActivityProfileItem() {
                         )
                     }
                 } catch (e: Throwable) {
+                    binding.saveButton.revertAnimation()
                     e.printStackTrace()
                 }
             }

@@ -8,13 +8,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.zerobranch.layout.SwipeLayout
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import site.panda2134.thssforum.R
 import site.panda2134.thssforum.databinding.DraftItemBinding
 import site.panda2134.thssforum.ui.post.*
-import site.panda2134.thssforum.ui.utils.SwipeLayout
 import site.panda2134.thssforum.utils.toTimeAgo
 import java.time.Instant
 
