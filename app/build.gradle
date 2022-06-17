@@ -22,7 +22,7 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         ndk {
-            abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "x86","x86_64"
+            abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
         }
     }
 
@@ -89,4 +89,6 @@ dependencies {
     implementation "io.ktor:ktor-client-websockets:2.0.2"
     implementation "io.ktor:ktor-serialization-gson:2.0.2"
     implementation "com.github.yshrsmz:KeyboardVisibilityEvent:v3.0.0-RC3"
+    implementation 'com.github.leandroBorgesFerreira:LoadingButtonAndroid:2.2.0'
+    implementation 'com.github.zerobranch:SwipeLayout:1.3.1'
 }

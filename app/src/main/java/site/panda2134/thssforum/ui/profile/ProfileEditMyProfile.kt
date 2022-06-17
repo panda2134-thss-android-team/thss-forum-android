@@ -1,22 +1,53 @@
 package site.panda2134.thssforum.ui.profile
 
+import android.Manifest
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
-import android.text.Editable
+import android.os.Environment
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import cn.bingoogolapple.photopicker.activity.BGAPhotoPickerActivity
 import com.bumptech.glide.Glide
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import site.panda2134.thssforum.R
 import site.panda2134.thssforum.api.APIWrapper
 import site.panda2134.thssforum.databinding.ProfileEditMyProfileBinding
 import site.panda2134.thssforum.models.ModifyProfileRequest
 import site.panda2134.thssforum.models.User
+import java.io.File
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 
 class ProfileEditMyProfile : ActivityProfileItem() {
     private lateinit var binding: ProfileEditMyProfileBinding
+    private lateinit var api: APIWrapper
+    private var newImageLocalPath: String? = null
+
+    private val choosePhoto =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode != RESULT_OK) return@registerForActivityResult
+            val image = BGAPhotoPickerActivity.getSelectedPhotos(it.data).firstOrNull()
+                ?: return@registerForActivityResult
+            newImageLocalPath = image
+            binding.myImage.setImageBitmap(BitmapFactory.decodeFile(image))
+        }
+
+    private val requestPhotoPermissions =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+            if (it.values.contains(false)) return@registerForActivityResult
+            val takePhotoDir =
+                File(Environment.getExternalStorageDirectory(), "THSSForum")
+
+            val photoPickerIntent = BGAPhotoPickerActivity.IntentBuilder(this)
+                .cameraFileDir(takePhotoDir)
+                .maxChooseCount(1)
+                .selectedPhotos(null) // 当前已选中的图片路径集合
+                .pauseOnScroll(false) // 滚动列表时是否暂停加载图片
+                .build()
+            choosePhoto.launch(photoPickerIntent)
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,19 +57,70 @@ class ProfileEditMyProfile : ActivityProfileItem() {
         setContentView(binding.root)
 
         // 载入顶部：我的头像、昵称和简介
-        val apiService = APIWrapper(this)
+        api = APIWrapper(this)
         MainScope().launch(Dispatchers.IO) {
-            loadUserInfo(apiService)
+            loadUserInfo()
+            withContext(Dispatchers.Main) {
+                binding.myImage.setOnClickListener {
+                    requestPhotoPermissions.launch(
+                        listOf(
+                            Manifest.permission.CAMERA,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE
+                        ).toTypedArray()
+                    )
+                }
+            }
         }
 
-        binding.saveButton.setOnClickListener() {
+        binding.saveButton.setOnClickListener {
             // 修改个人信息
             MainScope().launch(Dispatchers.IO) {
                 try {
-                    editUserInfo(apiService)
+                    val uploadedAvatar = newImageLocalPath?.let {
+                        withContext(Dispatchers.Main) {
+                            suspendCoroutine<Unit> { continuation ->
+                                binding.saveButton.startAnimation { continuation.resume(Unit) }
+                            }
+                        }
+                        try {
+                            api.uploadFileToOSS(
+                                Uri.fromFile(File(it)),
+                                false
+                            ) { _, currentBytes, totalBytes ->
+                                binding.saveButton.post {
+                                    binding.saveButton.setProgress(currentBytes * 100.0f / totalBytes)
+                                }
+                            }
+                        } catch (e: Throwable) {
+                            binding.saveButton.revertAnimation()
+                            throw e
+                        }
+                    }
+                    val req = ModifyProfileRequest(
+                        nickname = binding.myName.text.toString(),
+                        intro = binding.myIntro.text.toString(),
+                        avatar = uploadedAvatar?.toString()
+                    )
+                    api.modifyProfile(req)
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(this@ProfileEditMyProfile, getString(R.string.save_success), Toast.LENGTH_SHORT).show()
-                        finish()
+                        binding.saveButton.doneLoadingAnimation(
+                            br.com.simplepass.loadingbutton.R.color.green,
+                            BitmapFactory.decodeResource(
+                                binding.root.context.resources,
+                                R.drawable.ic_cloud_upload_white_24dp
+                            )
+                        )
+                        binding.saveButton.postDelayed(
+                            {
+                                Toast.makeText(
+                                    this@ProfileEditMyProfile,
+                                    getString(R.string.save_success),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                finish()
+                            }, 200
+                        )
                     }
                 } catch (e: Throwable) {
                     e.printStackTrace()
@@ -49,20 +131,14 @@ class ProfileEditMyProfile : ActivityProfileItem() {
 
     }
 
-    private suspend fun editUserInfo(apiWrapper: APIWrapper) {
-        // TODO: 修改图片
-        apiWrapper.modifyProfile(ModifyProfileRequest(nickname=binding.myName.text.toString(),intro=binding.myIntro.text.toString()))
-    }
 
-    private suspend fun loadUserInfo(apiWrapper: APIWrapper) {
+    private suspend fun loadUserInfo() {
         try {
-            val user: User = apiWrapper.getProfile()
+            val user: User = api.getProfile()
             withContext(Dispatchers.Main) {
-
-                binding.myName.text = user.nickname.toEditable()
-                binding.myIntro.text = user.intro.toEditable()
+                binding.myName.setText(user.nickname)
+                binding.myIntro.setText(user.intro)
             }
-            // 画图
 
             withContext(Dispatchers.Main) {
                 Glide.with(binding.root).load(user.avatar)
@@ -73,8 +149,5 @@ class ProfileEditMyProfile : ActivityProfileItem() {
             e.printStackTrace()
         }
     }
-
-    // 把string变成editable
-    fun String.toEditable(): Editable =  Editable.Factory.getInstance().newEditable(this)
 
 }

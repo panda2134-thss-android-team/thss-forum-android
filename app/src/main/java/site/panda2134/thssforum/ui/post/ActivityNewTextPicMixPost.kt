@@ -64,7 +64,7 @@ class ActivityNewTextPicMixPost : ActivityNewPostWithDraft<ActivityNewTextPicMix
     private lateinit var binding: PostTextPicMixBinding
     lateinit var locationClient: AMapLocationClient
     private var location: Location? = null
-    private val permissions = listOf(
+    private val locationPermissions = listOf(
         Manifest.permission.ACCESS_COARSE_LOCATION,
         Manifest.permission.ACCESS_FINE_LOCATION,
         Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -79,7 +79,7 @@ class ActivityNewTextPicMixPost : ActivityNewPostWithDraft<ActivityNewTextPicMix
         binding.location.visibility = View.GONE
         binding.addLocation.isEnabled = false
 
-        requestLocationPermissions.launch(permissions.toTypedArray())
+        requestLocationPermissions.launch(locationPermissions.toTypedArray())
 
         AMapLocationClient.updatePrivacyShow(this, true, true)
         AMapLocationClient.updatePrivacyAgree(this, true)
@@ -126,7 +126,7 @@ class ActivityNewTextPicMixPost : ActivityNewPostWithDraft<ActivityNewTextPicMix
         binding.photoPicker.addMoreData(BGAPhotoPickerActivity.getSelectedPhotos(it.data))
     }
 
-    private val requestPermissionsResult = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+    private val requestPhotoPermissions = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
         if (it.values.contains(false)) return@registerForActivityResult
         val takePhotoDir =
             File(Environment.getExternalStorageDirectory(), "THSSForum")
@@ -236,7 +236,7 @@ class ActivityNewTextPicMixPost : ActivityNewPostWithDraft<ActivityNewTextPicMix
         position: Int,
         models: ArrayList<String>?
     ) {
-        requestPermissionsResult.launch(listOf(Manifest.permission.CAMERA,
+        requestPhotoPermissions.launch(listOf(Manifest.permission.CAMERA,
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE).toTypedArray())
     }
 

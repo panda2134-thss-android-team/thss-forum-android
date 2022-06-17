@@ -3,8 +3,8 @@ package site.panda2134.thssforum.ui.profile
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
-import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import kotlinx.coroutines.Dispatchers
@@ -41,17 +41,10 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    private suspend fun getUid() {
-        try {
-            val user: User = api.getProfile()
-            withContext(Dispatchers.Main) {
-                val intent = Intent(binding.root.context, ProfileUserHomepage::class.java)
-                .putExtra("author", user.uid).putExtra("is_current_user", true)
-                binding.root.context.startActivity(intent)
-            }
-        } catch (e: Throwable) {
-            e.printStackTrace()
-        }
+    private fun gotoMyHomepage() {
+        val intent = Intent(binding.root.context, ProfileUserHomepage::class.java)
+        .putExtra("author", api.currentUserId).putExtra("is_current_user", true)
+        binding.root.context.startActivity(intent)
     }
 
     override fun onCreateView(
@@ -74,7 +67,7 @@ class ProfileFragment : Fragment() {
         binding.myHomepage.setOnClickListener {
             api = APIWrapper(requireActivity())
             MainScope().launch(Dispatchers.IO) {
-                getUid()
+                gotoMyHomepage()
             }
         }
         binding.drafts.setOnClickListener {
@@ -101,12 +94,12 @@ class ProfileFragment : Fragment() {
         return root
     }
 
-
     // 设置要不要显示menubar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
+
     // 在顶栏加图标（因为是fragment所以写法不同）
     // 之后写点击事件的时候，直接对应重载就可以了
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -124,8 +117,10 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-//        _binding = null
+    override fun onResume() {
+        super.onResume()
+        MainScope().launch {
+            loadUserInfo()
+        }
     }
 }

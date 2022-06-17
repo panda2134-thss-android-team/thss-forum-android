@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
     <ImageView
         android:id="@+id/my_image"
@@ -33,15 +35,17 @@
         android:textAlignment="center"
         android:inputType="textLongMessage"
         android:importantForAutofill="no" />
-    <Button
+    <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
         android:id="@+id/save_button"
         android:layout_marginTop="@dimen/medium_margin"
-        android:background="@color/purple_200"
+        android:backgroundTint="@color/purple_200"
         android:textColor="@color/white"
         android:text="@string/save"
         android:textSize="@dimen/profile_button_save_ts"
         android:layout_gravity="center"
+        app:spinning_bar_padding="3dp"
+        app:spinning_bar_color="@color/white"
         android:layout_width="@dimen/profile_button_save_w"
-        android:layout_height="@dimen/profile_button_save_h">
-    </Button>
+        android:layout_height="@dimen/profile_button_save_h"
+    />
 </LinearLayout>
