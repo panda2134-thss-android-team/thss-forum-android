@@ -211,7 +211,7 @@ class NotificationService : Service() {
             notifications.addAll(all.values.map {
                 if (it !is String) return@map null
                 try {
-                    api.gsonFireObject.fromJson(it, NotificationItem::class.java)
+                    gsonFireObject.fromJson(it, NotificationItem::class.java)
                 } catch (e: JsonSyntaxException) {
                     Log.d(javaClass.name, "failed to parse notification history")
                     null
@@ -256,7 +256,7 @@ class NotificationService : Service() {
                                     val notificationItem = NotificationItem(pushed)
                                     notifications.add(notificationItem)
                                     with (getSharedPreferences(getString(R.string.NOTIFICATION_SHARED_PREF), MODE_PRIVATE).edit()) {
-                                        val j = api.gsonFireObject.toJson(notificationItem)
+                                        val j = gsonFireObject.toJson(notificationItem)
                                         putString(pushed.notificationId, j)
                                         apply()
                                     }

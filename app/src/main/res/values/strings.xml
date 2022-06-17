@@ -18,10 +18,21 @@
     <string name="NO_MORE_CONTENT">没有更多内容了</string>
 
     <string name="GLOBAL_SHARED_PREF" translatable="false">site.panda2134.thssforum.SHARED_PREF</string>
+    <string name="DRAFT_SHARED_PREF" translatable="false">site.panda2134.thssforum.DRAFT_SHARED_REF</string>
     <string name="NOTIFICATION_SHARED_PREF" translatable="false">site.panda2134.thssforum.NOTIFICATION_SHARED_PREF</string>
     <string name="PREF_KEY_TOKEN" translatable="false">token</string>
     <string name="PREF_KEY_UID" translatable="false">uid</string>
     <string name="PREF_KEY_TOKEN_EXPIRE_AT" translatable="false">tokenExpiresAt</string>
+    <string name="PREF_KEY_PURE_TEXT_TITLE" translatable="false">pureTextTitle</string>
+    <string name="PREF_KEY_PURE_TEXT_CONTENT" translatable="false">pureTextContent</string>
+    <string name="PREF_KEY_IMAGE_TITLE" translatable="false">imageTitle</string>
+    <string name="PREF_KEY_IMAGE_CONTENT" translatable="false">imageContent</string>
+    <string name="PREF_KEY_IMAGE_PATH_LIST" translatable="false">imagePathList</string>
+    <string name="PREF_KEY_VIDEO_TITLE" translatable="false">videoTitle</string>
+    <string name="PREF_KEY_VIDEO_PATH" translatable="false">videoPath</string>
+    <string name="PREF_KEY_AUDIO_TITLE" translatable="false">audioTitle</string>
+    <string name="PREF_KEY_AUDIO_PATH" translatable="false">audioPath</string>
+    <string name="PREF_KEY_DRAFT_SET" translatable="false">draft</string>
 
     <string name="RECYCLER_VIEW_NO_CONTENT">暂无内容</string>
 
@@ -48,13 +59,12 @@
     <string name="video">视频</string>
     <string name="all">全部</string>
 
+    <string name="my_homepage">我的主页</string>
     <string name="drafts">草稿箱</string>
-    <string name="interests_list">关注列表</string>
+    <string name="followed_list">关注列表</string>
     <string name="edit_my_profile">修改个人信息</string>
 
 
-    <string name="search">搜索</string>
-    <string name="notify">通知</string>
     <string name="notify_description">来自其他用户的点赞、评论通知</string>
     <string name="menu_puretext">发布-纯文字</string>
     <string name="menu_textpicmix">发布-图文混合</string>
@@ -62,7 +72,9 @@
     <string name="menu_video">发布-视频</string>
     <string name="menu_notify_search">通知-搜索</string>
 
+    <string name="copy_to_clipboard">复制到剪贴板</string>
     <string name="delete">删除</string>
+    <string name="user_homepage">用户主页</string>
     <string name="user_name">用户名</string>
     <string name="content">内容</string>
     <string name="title_name">动态名</string>
@@ -77,6 +89,10 @@
 
     <string name="test_sentence">测试</string>
     <string name="add_location">添加定位信息</string>
+    <string name="select_video">从相册选择视频</string>
+    <string name="shoot_video">拍摄视频</string>
+    <string name="select_picture">从相册选择照片</string>
+    <string name="shoot_picture">拍摄照片</string>
 
     <string name="content_hint">请输入你想要发表的内容…</string>
     <string name="title_hint">请输入动态标题…</string>
@@ -84,6 +100,9 @@
     <string name="notify_search_hint">查询通知内容…</string>
 
     <string name="like_time_switch">动态展示顺序</string>
+    <string name="eye_switch">屏蔽与否</string>
+    <string name="search">搜索</string>
+    <string name="notify">通知</string>
     <string name="nickname">昵称</string>
     <string name="intro">简介</string>
     <string name="save">保存</string>
@@ -116,4 +135,35 @@
     <string name="notification_background" formatted="true">THSSForum 正在后台运行。</string>
 
     <string name="unknown">未知</string>
+    <string name="reply">回复</string>
+    <string name="write_your_comment">写下您的评论</string>
+
+    <string name="save_success">保存成功</string>
+    <string name="post_success">发布成功</string>
+    <string name="comment_success">评论成功</string>
+    <string name="delete_success">删除成功</string>
+
+    <string name="no_photo">还没有照片</string>
+    <string name="please_shot_or_choose_a_photo">请拍摄或从相册选择一张照片👀</string>
+
+    <string name="no_video">还没有视频</string>
+    <string name="please_shot_or_choose_a_video">请拍摄或从相册选择一段视频👀</string>
+
+    <string name="no_audio">还没有音频</string>
+    <string name="please_record_or_choose_an_audio">请录制或从手机选择一段音频👀</string>
+
+    <string name="no_title">还没有标题</string>
+    <string name="please_add_a_title">请起一个标题👀</string>
+
+    <string name="no_content">还没有内容</string>
+    <string name="please_add_content">写点什么吧</string>
+
+    <string name="uploaded_preview">上传预览</string>
+
+    <string name="empty_title">空标题</string>
+    <string name="are_you_sure_to_delete">您确定删除吗？</string>
+    <string name="delete_lose_forever">选择的内容将永久删除</string>
+
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
 </resources>

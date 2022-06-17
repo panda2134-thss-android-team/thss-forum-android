@@ -1,14 +1,18 @@
 package site.panda2134.thssforum.api
 
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.core.content.ContextCompat.startActivity
+import com.alibaba.sdk.android.oss.ClientException
 import com.alibaba.sdk.android.oss.OSSClient
+import com.alibaba.sdk.android.oss.ServiceException
 import com.alibaba.sdk.android.oss.callback.OSSProgressCallback
 import com.alibaba.sdk.android.oss.common.auth.OSSStsTokenCredentialProvider
 import com.alibaba.sdk.android.oss.model.PutObjectRequest
@@ -16,7 +20,6 @@ import com.github.kittinunf.fuel.core.FuelManager
 import com.github.kittinunf.fuel.core.ResponseDeserializable
 import com.github.kittinunf.fuel.core.awaitUnit
 import com.github.kittinunf.fuel.core.extensions.authentication
-import com.github.kittinunf.fuel.core.interceptors.LogRequestAsCurlInterceptor
 import com.github.kittinunf.fuel.coroutines.awaitObject
 import com.github.kittinunf.fuel.gson.gsonDeserializer
 import com.github.kittinunf.fuel.gson.jsonBody
@@ -24,7 +27,6 @@ import com.google.gson.*
 import io.gsonfire.DateSerializationPolicy
 import io.gsonfire.GsonFireBuilder
 import kotlinx.coroutines.*
-import org.json.JSONStringer
 import site.panda2134.thssforum.R
 import site.panda2134.thssforum.models.*
 import site.panda2134.thssforum.ui.LoginActivity
@@ -38,39 +40,6 @@ import kotlin.collections.ArrayList
 @Suppress("unused")
 class APIWrapper(private val context: Context) {
     private val noToken = "NO_TOKEN"
-    val gsonFireObject: Gson
-
-    init {
-        val gsonFireBuilder: GsonFireBuilder = GsonFireBuilder()
-            .dateSerializationPolicy(DateSerializationPolicy.rfc3339)
-        val gsonBuilder = gsonFireBuilder.createGsonBuilder()
-            .registerTypeAdapter(Instant::class.java, object: JsonDeserializer<Instant>, JsonSerializer<Instant> {
-                override fun deserialize(
-                    json: JsonElement?,
-                    typeOfT: Type?,
-                    context: JsonDeserializationContext?
-                ): Instant {
-                    if (json !is JsonPrimitive || ! json.isString) {
-                        throw IllegalStateException("parsing Instant requires a string")
-                    }
-                    return Instant.parse(json.asString)
-                }
-
-                override fun serialize(
-                    src: Instant?,
-                    typeOfSrc: Type?,
-                    context: JsonSerializationContext?
-                ): JsonElement {
-                    return if (src == null) {
-                        JsonNull.INSTANCE
-                    } else {
-                        JsonPrimitive(src.toString())
-                    }
-                }
-
-            })
-        gsonFireObject = gsonBuilder.create()
-    }
 
     inline fun <reified T: Any> gsonFireDeserializer(): ResponseDeserializable<T> = gsonDeserializer<T>(gsonFireObject)
 
@@ -108,7 +77,7 @@ class APIWrapper(private val context: Context) {
 
     private val fuel: FuelManager = FuelManager().apply {
         basePath = context.getString(R.string.API_BASEPATH)
-        addRequestInterceptor(LogRequestAsCurlInterceptor)
+//        addRequestInterceptor(LogRequestAsCurlInterceptor)
         addResponseInterceptor { next ->
             { request, response ->
                 val toastMessage = when (response.statusCode) {
@@ -226,17 +195,29 @@ class APIWrapper(private val context: Context) {
     suspend fun getUserPosts(
         uid: String,
         start: Instant? = null,
-        end: Instant? = null
+        end: Instant? = null,
+        sortBy: PostsSortBy = PostsSortBy.Time,
+        skip: Int? = null,
+        limit: Int? = null,
+        types: List<PostType> = PostType.values().toList(),
+        scope: CoroutineScope = MainScope()
     ): List<Post> {
         val posts = fuel.get(
             "/users/$uid/posts?",
-            listOf("start" to start?.toString(), "end" to end?.toString())
+            listOf(
+                "start" to start?.toString(),
+                "end" to end?.toString(),
+                "sort_by" to sortBy.value,
+                "skip" to skip,
+                "limit" to limit
+            )
+                    + types.map { "type" to it.value }
         )
             .authentication()
             .bearer(token)
             .awaitObject(gsonFireDeserializer<ArrayList<PostResponse>>())
         return posts.map { postResponse ->
-            MainScope().async(Dispatchers.IO) {
+            scope.async(Dispatchers.IO) {
                 Post(this@APIWrapper.getUserInfo(postResponse.by), PostContent.fromPostResponse(postResponse))
             }
         }.awaitAll()
@@ -451,9 +432,9 @@ class APIWrapper(private val context: Context) {
             .bearer(token)
             .awaitObject(gsonFireDeserializer<UploadTokenResponse>())
 
-    suspend fun uploadFileToOSS(uri: Uri): Uri = this.uploadFileToOSS(uri, null)
+    suspend fun uploadFileToOSS(uri: Uri, useContentResolver: Boolean = true): Uri = this.uploadFileToOSS(uri, useContentResolver,null)
 
-    suspend fun uploadFileToOSS(uri: Uri, progressCallback: OSSProgressCallback<PutObjectRequest>?): Uri {
+    suspend fun uploadFileToOSS(uri: Uri, useContentResolver: Boolean = true, progressCallback: OSSProgressCallback<PutObjectRequest>?): Uri {
         var localOSSToken = ossToken
         var tokenExpired = true
         try {
@@ -474,8 +455,16 @@ class APIWrapper(private val context: Context) {
         val bucketDomain = context.getString(R.string.OSS_BUCKET_DOMAIN)
         val credProvider = OSSStsTokenCredentialProvider(localOSSToken.accessKeyId, localOSSToken.accessKeySecret, localOSSToken.securityToken)
         val oss = OSSClient(context, ossEndpoint, credProvider)
-        val extension = MimeTypeMap.getFileExtensionFromUrl(uri.toString())
+
+        val extension = if (useContentResolver) {
+            val contentResolver: ContentResolver = context.contentResolver
+            val mime = MimeTypeMap.getSingleton()
+            mime.getExtensionFromMimeType(contentResolver.getType(uri))
+        } else {
+            uri.toString().split('.').lastOrNull()
+        } ?: "unknown"
         val objectKey = "upload/${uidReversed.substring(0..1)}/${myProfile.uid}/${UUID.randomUUID()}.$extension"
+
         withContext(Dispatchers.IO) {
             val req = PutObjectRequest(
                 context.getString(R.string.OSS_BUCKET),
@@ -489,7 +478,22 @@ class APIWrapper(private val context: Context) {
                     }
                 }
             }
-            oss.putObject(req)
+            Log.d("APIService", "I'm OK")
+            try {
+                oss.putObject(req)
+            } catch (e: ClientException) {
+                // 客户端异常，例如网络异常等。
+                Log.e("APIService", e.toString())
+                e.printStackTrace()
+            } catch (e: ServiceException) {
+                // 服务端异常。
+                Log.e("APIService", "ServiceException")
+                Log.e("RequestId", e.requestId)
+                Log.e("ErrorCode", e.errorCode)
+                Log.e("HostId", e.hostId)
+                Log.e("RawMessage", e.rawMessage)
+            }
+            Log.d("APIService", "Upload succedded: $objectKey")
         }
         return Uri.parse("https://$bucketDomain/$objectKey")
     }

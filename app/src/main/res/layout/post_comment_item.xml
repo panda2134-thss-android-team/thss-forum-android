@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/comment_item"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/following_item"
     android:orientation="vertical">
-    <TextView
+    <View
         android:id="@+id/interval"
         android:layout_height="@dimen/interval_height"
         android:layout_width="match_parent"
@@ -16,38 +16,57 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/post_item_inside_margin">
         <ImageView
-            android:id="@+id/commenter_pic"
+            android:id="@+id/commenter_avatar"
             android:layout_width="@dimen/commenter_pic"
             android:layout_height="@dimen/commenter_pic"
             android:contentDescription="@string/drafts"
-            tools:srcCompat="@drawable/text_box_edit_outline"
+            tools:srcCompat="@tools:sample/avatars"
             android:background="@drawable/image_border"
             android:padding="@dimen/image_border_w"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/pic_to_text_margin"
+            android:layout_marginStart="@dimen/pic_to_text_margin"
             android:orientation="vertical">
-            <LinearLayout
-                android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/nickname"
+                        android:textSize="@dimen/comment_text"
+                        android:textColor="@color/click_blue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="@tools:sample/first_names" />
+                    <LinearLayout
+                        android:id="@+id/reply_wrapper"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/comment_text"
+                            android:layout_marginHorizontal="@dimen/small_margin"
+                            android:text="@string/reply"/>
+                        <TextView
+                            android:id="@+id/nicknameReplyTo"
+                            android:textSize="@dimen/comment_text"
+                            android:textColor="@color/click_blue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="@tools:sample/first_names" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            <TextView
+                android:id="@+id/comment_content"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <TextView
-                    android:id="@+id/following_nickname"
-                    android:textSize="@dimen/commenter_name"
-                    android:textColor="@color/click_blue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="用户D" />
-                <TextView
-                    android:id="@+id/commenter_text"
-                    android:textSize="@dimen/commenter_name"
-                    android:textColor="@color/black"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/commenter_item_inside_margin"
-                    android:text="好！" />
-            </LinearLayout>
+                android:layout_marginTop="@dimen/commenter_item_inside_margin"
+                style="@style/TextAppearance.AppCompat.Body2"
+                android:textSize="@dimen/comment_text"
+                tools:text="@tools:sample/lorem[15]" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

@@ -14,14 +14,23 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-        <ImageView
-            android:contentDescription="@string/avatar"
-            android:id="@+id/user_avatar"
-            tools:srcCompat="@tools:sample/avatars"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@drawable/image_border"
-            android:padding="@dimen/image_border_w"/>
+        <TextView
+            android:id="@+id/month"
+            style="@style/TextAppearance.AppCompat.SearchResult.Title"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/post_item_inside_margin"
+            android:text="15" />
+
+        <TextView
+            android:id="@+id/day"
+            style="@style/TextAppearance.AppCompat.SearchResult.Subtitle"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/post_item_inside_margin"
+            android:text="6月" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -41,30 +50,7 @@
                     android:layout_marginTop="5dp"
                     tools:text="@tools:sample/first_names"/>
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/followed_button"
-                    android:visibility="gone"
-                    android:layout_width="35dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="6dp"
-                    android:layout_marginBottom="1dp"
-                    android:layout_marginStart="5dp"
-                    app:cardBackgroundColor="@color/followed_button_bg"
-                    app:cardCornerRadius="3dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
 
-                    <TextView
-                        android:id="@+id/followed_button_text"
-                        android:textColor="@color/word_grey"
-                        android:textSize="11sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="@string/followed" />
-
-                </androidx.cardview.widget.CardView>
             </LinearLayout>
 
             <TextView
@@ -227,25 +213,13 @@
                         tools:text="35"
                         android:textColor="@color/click_blue"/>
             </LinearLayout>
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/comment_view"
                 android:nestedScrollingEnabled="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:listitem="@layout/post_comment_item"
-                tools:itemCount="2"
                 tools:ignore="RtlSymmetry" />
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/comment_input"
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:inputType="text"
-                android:imeOptions="actionSend"
-                android:hint="@string/write_your_comment" />
         </LinearLayout>
 
     </LinearLayout>

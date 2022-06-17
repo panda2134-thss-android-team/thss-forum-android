@@ -1,26 +1,39 @@
 package site.panda2134.thssforum.api
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import com.github.kittinunf.fuel.Fuel
-import com.github.kittinunf.fuel.core.FuelError
-import com.github.kittinunf.fuel.core.ResponseDeserializable
-import com.github.kittinunf.fuel.coroutines.await
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import java.io.InputStream
+import com.google.gson.*
+import io.gsonfire.DateSerializationPolicy
+import io.gsonfire.GsonFireBuilder
+import java.lang.reflect.Type
+import java.time.Instant
 
-suspend fun downloadImage(avatarUrl: String): Bitmap? =
-    withContext(Dispatchers.IO) {
-        try {
-            val avatar = Fuel.get(avatarUrl).await(object : ResponseDeserializable<Bitmap> {
-                override fun deserialize(inputStream: InputStream): Bitmap {
-                    return BitmapFactory.decodeStream(inputStream)
-                }
-            })
-            return@withContext avatar
-        } catch (e: FuelError) {
-            e.printStackTrace()
-            return@withContext null
+
+val gsonFireBuilder: GsonFireBuilder = GsonFireBuilder()
+    .dateSerializationPolicy(DateSerializationPolicy.rfc3339)
+val gsonBuilder = gsonFireBuilder.createGsonBuilder()
+    .registerTypeAdapter(Instant::class.java, object: JsonDeserializer<Instant>,
+        JsonSerializer<Instant> {
+        override fun deserialize(
+            json: JsonElement?,
+            typeOfT: Type?,
+            context: JsonDeserializationContext?
+        ): Instant {
+            if (json !is JsonPrimitive || ! json.isString) {
+                throw IllegalStateException("parsing Instant requires a string")
+            }
+            return Instant.parse(json.asString)
         }
-    }
+
+        override fun serialize(
+            src: Instant?,
+            typeOfSrc: Type?,
+            context: JsonSerializationContext?
+        ): JsonElement {
+            return if (src == null) {
+                JsonNull.INSTANCE
+            } else {
+                JsonPrimitive(src.toString())
+            }
+        }
+
+    })
+val gsonFireObject = gsonBuilder.create()

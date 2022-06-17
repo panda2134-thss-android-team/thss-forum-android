@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/normal_margin"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/line_1"
+                android:layout_height="@dimen/card_line_height"
+                android:layout_width="@dimen/card_line_1_width"
+                android:layout_marginTop="@dimen/card_line_top"
+                android:background="@color/card_line" />
+
+            <ImageView
+                android:id="@+id/my_avatar"
+                android:layout_width="@dimen/my_pic"
+                android:layout_height="@dimen/my_pic"
+                android:contentDescription="@string/drafts"
+                tools:background="@color/click_blue"
+                android:background="@drawable/image_border"
+                android:padding="@dimen/image_border_w"
+            />
+
+            <LinearLayout android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/my_name"
+                        style="@style/TextAppearance.AppCompat.Headline"
+                        android:textStyle="bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/normal_margin"
+                        android:layout_marginTop="3dp"
+                        tools:text="移动应用" />
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/followed_button"
+                        android:layout_width="55dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="6dp"
+                        android:layout_marginBottom="1dp"
+                        android:layout_marginStart="@dimen/normal_margin"
+                        app:cardBackgroundColor="@color/followed_button_bg"
+                        app:cardCornerRadius="3dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:id="@+id/followed_button_text"
+                            android:textColor="@color/word_grey"
+                            android:textSize="14sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="@string/followed" />
+
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/line_2"
+                    android:layout_height="@dimen/card_line_height"
+                    android:layout_width="@dimen/card_line_2_width"
+                    android:layout_marginTop="@dimen/small_margin"
+                    android:background="@color/card_line" />
+
+                <TextView
+                    android:id="@+id/my_motto"
+                    style="@style/TextAppearance.AppCompat.Body1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/motto"
+                    android:layout_marginLeft="@dimen/normal_margin"
+                    android:layout_marginTop="@dimen/small_margin"
+                    tools:text="希望可以早点写完大作业" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/hp_posts_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:itemCount="5"
+                tools:listitem="@layout/homepage_post_item" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    </LinearLayout>
+</layout>

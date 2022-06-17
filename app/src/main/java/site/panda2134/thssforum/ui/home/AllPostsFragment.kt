@@ -26,7 +26,7 @@ class AllPostsFragment : Fragment() {
         // 把动态item中的每一项调用api填写
         api = APIWrapper(requireActivity())
 
-        adapter = PostListRecyclerViewAdapter(api, false)
+        adapter = PostListRecyclerViewAdapter(api, fetchFollowing = false, activity = requireActivity(), lifecycleOwner = this)
         binding.allPostsList.adapter = adapter
         adapter.setupRecyclerView(this.requireContext(), binding.allPostsList)
         binding.root.setOnRefreshListener {
@@ -44,6 +44,7 @@ class AllPostsFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.discover_searchswitch_menuicon, menu)
         this.menu = menu
+        updateMenuIcon()
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
@@ -54,13 +55,19 @@ class AllPostsFragment : Fragment() {
             }
             R.id.seq_menu_item -> {
                 isTimeSeq = !isTimeSeq
-                menu.findItem(R.id.seq_menu_item).icon = (ContextCompat.getDrawable(requireActivity(),
-                    if (isTimeSeq) R.drawable.ic_baseline_access_time_24 else R.drawable.ic_baseline_thumb_up_24))
+                updateMenuIcon()
                 adapter.sortBy = if (isTimeSeq) APIWrapper.PostsSortBy.Time else APIWrapper.PostsSortBy.Like
                 adapter.refresh()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun updateMenuIcon() {
+        menu.findItem(R.id.seq_menu_item).icon = (ContextCompat.getDrawable(
+            requireActivity(),
+            if (isTimeSeq) R.drawable.ic_baseline_access_time_24 else R.drawable.ic_baseline_thumb_up_24
+        ))
     }
 }
