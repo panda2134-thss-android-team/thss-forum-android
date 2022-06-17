@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.webkit.MimeTypeMap
 import android.widget.MediaController
 import androidx.activity.result.ActivityResult
@@ -23,15 +24,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import com.alibaba.sdk.android.oss.callback.OSSProgressCallback
+import com.amap.api.location.AMapLocationClient
+import com.amap.api.location.AMapLocationClientOption
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import site.panda2134.thssforum.R
 import site.panda2134.thssforum.api.APIWrapper
 import site.panda2134.thssforum.databinding.PostVideoBinding
+import site.panda2134.thssforum.models.Location
 import site.panda2134.thssforum.models.MediaPostContent
 import site.panda2134.thssforum.models.PostContent
 import java.lang.Exception
+import java.math.BigDecimal
 import java.time.Instant
 
 
@@ -40,6 +45,51 @@ class ActivityNewVideoPost : ActivityNewPost() {
     private lateinit var api: APIWrapper
     val videoPath = MutableLiveData<String?>(null)
     val uploading = MutableLiveData(false)
+    lateinit var locationClient: AMapLocationClient
+    private var location: Location? = null
+    private val permissions = listOf(
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.READ_PHONE_STATE)
+
+    private val requestMultiplePermissions =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+            for (perm in permissions) {
+                if (it[perm] != true) {
+                    binding.addLocation.isEnabled = false
+                    return@registerForActivityResult
+                }
+            }
+            binding.addLocation.isEnabled = true
+        }
+
+    private fun initAddLocation() {
+        requestMultiplePermissions.launch(permissions.toTypedArray())
+
+        AMapLocationClient.updatePrivacyShow(this, true, true)
+        AMapLocationClient.updatePrivacyAgree(this, true)
+
+        locationClient = AMapLocationClient(applicationContext)
+        locationClient.setLocationListener {
+            Log.d("AMAP", it.address)
+            binding.addLocation.visibility = View.GONE
+            binding.location.visibility = View.VISIBLE
+            binding.location.text = it.address
+            location = Location(it.address, BigDecimal(it.longitude), BigDecimal(it.latitude))
+        }
+        locationClient.setLocationOption(
+            AMapLocationClientOption()
+            .apply {
+                locationPurpose = AMapLocationClientOption.AMapLocationPurpose.Transport
+            })
+
+        binding.addLocation.setOnClickListener {
+            locationClient.stopLocation()
+            locationClient.startLocation()
+        }
+    }
 
     val progress = MutableLiveData<Int>(0)
     private val tag = "newVideoPost"
@@ -138,9 +188,13 @@ class ActivityNewVideoPost : ActivityNewPost() {
         binding.shootVideo.setOnClickListener {
             requestPermissionLauncher.launch(permission)
         }
+        initAddLocation()
         val mediaController = MediaController(this, false)
         mediaController.setAnchorView(binding.videoPreview)
         binding.videoPreview.setMediaController(mediaController)
+        videoPath.value?.let{
+            binding.videoPreview.setVideoURI(Uri.parse(videoPath.value))
+        }
     }
 
     override fun finish() {

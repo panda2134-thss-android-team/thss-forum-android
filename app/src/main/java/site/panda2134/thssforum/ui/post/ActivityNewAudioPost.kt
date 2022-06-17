@@ -1,19 +1,242 @@
 package site.panda2134.thssforum.ui.post
 
+import android.Manifest
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
+import android.view.MenuItem
+import android.view.View
+import android.widget.MediaController
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.lifecycleScope
+import com.amap.api.location.AMapLocationClient
+import com.amap.api.location.AMapLocationClientOption
+import com.arges.sepan.argmusicplayer.Models.ArgAudio
+import com.arges.sepan.argmusicplayer.PlayerViews.ArgPlayerSmallView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import site.panda2134.thssforum.R
 import site.panda2134.thssforum.api.APIWrapper
 import site.panda2134.thssforum.databinding.PostAudioBinding
+import site.panda2134.thssforum.models.Location
+import site.panda2134.thssforum.models.MediaPostContent
+import site.panda2134.thssforum.models.PostContent
+import java.lang.Exception
+import java.math.BigDecimal
+import java.time.Instant
 
 class ActivityNewAudioPost : ActivityNewPost() {
     // TODO
     private lateinit var binding: PostAudioBinding
     private lateinit var api: APIWrapper
+    val audioPath = MutableLiveData<String?>(null)
+    val uploading = MutableLiveData(false)
+    lateinit var locationClient: AMapLocationClient
+    private var location: Location? = null
+    private val permissions = listOf(
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.READ_PHONE_STATE)
 
+    private val requestMultiplePermissions =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+            for (perm in permissions) {
+                if (it[perm] != true) {
+                    binding.addLocation.isEnabled = false
+                    return@registerForActivityResult
+                }
+            }
+            binding.addLocation.isEnabled = true
+        }
+
+    private fun initAddLocation() {
+        requestMultiplePermissions.launch(permissions.toTypedArray())
+
+        AMapLocationClient.updatePrivacyShow(this, true, true)
+        AMapLocationClient.updatePrivacyAgree(this, true)
+
+        locationClient = AMapLocationClient(applicationContext)
+        locationClient.setLocationListener {
+            Log.d("AMAP", it.address)
+            binding.addLocation.visibility = View.GONE
+            binding.location.visibility = View.VISIBLE
+            binding.location.text = it.address
+            location = Location(it.address, BigDecimal(it.longitude), BigDecimal(it.latitude))
+        }
+        locationClient.setLocationOption(
+            AMapLocationClientOption()
+                .apply {
+                    locationPurpose = AMapLocationClientOption.AMapLocationPurpose.Transport
+                })
+
+        binding.addLocation.setOnClickListener {
+            locationClient.stopLocation()
+            locationClient.startLocation()
+        }
+    }
+
+    val progress = MutableLiveData<Int>(0)
+    private val tag = "newAudioPost"
+    private val permission = Manifest.permission.RECORD_AUDIO
+    private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        //将录制的音频uri上传至oss
+        run {
+            if (result.resultCode == Activity.RESULT_OK) {
+                Log.d(tag, "OK")
+                val uri = result.data?.data ?: return@run
+                handleAudioUpload(uri)
+            }
+            else {
+                Log.d(tag, "Oh No")
+            }
+        }
+    }
+    private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+        //先申请权限，申请成功后调用录音机
+        if (it.equals(true)) {
+            Log.d(tag, "permission OK")
+            try {
+                startForResult.launch(Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION))
+            } catch (e: Exception) {
+                Log.d(tag, e.toString())
+            }
+            Log.d(tag, "Everything is OK!")
+        }
+        else {
+            Log.d(tag, "permission failed")
+        }
+    }
+    private val mActLauncherAlbum =  registerForActivityResult(ActivityResultContracts.GetContent()) { result ->
+        //将相册中选择的uri上传至oss
+        result?.let {
+            handleAudioUpload(result)
+        }
+    }
+
+    private fun playAudio() {
+//        binding.audioPreview.apply {
+//            disableNextPrevButtons()
+//            setProgressMessage(context.getString(R.string.loading))
+//            disableRepeatButton()
+//            setPlaylistRepeat(false)
+//            playAudioAfterPercent(10)
+//            play(ArgAudio.createFromURL(
+//                "EF",
+//                binding.title.text.toString(),
+//                audioPath.value
+//            ))
+//            // 加载完成后不马上开始播放
+//            var firstPlayed = false
+//            this.setOnPlayingListener {
+//                if (!firstPlayed) {
+//                    firstPlayed = true
+//                    pause()
+//                }
+//            }
+//        }
+    }
+    private fun handleAudioUpload(result: Uri) {
+        this.lifecycleScope.launch {
+            try {
+                uploading.value = true
+                val uploadedPath = withContext(Dispatchers.IO) {
+                    api.uploadFileToOSS(result) { request, currentSize, totalSize ->
+                        progress.value = (currentSize * 100 / totalSize).toInt()
+                        Log.d(tag, progress.value.toString())
+                    }.toString()
+                }
+                uploading.value = false
+                audioPath.value = uploadedPath
+                playAudio()
+                Log.d(tag, audioPath.value!!)
+            } catch (e: Throwable) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun loadDraft() {
+        val pref = getSharedPreferences(getString(R.string.GLOBAL_SHARED_PREF), MODE_PRIVATE)
+        val draftTitle = pref.getString(getString(R.string.PREF_KEY_VIDEO_TITLE), "")
+        val draftPath = pref.getString(getString(R.string.PREF_KEY_VIDEO_PATH), null)
+        binding.title.setText(draftTitle)
+        audioPath.value = draftPath
+        Log.d(tag, "audioPath = ${audioPath.value}")
+    }
+
+    private fun saveDraft() {
+        val pref = getSharedPreferences(getString(R.string.GLOBAL_SHARED_PREF), MODE_PRIVATE)
+        with(pref.edit()) {
+            this.putString(getString(R.string.PREF_KEY_VIDEO_TITLE), binding.title.text.toString())
+            this.putString(getString(R.string.PREF_KEY_VIDEO_PATH), audioPath.value)
+            apply()
+        }
+    }
+
+    private fun showDialog() {
+        val alertDialog = AlertDialog.Builder(this)
+            .setTitle(getString(R.string.no_audio))
+            .setMessage(getString(R.string.please_record_or_choose_an_audio))
+            .create()
+        alertDialog.show()
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         api = APIWrapper(this)
         binding = PostAudioBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.lifecycleOwner = this
+        binding.v = this
+        binding.selectAudio.setOnClickListener {
+            mActLauncherAlbum.launch("audio/*")
+        }
+        loadDraft()
+        binding.recordAudio.setOnClickListener {
+            requestPermissionLauncher.launch(permission)
+        }
+        initAddLocation()
+        audioPath.value?.let{
+            playAudio()
+        }
     }
 
+    override fun finish() {
+        super.finish()
+        saveDraft()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.send_menu_item -> {
+                Log.d(tag, "item clicked")
+                if(audioPath.value?.isEmpty() != false) showDialog()
+                else {
+                    this.lifecycleScope.launch(Dispatchers.IO){
+                        Log.d(tag, "onOptionsItemSelected")
+                        Log.d(tag, "audioPath: $audioPath")
+                        val audioPostContent = MediaPostContent(binding.title.text.toString(), arrayOf(audioPath.value!!))
+                        val postContent = PostContent.makeAudioPost(audioPostContent, createdAt = Instant.now())
+                        val res = api.newPost(postContent)
+                        Log.d(tag, "postId: ${res.id}")
+                        withContext(Dispatchers.Main) {
+                            binding.title.text.clear()
+                            audioPath.value = ""
+                            saveDraft() // remove draft
+                        }
+                        finish()
+                    }
+                }
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 }

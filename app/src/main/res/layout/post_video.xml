@@ -24,7 +24,7 @@
             android:inputType="textLongMessage" />
 
         <LinearLayout
-            android:visibility="@{v.videoPath.length() > 0 || v.uploading ? View.GONE : View.VISIBLE}"
+            android:visibility="@{v.uploading ? View.GONE : View.VISIBLE}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -67,5 +67,15 @@
                 android:layout_height="match_parent"
                 android:visibility="@{(!v.uploading &amp;&amp; v.videoPath.length() > 0) ? View.VISIBLE : View.GONE}" />
         </RelativeLayout>
+        <Button
+            android:id="@+id/add_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_location"
+            app:icon="@drawable/ic_baseline_add_location_24" />
+        <TextView
+            android:id="@+id/location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 </layout>
