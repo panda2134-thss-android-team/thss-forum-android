@@ -148,5 +148,11 @@
     <string name="no_audio">还没有音频</string>
     <string name="please_record_or_choose_an_audio">请录制或从手机选择一段音频👀</string>
 
+    <string name="no_title">还没有标题</string>
+    <string name="please_add_a_title">请起一个标题👀</string>
+
+    <string name="no_content">还没有内容</string>
+    <string name="please_add_content">写点什么吧</string>
+
     <string name="uploaded_preview">上传预览</string>
 </resources>

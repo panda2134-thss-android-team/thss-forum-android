@@ -6,6 +6,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
@@ -38,12 +39,7 @@ class ActivityNewPureTextPost : ActivityNewPost() {
             binding.addLocation.isEnabled = ! it.values.contains(false)
         }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        binding = PostPureTextBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
+    private fun locationInit() {
         binding.location.visibility = View.GONE
         binding.addLocation.isEnabled = false
 
@@ -67,6 +63,23 @@ class ActivityNewPureTextPost : ActivityNewPost() {
             locationClient.stopLocation()
             locationClient.startLocation()
         }
+    }
+    private val noTitleDialog: AlertDialog
+        get() = AlertDialog.Builder(this)
+            .setTitle(getString(R.string.no_title))
+            .setMessage(R.string.please_add_a_title)
+            .create()
+    private val noContentDialog: AlertDialog
+        get() = AlertDialog.Builder(this)
+            .setTitle(getString(R.string.no_content))
+            .setMessage(R.string.please_add_content)
+            .create()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        binding = PostPureTextBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        locationInit()
 
         val pref = getSharedPreferences(getString(R.string.GLOBAL_SHARED_PREF), MODE_PRIVATE)
         val draftTitle = pref.getString(getString(R.string.PREF_KEY_PURE_TEXT_TITLE), "")
@@ -88,18 +101,38 @@ class ActivityNewPureTextPost : ActivityNewPost() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.send_menu_item -> {
-                val apiService = APIWrapper(this)
-                val imageTextPostContent = ImageTextPostContent(text = binding.content.text.toString(), arrayListOf<String>(), title = binding.title.text.toString())
-                val postContent = PostContent.makeImageTextPost(imageTextPostContent, location = location, createdAt = Instant.now())
-                this.lifecycleScope.launch(Dispatchers.IO) {
-                    apiService.newPost(postContent)
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(this@ActivityNewPureTextPost, R.string.post_success, Toast.LENGTH_SHORT).show()
-                    }
+                if (binding.title.text.toString() == "") {
+                    noTitleDialog.show()
                 }
-                binding.title.text?.clear()
-                binding.content.text?.clear()
-                finish()
+                else if (binding.content.text.toString() == "") {
+                    noContentDialog.show()
+                }
+                else {
+                    val apiService = APIWrapper(this)
+                    val imageTextPostContent = ImageTextPostContent(
+                        text = binding.content.text.toString(),
+                        arrayListOf<String>(),
+                        title = binding.title.text.toString()
+                    )
+                    val postContent = PostContent.makeImageTextPost(
+                        imageTextPostContent,
+                        location = location,
+                        createdAt = Instant.now()
+                    )
+                    this.lifecycleScope.launch(Dispatchers.IO) {
+                        apiService.newPost(postContent)
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(
+                                this@ActivityNewPureTextPost,
+                                R.string.post_success,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                    binding.title.text?.clear()
+                    binding.content.text?.clear()
+                    finish()
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)

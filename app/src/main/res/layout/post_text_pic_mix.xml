@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <data>
         <import type="android.view.View"/>
@@ -42,10 +43,23 @@
             android:layout_marginTop="@dimen/small_margin"
             android:gravity="top|start"
             android:hint="@string/content_hint"
-            android:minLines="10"
+            android:importantForAutofill="no"
             android:inputType="textMultiLine"
-            android:singleLine="false"
-            android:importantForAutofill="no" />
+            android:minLines="7"
+            android:singleLine="false" />
+
+        <Button
+            android:id="@+id/add_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/add_location"
+            style="@style/Widget.Material3.Button.IconButton"
+            app:icon="@drawable/ic_baseline_add_location_24" />
+
+        <TextView
+            android:id="@+id/location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
         <cn.bingoogolapple.photopicker.widget.BGASortableNinePhotoLayout
             android:id="@+id/photo_picker"
