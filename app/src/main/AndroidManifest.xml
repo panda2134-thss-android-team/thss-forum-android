@@ -62,7 +62,7 @@
         <activity
             android:name=".ui.profile.following.ProfileFollowingList"
             android:exported="true"
-            android:label="@string/interests_list" />
+            android:label="@string/followed_list" />
         <activity
             android:name=".ui.profile.ProfileDrafts"
             android:exported="true"

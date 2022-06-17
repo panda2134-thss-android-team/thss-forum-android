@@ -9,73 +9,85 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="199dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/normal_margin"
             android:layout_marginBottom="@dimen/normal_margin"
             android:orientation="horizontal">
+
             <TextView
                 android:id="@+id/line_1"
-                android:layout_height="@dimen/card_line_height"
                 android:layout_width="@dimen/card_line_1_width"
+                android:layout_height="@dimen/card_line_height"
                 android:layout_marginTop="@dimen/card_line_top"
-                android:background="@color/card_line"/>
+                android:background="@color/card_line" />
+
             <ImageView
                 android:id="@+id/image"
                 android:layout_width="@dimen/my_pic"
                 android:layout_height="@dimen/my_pic"
-                android:contentDescription="@string/drafts"
-                tools:background="@color/click_blue"
                 android:background="@drawable/image_border"
-                android:padding="@dimen/image_border_w"/>
-                <LinearLayout
-                    android:layout_width="match_parent"
+                android:contentDescription="@string/avatar"
+                android:padding="@dimen/image_border_w"
+                tools:background="@color/click_blue" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/name"
+                    style="@style/TextAppearance.AppCompat.Headline"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <TextView
-                        android:id="@+id/name"
-                        style="@style/TextAppearance.AppCompat.Headline"
-                        android:textStyle="bold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/normal_margin"
-                        android:layout_marginTop="3dp"
-                        tools:text="移动应用" />
-                    <TextView
-                        android:id="@+id/line_2"
-                        android:layout_height="@dimen/card_line_height"
-                        android:layout_width="@dimen/card_line_2_width"
-                        android:layout_marginTop="@dimen/small_margin"
-                        android:background="@color/card_line"/>
-                    <TextView
-                        android:id="@+id/motto"
-                        style="@style/TextAppearance.AppCompat.Body1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/motto"
-                        android:layout_marginStart="@dimen/normal_margin"
-                        android:layout_marginTop="@dimen/small_margin"
-                        tools:text="希望可以早点写完大作业" />
-                </LinearLayout>
+                    android:layout_marginStart="@dimen/normal_margin"
+                    android:layout_marginTop="3dp"
+                    android:textStyle="bold"
+                    tools:text="移动应用" />
+
+                <TextView
+                    android:id="@+id/line_2"
+                    android:layout_width="@dimen/card_line_2_width"
+                    android:layout_height="@dimen/card_line_height"
+                    android:layout_marginTop="@dimen/small_margin"
+                    android:background="@color/card_line" />
+
+                <TextView
+                    android:id="@+id/motto"
+                    style="@style/TextAppearance.AppCompat.Body1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/normal_margin"
+                    android:layout_marginTop="@dimen/small_margin"
+                    android:textColor="@color/motto"
+                    tools:text="希望可以早点写完大作业" />
             </LinearLayout>
+        </LinearLayout>
+
         <TextView
             android:id="@+id/interval_1"
-            android:layout_height="@dimen/profile_interval"
-            android:layout_width="match_parent"/>
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/profile_interval" />
+
         <LinearLayout
             android:id="@+id/my_homepage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginHorizontal="@dimen/profile_line_margin"
             android:background="?attr/colorSurface"
-            android:paddingVertical="@dimen/my_profile_gap"
-            android:layout_marginHorizontal="@dimen/profile_line_margin">
+            android:orientation="horizontal"
+            android:paddingVertical="@dimen/my_profile_gap">
+
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:contentDescription="@string/drafts"
+                android:contentDescription="@string/my_homepage"
                 app:srcCompat="@drawable/ic_baseline_dashboard_24"
                 app:tint="#4169E1" />
 
@@ -83,28 +95,34 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/profile_line_margin"
-                android:text="@string/my_homepage"
                 android:layout_weight="1"
-                android:textSize="15sp"/>
+                android:text="@string/my_homepage"
+                android:textSize="15sp" />
 
             <ImageView
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 app:srcCompat="@drawable/ic_baseline_arrow_forward_ios_24"
-                app:tint="#A8A8A8" />
+                app:tint="#A8A8A8"
+                android:contentDescription="@null" />
         </LinearLayout>
+
         <TextView
             android:id="@+id/interval_0"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/profile_interval"
-            android:layout_width="match_parent"/>
+            android:visibility="gone" />
+        <!--上下两个组件改为gone，因为草稿箱合并到发布页面了-->
         <LinearLayout
             android:id="@+id/drafts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginHorizontal="@dimen/profile_line_margin"
             android:background="?attr/colorSurface"
+            android:orientation="horizontal"
             android:paddingVertical="@dimen/my_profile_gap"
-            android:layout_marginHorizontal="@dimen/profile_line_margin">
+            android:visibility="gone">
+
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
@@ -116,33 +134,36 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/profile_line_margin"
-                android:text="@string/drafts"
                 android:layout_weight="1"
-                android:textSize="15sp"/>
+                android:text="@string/drafts"
+                android:textSize="15sp" />
 
             <ImageView
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 app:srcCompat="@drawable/ic_baseline_arrow_forward_ios_24"
-                app:tint="#A8A8A8" />
+                app:tint="#A8A8A8"
+                android:contentDescription="@null" />
         </LinearLayout>
+
         <TextView
             android:id="@+id/interval_2"
-            android:layout_height="@dimen/profile_interval"
-            android:layout_width="match_parent"/>
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/profile_interval" />
+
         <LinearLayout
             android:id="@+id/following_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginHorizontal="@dimen/profile_line_margin"
             android:background="?attr/colorSurface"
-            android:paddingVertical="@dimen/my_profile_gap"
-            android:layout_marginHorizontal="@dimen/profile_line_margin">
+            android:orientation="horizontal"
+            android:paddingVertical="@dimen/my_profile_gap">
 
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:contentDescription="@string/drafts"
+                android:contentDescription="@string/followed_list"
                 app:srcCompat="@drawable/account_star"
                 app:tint="#7765E7" />
 
@@ -150,34 +171,37 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/profile_line_margin"
-                android:text="@string/interests_list"
                 android:layout_weight="1"
-                android:textSize="15sp"/>
+                android:text="@string/followed_list"
+                android:textSize="15sp" />
 
             <ImageView
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:layout_marginStart="227dp"
                 app:srcCompat="@drawable/ic_baseline_arrow_forward_ios_24"
-                app:tint="#A8A8A8" />
+                app:tint="#A8A8A8"
+                android:contentDescription="@null" />
         </LinearLayout>
+
         <TextView
             android:id="@+id/interval_3"
-            android:layout_height="@dimen/profile_interval"
-            android:layout_width="match_parent"/>
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/profile_interval" />
+
         <LinearLayout
             android:id="@+id/edit_my_profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginHorizontal="@dimen/profile_line_margin"
             android:background="?attr/colorSurface"
-            android:paddingVertical="@dimen/my_profile_gap"
-            android:layout_marginHorizontal="@dimen/profile_line_margin">
+            android:orientation="horizontal"
+            android:paddingVertical="@dimen/my_profile_gap">
 
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:contentDescription="@string/drafts"
+                android:contentDescription="@string/edit_my_profile"
                 app:srcCompat="@drawable/text_box_edit_outline"
                 app:tint="#CD853F" />
 
@@ -185,29 +209,32 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/profile_line_margin"
-                android:text="@string/edit_my_profile"
                 android:layout_weight="1"
-                android:textSize="15sp"/>
+                android:text="@string/edit_my_profile"
+                android:textSize="15sp" />
 
             <ImageView
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:layout_marginStart="197dp"
                 app:srcCompat="@drawable/ic_baseline_arrow_forward_ios_24"
-                app:tint="#A8A8A8" />
+                app:tint="#A8A8A8"
+                android:contentDescription="@null" />
         </LinearLayout>
+
         <TextView
             android:id="@+id/interval_4"
-            android:layout_height="@dimen/profile_interval"
-            android:layout_width="match_parent"/>
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/profile_interval" />
+
         <LinearLayout
             android:id="@+id/logout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginHorizontal="@dimen/profile_line_margin"
             android:background="?attr/colorSurface"
-            android:paddingVertical="@dimen/my_profile_gap"
-            android:layout_marginHorizontal="@dimen/profile_line_margin">
+            android:orientation="horizontal"
+            android:paddingVertical="@dimen/my_profile_gap">
 
             <ImageView
                 android:layout_width="24dp"
@@ -220,16 +247,17 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/profile_line_margin"
-                android:text="@string/logout"
                 android:layout_weight="1"
-                android:textSize="15sp"/>
+                android:text="@string/logout"
+                android:textSize="15sp" />
 
             <ImageView
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:layout_marginStart="197dp"
                 app:srcCompat="@drawable/ic_baseline_arrow_forward_ios_24"
-                app:tint="#A8A8A8" />
+                app:tint="#A8A8A8"
+                android:contentDescription="@null" />
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
