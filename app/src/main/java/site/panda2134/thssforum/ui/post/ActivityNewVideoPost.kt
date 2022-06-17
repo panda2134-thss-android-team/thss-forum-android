@@ -72,6 +72,16 @@ class ActivityNewVideoPost : ActivityNewPost() {
         }
     }
 
+    private val noTitleDialog: AlertDialog
+        get() = AlertDialog.Builder(this)
+            .setTitle(getString(R.string.no_title))
+            .setMessage(R.string.please_add_a_title)
+            .create()
+    private val noVideoDialog: AlertDialog
+        get() = AlertDialog.Builder(this)
+            .setTitle(getString(R.string.no_video))
+            .setMessage(R.string.please_shot_or_choose_a_video)
+            .create()
     val progressPercentage = MutableLiveData<Int>(0)
     private val tag = "newVideoPost"
     private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -146,14 +156,6 @@ class ActivityNewVideoPost : ActivityNewPost() {
             apply()
         }
     }
-
-    private fun showDialog() {
-        val alertDialog = AlertDialog.Builder(this)
-            .setTitle(getString(R.string.no_video))
-            .setMessage(getString(R.string.please_shot_or_choose_a_video))
-            .create()
-        alertDialog.show()
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         api = APIWrapper(this)
@@ -183,7 +185,12 @@ class ActivityNewVideoPost : ActivityNewPost() {
         return when (item.itemId) {
             R.id.send_menu_item -> {
                 Log.d(tag, "item clicked")
-                if(videoPath.value?.isEmpty() != false) showDialog()
+                if(binding.title.text.toString() == "") {
+                    noTitleDialog.show()
+                }
+                else if(videoPath.value?.isEmpty() != false) {
+                    noVideoDialog.show()
+                }
                 else {
                     this.lifecycleScope.launch(Dispatchers.IO){
                         Log.d(tag, "onOptionsItemSelected")

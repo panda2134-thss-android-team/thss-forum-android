@@ -15,26 +15,79 @@ import androidx.lifecycle.lifecycleScope
 import cn.bingoogolapple.photopicker.activity.BGAPhotoPickerActivity
 import cn.bingoogolapple.photopicker.activity.BGAPhotoPickerPreviewActivity
 import cn.bingoogolapple.photopicker.widget.BGASortableNinePhotoLayout
+import com.amap.api.location.AMapLocationClient
+import com.amap.api.location.AMapLocationClientOption
 import kotlinx.coroutines.*
 import site.panda2134.thssforum.R
 import site.panda2134.thssforum.api.APIWrapper
 import site.panda2134.thssforum.databinding.PostTextPicMixBinding
 import site.panda2134.thssforum.models.ImageTextPostContent
+import site.panda2134.thssforum.models.Location
 import site.panda2134.thssforum.models.PostContent
 import java.io.File
+import java.math.BigDecimal
 import java.time.Instant
 
 
 class ActivityNewTextPicMixPost : ActivityNewPost(), BGASortableNinePhotoLayout.Delegate {
     private lateinit var binding: PostTextPicMixBinding
+    lateinit var locationClient: AMapLocationClient
+    private var location: Location? = null
+    private val permissions = listOf(
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.READ_PHONE_STATE)
+
+    private val requestLocationPermissions =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+            binding.addLocation.isEnabled = ! it.values.contains(false)
+        }
+    private fun locationInit() {
+        binding.location.visibility = View.GONE
+        binding.addLocation.isEnabled = false
+
+        requestLocationPermissions.launch(permissions.toTypedArray())
+
+        AMapLocationClient.updatePrivacyShow(this, true, true)
+        AMapLocationClient.updatePrivacyAgree(this, true)
+
+        locationClient = AMapLocationClient(applicationContext)
+        locationClient.setLocationListener {
+            binding.location.visibility = View.VISIBLE
+            binding.location.text = it.address
+            location = Location(it.address, BigDecimal(it.longitude), BigDecimal(it.latitude))
+        }
+        locationClient.setLocationOption(AMapLocationClientOption()
+            .apply {
+                locationPurpose = AMapLocationClientOption.AMapLocationPurpose.Transport
+            })
+
+        binding.addLocation.setOnClickListener {
+            locationClient.stopLocation()
+            locationClient.startLocation()
+        }
+    }
+
     private lateinit var api: APIWrapper
     private val tag = "newTextPicMixPost"
     val progressPercentage = MutableLiveData<Int>(0)
     val uploading = MutableLiveData(false)
-    private val alertDialog: AlertDialog
+    private val noPictureDialog: AlertDialog
         get() = AlertDialog.Builder(this)
             .setTitle(getString(R.string.no_photo))
             .setMessage(R.string.please_shot_or_choose_a_photo)
+            .create()
+    private val noTitleDialog: AlertDialog
+        get() = AlertDialog.Builder(this)
+            .setTitle(getString(R.string.no_title))
+            .setMessage(R.string.please_add_a_title)
+            .create()
+    private val noContentDialog: AlertDialog
+        get() = AlertDialog.Builder(this)
+            .setTitle(getString(R.string.no_content))
+            .setMessage(R.string.please_add_content)
             .create()
 
     private val chooseMorePhoto = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -92,6 +145,7 @@ class ActivityNewTextPicMixPost : ActivityNewPost(), BGASortableNinePhotoLayout.
         binding = PostTextPicMixBinding.inflate(layoutInflater)
         binding.p = this
         setContentView(binding.root)
+        locationInit()
         loadDraft()
         binding.photoPicker.apply {
             maxItemCount = 9
@@ -112,8 +166,14 @@ class ActivityNewTextPicMixPost : ActivityNewPost(), BGASortableNinePhotoLayout.
         return when (item.itemId) {
             R.id.send_menu_item -> {
                 Log.d(tag, "item clicked")
-                if(binding.photoPicker.data.size == 0) {
-                    alertDialog.show()
+                if(binding.title.text.toString() == "") {
+                    noTitleDialog.show()
+                }
+                else if(binding.content.text.toString() == "") {
+                    noContentDialog.show()
+                }
+                else if(binding.photoPicker.data.size == 0) {
+                    noPictureDialog.show()
                 }
                 else {
                     lifecycleScope.launch {

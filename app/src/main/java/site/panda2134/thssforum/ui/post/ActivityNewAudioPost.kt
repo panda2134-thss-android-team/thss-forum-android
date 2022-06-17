@@ -75,6 +75,16 @@ class ActivityNewAudioPost : ActivityNewPost() {
         }
     }
 
+    private val noTitleDialog: AlertDialog
+        get() = AlertDialog.Builder(this)
+            .setTitle(getString(R.string.no_title))
+            .setMessage(R.string.please_add_a_title)
+            .create()
+    private val noAudioDialog: AlertDialog
+        get() = AlertDialog.Builder(this)
+            .setTitle(getString(R.string.no_audio))
+            .setMessage(R.string.please_record_or_choose_an_audio)
+            .create()
     val progress = MutableLiveData<Int>(0)
     private val tag = "newAudioPost"
     private val permission = Manifest.permission.RECORD_AUDIO
@@ -174,13 +184,6 @@ class ActivityNewAudioPost : ActivityNewPost() {
         }
     }
 
-    private fun showDialog() {
-        val alertDialog = AlertDialog.Builder(this)
-            .setTitle(getString(R.string.no_audio))
-            .setMessage(getString(R.string.please_record_or_choose_an_audio))
-            .create()
-        alertDialog.show()
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         api = APIWrapper(this)
@@ -210,7 +213,8 @@ class ActivityNewAudioPost : ActivityNewPost() {
         return when (item.itemId) {
             R.id.send_menu_item -> {
                 Log.d(tag, "item clicked")
-                if(audioPath.value?.isEmpty() != false) showDialog()
+                if (binding.title.text.toString() == "") noTitleDialog.show()
+                else if (audioPath.value?.isEmpty() != false) noAudioDialog.show()
                 else {
                     this.lifecycleScope.launch(Dispatchers.IO){
                         Log.d(tag, "onOptionsItemSelected")
