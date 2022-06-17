@@ -29,4 +29,6 @@
     <color name="like_color">#C00020</color>
 
     <color name="bga_pp_eighteen_maskColor">#00000000</color>
+    <color name="eye_off_icon">#DAA520</color>
+    <color name="eye_icon">#FFFFFF</color>
 </resources>
