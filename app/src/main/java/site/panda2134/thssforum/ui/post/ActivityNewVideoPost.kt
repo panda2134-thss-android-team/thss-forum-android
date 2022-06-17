@@ -21,21 +21,60 @@ import kotlinx.coroutines.withContext
 import site.panda2134.thssforum.R
 import site.panda2134.thssforum.api.APIWrapper
 import site.panda2134.thssforum.databinding.PostVideoBinding
+import site.panda2134.thssforum.models.Location
 import site.panda2134.thssforum.models.MediaPostContent
 import site.panda2134.thssforum.models.PostContent
 import java.lang.Exception
 import java.time.Instant
-
+import android.view.View
+import com.amap.api.location.AMapLocationClient
+import com.amap.api.location.AMapLocationClientOption
 
 class ActivityNewVideoPost : ActivityNewPost() {
     private lateinit var binding: PostVideoBinding
     private lateinit var api: APIWrapper
     val videoPath = MutableLiveData<String?>(null)
     val uploading = MutableLiveData(false)
+    lateinit var locationClient: AMapLocationClient
+    private var location: Location? = null
+
+    private val requestLocationPermissions =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+            binding.addLocation.isEnabled = ! it.values.contains(false)
+        }
+
+    private fun initAddLocation() {
+        requestLocationPermissions.launch(listOf(
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.READ_PHONE_STATE).toTypedArray())
+        AMapLocationClient.updatePrivacyShow(this, true, true)
+        AMapLocationClient.updatePrivacyAgree(this, true)
+
+        locationClient = AMapLocationClient(applicationContext)
+        locationClient.setLocationListener {
+            Log.d("AMAP", it.address)
+            binding.addLocation.visibility = View.GONE
+            binding.location.visibility = View.VISIBLE
+            binding.location.text = it.address
+            location = Location(it.address, it.longitude.toBigDecimal(), it.latitude.toBigDecimal())
+        }
+        locationClient.setLocationOption(
+            AMapLocationClientOption()
+            .apply {
+                locationPurpose = AMapLocationClientOption.AMapLocationPurpose.Transport
+            })
+
+        binding.addLocation.setOnClickListener {
+            locationClient.stopLocation()
+            locationClient.startLocation()
+        }
+    }
 
     val progressPercentage = MutableLiveData<Int>(0)
     private val tag = "newVideoPost"
-    private val permission = Manifest.permission.CAMERA
     private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         //将从camera拍摄的视频uri上传到oss
         run {
@@ -128,8 +167,9 @@ class ActivityNewVideoPost : ActivityNewPost() {
         }
         loadDraft()
         binding.shootVideo.setOnClickListener {
-            requestPermissionLauncher.launch(permission)
+            requestPermissionLauncher.launch(Manifest.permission.CAMERA)
         }
+        initAddLocation()
         val mediaController = MediaController(this, false)
         mediaController.setAnchorView(binding.videoPreview)
         binding.videoPreview.setMediaController(mediaController)

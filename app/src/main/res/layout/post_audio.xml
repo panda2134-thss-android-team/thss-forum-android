@@ -1,15 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:paddingHorizontal="@dimen/medium_margin"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <EditText
-        android:id="@+id/title"
-        android:layout_marginTop="@dimen/normal_margin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/TextAppearance.AppCompat.Headline"
-        android:textStyle="bold"
-        android:hint="@string/title_hint"
-        android:inputType="textLongMessage" />
-</LinearLayout>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="v"
+            type="site.panda2134.thssforum.ui.post.ActivityNewAudioPost" />
+        <import type="android.view.View"/>
+    </data>
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:paddingHorizontal="@dimen/medium_margin"
+        android:paddingVertical="@dimen/normal_margin"
+        android:orientation="vertical">
+        <EditText
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/TextAppearance.AppCompat.Headline"
+            android:textStyle="bold"
+            android:hint="@string/title_hint"
+            android:inputType="textLongMessage" />
+
+        <LinearLayout
+            android:visibility="@{v.uploading ? View.GONE : View.VISIBLE}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/select_audio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Widget.Material3.Button.IconButton"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginEnd="@dimen/small_margin"
+                app:icon="@drawable/ic_baseline_photo_album_24" />
+
+            <Button
+                android:id="@+id/record_audio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@id/select_audio"
+                app:layout_constraintTop_toTopOf="parent"
+                style="@style/Widget.Material3.Button.IconButton"
+                app:icon="@drawable/ic_baseline_camera_24"
+                tools:layout_editor_absoluteY="659dp" />
+
+        </LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="220dp">
+
+<!--            <com.arges.sepan.argmusicplayer.PlayerViews.ArgPlayerSmallView-->
+<!--                android:id="@+id/audioPreview"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:visibility="@{(!v.uploading &amp;&amp; v.audioPath.length() > 0) ? View.VISIBLE : View.GONE}">-->
+
+<!--            </com.arges.sepan.argmusicplayer.PlayerViews.ArgPlayerSmallView>-->
+
+        </RelativeLayout>
+        <Button
+            android:id="@+id/add_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_location"
+            app:icon="@drawable/ic_baseline_add_location_24" />
+        <TextView
+            android:id="@+id/location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</layout>
