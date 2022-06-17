@@ -14,6 +14,7 @@
         android:paddingHorizontal="@dimen/medium_margin"
         android:paddingVertical="@dimen/normal_margin"
         android:orientation="vertical">
+
         <EditText
             android:id="@+id/title"
             android:layout_width="match_parent"
@@ -25,32 +26,44 @@
             android:importantForAutofill="no" />
 
         <LinearLayout
-            android:visibility="@{v.uploading ? View.GONE : View.VISIBLE}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
             <Button
-                android:id="@+id/select_video"
+                style="@style/Widget.Material3.Button.IconButton"
+                android:id="@+id/add_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/Widget.Material3.Button.IconButton"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/add_location"
                 android:layout_marginEnd="@dimen/small_margin"
-                android:contentDescription="@string/select_video"
-                app:icon="@drawable/ic_baseline_photo_album_24" />
+                app:icon="@drawable/ic_baseline_add_location_24" />
+            <LinearLayout
+                android:visibility="@{v.uploading ? View.GONE : View.VISIBLE}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <Button
-                android:id="@+id/shoot_video"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintLeft_toRightOf="@id/select_video"
-                app:layout_constraintTop_toTopOf="parent"
-                style="@style/Widget.Material3.Button.IconButton"
-                app:icon="@drawable/ic_baseline_camera_24"
-                android:contentDescription="@string/shoot_video"
-                tools:layout_editor_absoluteY="659dp" />
+                <Button
+                    android:id="@+id/select_video"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginEnd="@dimen/small_margin"
+                    android:contentDescription="@string/select_video"
+                    app:icon="@drawable/ic_baseline_photo_album_24" />
 
+                <Button
+                    android:id="@+id/shoot_video"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toRightOf="@id/select_video"
+                    app:layout_constraintTop_toTopOf="parent"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    app:icon="@drawable/ic_baseline_camera_24"
+                    android:contentDescription="@string/shoot_video"
+                    tools:layout_editor_absoluteY="659dp" />
+
+            </LinearLayout>
         </LinearLayout>
         <RelativeLayout
             android:layout_width="match_parent"
@@ -66,18 +79,16 @@
 
             <VideoView
                 android:id="@+id/videoPreview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:layout_width="200dp"
+                android:layout_centerInParent="true"
                 android:visibility="@{(!v.uploading &amp;&amp; v.videoPath.length() > 0) ? View.VISIBLE : View.GONE}" />
         </RelativeLayout>
-        <Button
-            android:id="@+id/add_location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/add_location"
-            app:icon="@drawable/ic_baseline_add_location_24" />
+
         <TextView
             android:id="@+id/location"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>

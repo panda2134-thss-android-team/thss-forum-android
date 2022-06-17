@@ -2,12 +2,10 @@ package site.panda2134.thssforum.ui.post
 
 import android.Manifest
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
@@ -35,15 +33,9 @@ class ActivityNewPureTextPost : ActivityNewPost() {
         Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.READ_PHONE_STATE)
 
-    private val requestMultiplePermissions =
+    private val requestLocationPermissions =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
-            for (perm in permissions) {
-                if (it[perm] != true) {
-                    binding.addLocation.isEnabled = false
-                    return@registerForActivityResult
-                }
-            }
-            binding.addLocation.isEnabled = true
+            binding.addLocation.isEnabled = ! it.values.contains(false)
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,15 +47,13 @@ class ActivityNewPureTextPost : ActivityNewPost() {
         binding.location.visibility = View.GONE
         binding.addLocation.isEnabled = false
 
-        requestMultiplePermissions.launch(permissions.toTypedArray())
+        requestLocationPermissions.launch(permissions.toTypedArray())
 
         AMapLocationClient.updatePrivacyShow(this, true, true)
         AMapLocationClient.updatePrivacyAgree(this, true)
 
         locationClient = AMapLocationClient(applicationContext)
         locationClient.setLocationListener {
-            Log.d("AMAP", it.address)
-            binding.addLocation.visibility = View.GONE
             binding.location.visibility = View.VISIBLE
             binding.location.text = it.address
             location = Location(it.address, BigDecimal(it.longitude), BigDecimal(it.latitude))

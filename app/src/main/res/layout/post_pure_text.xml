@@ -13,7 +13,8 @@
         style="@style/TextAppearance.AppCompat.Headline"
         android:textStyle="bold"
         android:hint="@string/title_hint"
-        android:inputType="textLongMessage" />
+        android:inputType="textLongMessage"
+        android:importantForAutofill="no" />
 
     <EditText
         android:id="@+id/content"
@@ -23,13 +24,16 @@
         android:gravity="top|start"
         android:hint="@string/content_hint"
         android:minLines="10"
-        android:singleLine="false"/>
+        android:inputType="textMultiLine"
+        android:singleLine="false"
+        android:importantForAutofill="no" />
 
     <Button
         android:id="@+id/add_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/add_location"
+        android:contentDescription="@string/add_location"
+        style="@style/Widget.Material3.Button.IconButton"
         app:icon="@drawable/ic_baseline_add_location_24" />
     <TextView
         android:id="@+id/location"

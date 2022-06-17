@@ -29,6 +29,8 @@
     <string name="PREF_KEY_IMAGE_PATH_LIST" translatable="false">imagePathList</string>
     <string name="PREF_KEY_VIDEO_TITLE" translatable="false">videoTitle</string>
     <string name="PREF_KEY_VIDEO_PATH" translatable="false">videoPath</string>
+    <string name="PREF_KEY_AUDIO_TITLE" translatable="false">audioTitle</string>
+    <string name="PREF_KEY_AUDIO_PATH" translatable="false">audioPath</string>
 
     <string name="RECYCLER_VIEW_NO_CONTENT">暂无内容</string>
 
@@ -144,4 +146,6 @@
 
     <string name="no_audio">还没有音频</string>
     <string name="please_record_or_choose_an_audio">请录制或从手机选择一段音频👀</string>
+
+    <string name="uploaded_preview">上传预览</string>
 </resources>

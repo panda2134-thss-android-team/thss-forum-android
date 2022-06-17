@@ -56,7 +56,6 @@ class ActivityNewVideoPost : ActivityNewPost() {
         locationClient = AMapLocationClient(applicationContext)
         locationClient.setLocationListener {
             Log.d("AMAP", it.address)
-            binding.addLocation.visibility = View.GONE
             binding.location.visibility = View.VISIBLE
             binding.location.text = it.address
             location = Location(it.address, it.longitude.toBigDecimal(), it.latitude.toBigDecimal())
@@ -115,7 +114,7 @@ class ActivityNewVideoPost : ActivityNewPost() {
             try {
                 uploading.value = true
                 val uploadedPath = withContext(Dispatchers.IO) {
-                    api.uploadFileToOSS(result) { request, currentSize, totalSize ->
+                    api.uploadFileToOSS(result) { _, currentSize, totalSize ->
                         progressPercentage.value = (currentSize * 100 / totalSize).toInt()
                         Log.d(tag, progressPercentage.value.toString())
                     }.toString()
@@ -190,7 +189,7 @@ class ActivityNewVideoPost : ActivityNewPost() {
                         Log.d(tag, "onOptionsItemSelected")
                         Log.d(tag, "videoPath: $videoPath")
                         val videoPostContent = MediaPostContent(binding.title.text.toString(), arrayOf(videoPath.value!!))
-                        val postContent = PostContent.makeVideoPost(videoPostContent, createdAt = Instant.now())
+                        val postContent = PostContent.makeVideoPost(videoPostContent, createdAt = Instant.now(), location = location)
                         val res = api.newPost(postContent)
                         Log.d(tag, "postId: ${res.id}")
                         withContext(Dispatchers.Main) {

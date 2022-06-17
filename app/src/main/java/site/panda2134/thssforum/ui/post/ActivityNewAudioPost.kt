@@ -9,7 +9,7 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.widget.MediaController
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.MutableLiveData
@@ -17,7 +17,6 @@ import androidx.lifecycle.lifecycleScope
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.arges.sepan.argmusicplayer.Models.ArgAudio
-import com.arges.sepan.argmusicplayer.PlayerViews.ArgPlayerSmallView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -46,19 +45,13 @@ class ActivityNewAudioPost : ActivityNewPost() {
         Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.READ_PHONE_STATE)
 
-    private val requestMultiplePermissions =
+    private val requestLocationPermissions =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
-            for (perm in permissions) {
-                if (it[perm] != true) {
-                    binding.addLocation.isEnabled = false
-                    return@registerForActivityResult
-                }
-            }
-            binding.addLocation.isEnabled = true
+            binding.addLocation.isEnabled = ! it.values.contains(false)
         }
 
     private fun initAddLocation() {
-        requestMultiplePermissions.launch(permissions.toTypedArray())
+        requestLocationPermissions.launch(permissions.toTypedArray())
 
         AMapLocationClient.updatePrivacyShow(this, true, true)
         AMapLocationClient.updatePrivacyAgree(this, true)
@@ -66,10 +59,9 @@ class ActivityNewAudioPost : ActivityNewPost() {
         locationClient = AMapLocationClient(applicationContext)
         locationClient.setLocationListener {
             Log.d("AMAP", it.address)
-            binding.addLocation.visibility = View.GONE
             binding.location.visibility = View.VISIBLE
             binding.location.text = it.address
-            location = Location(it.address, BigDecimal(it.longitude), BigDecimal(it.latitude))
+            location = Location(it.address, it.longitude.toBigDecimal(), it.latitude.toBigDecimal())
         }
         locationClient.setLocationOption(
             AMapLocationClientOption()
@@ -122,33 +114,34 @@ class ActivityNewAudioPost : ActivityNewPost() {
     }
 
     private fun playAudio() {
-//        binding.audioPreview.apply {
-//            disableNextPrevButtons()
-//            setProgressMessage(context.getString(R.string.loading))
-//            disableRepeatButton()
-//            setPlaylistRepeat(false)
-//            playAudioAfterPercent(10)
-//            play(ArgAudio.createFromURL(
-//                "EF",
-//                binding.title.text.toString(),
-//                audioPath.value
-//            ))
-//            // 加载完成后不马上开始播放
-//            var firstPlayed = false
-//            this.setOnPlayingListener {
-//                if (!firstPlayed) {
-//                    firstPlayed = true
-//                    pause()
-//                }
-//            }
-//        }
+        binding.audioPreview.apply {
+            disableNextPrevButtons()
+            setProgressMessage(context.getString(R.string.loading))
+            disableRepeatButton()
+            setPlaylistRepeat(false)
+            playAudioAfterPercent(10)
+            play(
+                ArgAudio.createFromURL(
+                getString(R.string.uploaded_preview),
+                binding.title.text.toString(),
+                audioPath.value
+            ))
+            // 加载完成后不马上开始播放
+            var firstPlayed = false
+            this.setOnPlayingListener {
+                if (!firstPlayed) {
+                    firstPlayed = true
+                    pause()
+                }
+            }
+        }
     }
     private fun handleAudioUpload(result: Uri) {
         this.lifecycleScope.launch {
             try {
                 uploading.value = true
                 val uploadedPath = withContext(Dispatchers.IO) {
-                    api.uploadFileToOSS(result) { request, currentSize, totalSize ->
+                    api.uploadFileToOSS(result) { _, currentSize, totalSize ->
                         progress.value = (currentSize * 100 / totalSize).toInt()
                         Log.d(tag, progress.value.toString())
                     }.toString()
@@ -165,8 +158,8 @@ class ActivityNewAudioPost : ActivityNewPost() {
 
     private fun loadDraft() {
         val pref = getSharedPreferences(getString(R.string.GLOBAL_SHARED_PREF), MODE_PRIVATE)
-        val draftTitle = pref.getString(getString(R.string.PREF_KEY_VIDEO_TITLE), "")
-        val draftPath = pref.getString(getString(R.string.PREF_KEY_VIDEO_PATH), null)
+        val draftTitle = pref.getString(getString(R.string.PREF_KEY_AUDIO_TITLE), "")
+        val draftPath = pref.getString(getString(R.string.PREF_KEY_AUDIO_PATH), null)
         binding.title.setText(draftTitle)
         audioPath.value = draftPath
         Log.d(tag, "audioPath = ${audioPath.value}")
@@ -175,8 +168,8 @@ class ActivityNewAudioPost : ActivityNewPost() {
     private fun saveDraft() {
         val pref = getSharedPreferences(getString(R.string.GLOBAL_SHARED_PREF), MODE_PRIVATE)
         with(pref.edit()) {
-            this.putString(getString(R.string.PREF_KEY_VIDEO_TITLE), binding.title.text.toString())
-            this.putString(getString(R.string.PREF_KEY_VIDEO_PATH), audioPath.value)
+            this.putString(getString(R.string.PREF_KEY_AUDIO_TITLE), binding.title.text.toString())
+            this.putString(getString(R.string.PREF_KEY_AUDIO_PATH), audioPath.value)
             apply()
         }
     }
@@ -223,13 +216,13 @@ class ActivityNewAudioPost : ActivityNewPost() {
                         Log.d(tag, "onOptionsItemSelected")
                         Log.d(tag, "audioPath: $audioPath")
                         val audioPostContent = MediaPostContent(binding.title.text.toString(), arrayOf(audioPath.value!!))
-                        val postContent = PostContent.makeAudioPost(audioPostContent, createdAt = Instant.now())
+                        val postContent = PostContent.makeAudioPost(audioPostContent, createdAt = Instant.now(), location = location)
                         val res = api.newPost(postContent)
                         Log.d(tag, "postId: ${res.id}")
                         withContext(Dispatchers.Main) {
+                            Toast.makeText(this@ActivityNewAudioPost, R.string.post_success, Toast.LENGTH_SHORT).show()
                             binding.title.text.clear()
                             audioPath.value = ""
-                            saveDraft() // remove draft
                         }
                         finish()
                     }
