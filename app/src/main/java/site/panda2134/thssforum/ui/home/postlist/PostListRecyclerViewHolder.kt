@@ -68,9 +68,7 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIWrapp
             try {
                 commentAdapter.fetchComments()
                 val likes = api.getNumOfLikes(p.postContent.id)
-                val likeNicknames = likes.likesUidList.map {
-                    scope.async { api.getUserInfo(it) }
-                }.awaitAll().map { it.nickname }
+                val likeNicknames = getLikeNicknames(scope)
                 val followingUsers = api.getFollowingUsers()
                 withContext(Dispatchers.Main) {
                     binding.likeList.text = likeNicknames.joinToString(", ")
@@ -177,10 +175,7 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIWrapp
                     } else {
                         api.unlikeThisPost(p.postContent.id).count
                     }
-                    val likes = api.getNumOfLikes(p.postContent.id)
-                    val likeNicknames = likes.likesUidList.map {
-                        scope.async { api.getUserInfo(it) }
-                    }.awaitAll().map { it.nickname }
+                    val likeNicknames = getLikeNicknames(scope)
                     withContext(Dispatchers.Main) {
                         binding.likeList.text = likeNicknames.joinToString(", ")
                         binding.likeWrapper.isVisible = binding.likeList.text.isNotBlank()
@@ -251,6 +246,15 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIWrapp
                 hideCommentEditText()
             }
         }
+    }
+
+    private suspend fun getLikeNicknames(scope: CoroutineScope): List<String> {
+        val blockedUid = api.getBlacklist().map { blocked -> blocked.uid }
+        val likes = api.getNumOfLikes(post!!.postContent.id!!)
+        return likes.likesUidList
+            .filter { it !in blockedUid }
+            .map { scope.async { api.getUserInfo(it) } }
+            .awaitAll().map { it.nickname }
     }
 
 
