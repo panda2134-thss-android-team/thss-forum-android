@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.MutableLiveData
 import com.bumptech.glide.Glide
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -13,14 +14,13 @@ import kotlinx.coroutines.withContext
 import site.panda2134.thssforum.R
 import site.panda2134.thssforum.api.APIWrapper
 import site.panda2134.thssforum.databinding.ProfileUserHomepageBinding
-import site.panda2134.thssforum.models.User
 import site.panda2134.thssforum.ui.home.postlist.PostListRecyclerViewAdapter
 
 
 class ProfileUserHomepage : ActivityProfileItem() {
     private lateinit var binding: ProfileUserHomepageBinding
-    private var isView = true // 右上角的屏蔽与否：默认是不屏蔽
-    private lateinit var menu: Menu
+    private var isBlocked = MutableLiveData<Boolean>(false) // 右上角的屏蔽与否：默认是不屏蔽
+    private var menu: Menu? = null
     private lateinit var uid : String // 本界面展示的作者的uid
     private lateinit var api: APIWrapper
     private lateinit var adapter: PostListRecyclerViewAdapter
@@ -28,7 +28,6 @@ class ProfileUserHomepage : ActivityProfileItem() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        println("profile_user_homepage")
 
         binding = ProfileUserHomepageBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -36,8 +35,16 @@ class ProfileUserHomepage : ActivityProfileItem() {
         uid = intent.getSerializableExtra("author") as String
         // 载入顶部：那个用户的主页
         api = APIWrapper(this)
-        MainScope().launch(Dispatchers.IO) {
-            loadUserInfo(uid)
+        MainScope().launch {
+            loadUserInfo()
+            loadIsBlocked()
+        }
+        isBlocked.observe(this) {
+            menu?.apply {
+                findItem(R.id.eye_menu_item).icon =
+                    ContextCompat.getDrawable(this@ProfileUserHomepage,
+                        if (it) R.drawable.eye_off else R.drawable.eye)
+            }
         }
 
         isCurrentUser = (uid == api.currentUserId)
@@ -47,20 +54,24 @@ class ProfileUserHomepage : ActivityProfileItem() {
         binding.hpPostsList.adapter = adapter
         adapter.setupRecyclerView(this, binding.hpPostsList)
 
-        binding.followedButton.setOnClickListener() {
+        binding.followedButton.setOnClickListener {
 
         }
     }
 
-    private suspend fun loadUserInfo(uid : String) {
+    private suspend fun loadIsBlocked() {
+        val blockList = withContext(Dispatchers.IO) { api.getBlacklist() }
+        isBlocked.value = uid in blockList.map { it.uid }
+    }
+
+    private suspend fun loadUserInfo() {
         try {
-            val user: User = api.getUserInfo(uid)
+            val user = withContext(Dispatchers.IO) {
+                api.getUserInfo(uid)
+            }
             withContext(Dispatchers.Main) {
                 binding.myName.text = user.nickname
                 binding.myMotto.text = user.intro
-            }
-            // 画图
-            withContext(Dispatchers.Main) {
                 Glide.with(binding.root).load(user.avatar)
                     .placeholder(R.drawable.ic_baseline_account_circle_24)
                     .into(binding.myAvatar)
@@ -71,22 +82,32 @@ class ProfileUserHomepage : ActivityProfileItem() {
     }
 
     // 不去看该用户内容
-    private suspend fun notView(uid : String) {
-        try {
-            api.addBlacklistUser(uid)
-            println("完成恢复白名单啦")
-        } catch (e: Throwable) {
-            e.printStackTrace()
+    private suspend fun blockThisUser() {
+        withContext(Dispatchers.IO) {
+            try {
+                api.addBlacklistUser(uid)
+                println("完成加入黑名单啦")
+            } catch (e: Throwable) {
+                e.printStackTrace()
+            }
+        }
+        withContext(Dispatchers.Main) {
+            isBlocked.value = true
         }
     }
 
     // 看该用户内容
-    private suspend fun viewAgain(uid : String) {
-        try {
-            api.delBlacklistUser(uid)
-            println("完成加入黑名单啦")
-        } catch (e: Throwable) {
-            e.printStackTrace()
+    private suspend fun unblockThisUser() {
+        withContext(Dispatchers.IO) {
+            try {
+                api.delBlacklistUser(uid)
+                println("完成恢复白名单啦")
+            } catch (e: Throwable) {
+                e.printStackTrace()
+            }
+        }
+        withContext(Dispatchers.Main) {
+            isBlocked.value = false
         }
     }
 
@@ -103,19 +124,11 @@ class ProfileUserHomepage : ActivityProfileItem() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.eye_menu_item -> {
-                if(isView) {
-                    isView = false
-                    menu.getItem(0).icon = ContextCompat.getDrawable(this, R.drawable.eye_off)
-                    MainScope().launch(Dispatchers.IO) {
-                        viewAgain(uid)
-                    }
-
-                }
-                else {
-                    isView = true
-                    menu.getItem(0).icon = (ContextCompat.getDrawable(this, R.drawable.eye))
-                    MainScope().launch(Dispatchers.IO) {
-                        notView(uid)
+                MainScope().launch {
+                    if(isBlocked.value == true) {
+                        unblockThisUser()
+                    } else {
+                        blockThisUser()
                     }
                 }
                 true

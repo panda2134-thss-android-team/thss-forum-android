@@ -68,6 +68,7 @@ class APIWrapper(private val context: Context) {
             }
         }
     val isLoggedIn: Boolean get() = (token != noToken)
+    var silentHttpResponseStatus: List<Int> = listOf()
     private var ossToken: UploadTokenResponse? = null
 
     fun logout() {
@@ -107,7 +108,7 @@ class APIWrapper(private val context: Context) {
                     }
                     else -> null
                 }
-                if (toastMessage != null) {
+                if (toastMessage != null && response.statusCode !in silentHttpResponseStatus) {
                     MainScope().launch {
                         Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
                     }

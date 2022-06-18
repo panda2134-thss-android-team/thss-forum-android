@@ -44,21 +44,26 @@ class CommentRecyclerViewHolder(val binding: PostCommentItemBinding,
                 MainScope().launch(Dispatchers.IO) {
                     // parnet comment can be removed; check for this!
                     try {
+                        api.silentHttpResponseStatus = listOf(403)
                         val parentComment = api.getCommentInfo(postId, parentCommentId)
                         withContext(Dispatchers.Main) {
                             replyTo = parentComment.user
                             binding.nicknameReplyTo.text = parentComment.user.nickname
                         }
                     } catch (e: FuelError) {
-                        if (e.response.statusCode != 404) throw e
-                        else {
+                        if (e.response.statusCode in listOf(403,404)) {
                             withContext(Dispatchers.Main) {
                                 replyTo = null
-                                binding.nicknameReplyTo.text = binding.root.context.getString(R.string.unknown)
+                                val ctx = binding.root.context
+                                binding.nicknameReplyTo.text =
+                                    if (e.response.statusCode == 404) ctx.getString(R.string.unknown)
+                                    else ctx.getString(R.string.blocked_user)
                             }
+                        } else {
+                            e.printStackTrace()
                         }
-                    } catch (e: Throwable) {
-                        e.printStackTrace()
+                    } finally {
+                        api.silentHttpResponseStatus = listOf()
                     }
                 }
             }

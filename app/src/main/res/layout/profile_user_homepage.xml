@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
     </data>
 
     <LinearLayout
@@ -48,7 +47,7 @@
                         android:textStyle="bold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/normal_margin"
+                        android:layout_marginStart="@dimen/normal_margin"
                         android:layout_marginTop="3dp"
                         tools:text="移动应用" />
 
@@ -90,7 +89,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/motto"
-                    android:layout_marginLeft="@dimen/normal_margin"
+                    android:layout_marginStart="@dimen/normal_margin"
                     android:layout_marginTop="@dimen/small_margin"
                     tools:text="希望可以早点写完大作业" />
             </LinearLayout>

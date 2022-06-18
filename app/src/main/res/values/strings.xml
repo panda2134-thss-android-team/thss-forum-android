@@ -135,6 +135,7 @@
     <string name="notification_background" formatted="true">THSSForum 正在后台运行。</string>
 
     <string name="unknown">未知</string>
+    <string name="blocked_user">已屏蔽用户</string>
     <string name="reply">回复</string>
     <string name="write_your_comment">写下您的评论</string>
 
