@@ -201,8 +201,8 @@ class ActivityNewVideoPost: ActivityNewPostWithDraft<ActivityNewVideoPost.VideoD
                             videoPath.value = ""
                             Toast.makeText(this@ActivityNewVideoPost, R.string.post_success, Toast.LENGTH_SHORT).show()
                             isPostSent = true
+                            finish()
                         }
-                        finish()
                     }
                 }
                 true

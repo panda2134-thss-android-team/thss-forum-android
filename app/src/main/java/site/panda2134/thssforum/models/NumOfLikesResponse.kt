@@ -27,5 +27,27 @@ data class LikeStatisticsResponse(
     @SerializedName("count")
     val count: Int,
     @SerializedName("likedByMe")
-    val likedByMe: Boolean
-)
+    val likedByMe: Boolean,
+    @SerializedName("likes")
+    val likesUidList: Array<String>
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as LikeStatisticsResponse
+
+        if (count != other.count) return false
+        if (likedByMe != other.likedByMe) return false
+        if (!likesUidList.contentEquals(other.likesUidList)) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = count
+        result = 31 * result + likedByMe.hashCode()
+        result = 31 * result + likesUidList.contentHashCode()
+        return result
+    }
+}

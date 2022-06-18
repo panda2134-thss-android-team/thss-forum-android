@@ -52,6 +52,7 @@ abstract class ActivityNewPostWithDraft<T: ActivityNewPostWithDraft.DraftHolder>
         abstract fun getActivityClassName(): String
     }
 
+    private var draftId: String? = null
     protected var isPostSent = false
     protected abstract fun deserializeDraftJson(j: JsonObject): T
     protected abstract fun serializeDraftJson(holder: T): JsonObject
@@ -61,6 +62,7 @@ abstract class ActivityNewPostWithDraft<T: ActivityNewPostWithDraft.DraftHolder>
         super.onCreate(savedInstanceState)
 
         intent.getStringExtra(EXTRA_DRAFT_ID)?.let { draftId ->
+            this.draftId = draftId
             val pref = getSharedPreferences(getString(R.string.DRAFT_SHARED_PREF), MODE_PRIVATE)
             val jsonValue = pref.getString(draftId, null) ?: return@let
             val j = gsonFireObject.fromJson(jsonValue, DeserializedDraft::class.java)
@@ -74,20 +76,29 @@ abstract class ActivityNewPostWithDraft<T: ActivityNewPostWithDraft.DraftHolder>
         super.finish()
         if (!isPostSent) {
             this.saveDraft()
-        }
-        draftHolder?.let {
-            val activityClassName = it.getActivityClassName()
-            val j = serializeDraftJson(it)
-            val pref = getSharedPreferences(getString(R.string.DRAFT_SHARED_PREF), MODE_PRIVATE)
-            with (pref.edit()) {
-                val jsonValue = gsonFireObject.toJson(
-                    DeserializedDraft(
-                        activityClassName = activityClassName,
-                        data = j
+            draftHolder?.let {
+                val activityClassName = it.getActivityClassName()
+                val j = serializeDraftJson(it)
+                val pref = getSharedPreferences(getString(R.string.DRAFT_SHARED_PREF), MODE_PRIVATE)
+                with (pref.edit()) {
+                    val jsonValue = gsonFireObject.toJson(
+                        DeserializedDraft(
+                            activityClassName = activityClassName,
+                            data = j
+                        )
                     )
-                )
-                putString(UUID.randomUUID().toString(), jsonValue)
-                apply()
+                    putString(UUID.randomUUID().toString(), jsonValue)
+                    apply()
+                }
+            }
+        } else {
+            // post already sent, remove the draft
+            draftId?.let {
+                val pref = getSharedPreferences(getString(R.string.DRAFT_SHARED_PREF), MODE_PRIVATE)
+                with (pref.edit()) {
+                    remove(it)
+                    apply()
+                }
             }
         }
     }

@@ -9,6 +9,7 @@ import site.panda2134.thssforum.ui.profile.following.ProfileFollowingRecyclerVie
 
 class ProfileDrafts : ActivityProfileItem() {
     private lateinit var binding: ProfileDraftsBinding
+    private lateinit var adapter: DraftListRecyclerViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,12 +17,26 @@ class ProfileDrafts : ActivityProfileItem() {
         binding = ProfileDraftsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val drafts = ActivityNewPostWithDraft.getDraftList(this)
-        if (drafts.isNotEmpty()) {
-            val adapter = DraftListRecyclerViewAdapter(drafts.toMutableList(), binding.noContent)
+        adapter = DraftListRecyclerViewAdapter(mutableListOf(), binding.noContent)
+        binding.draftList.adapter = adapter
 
-            binding.draftList.adapter = adapter
-            binding.noContent.isVisible = false
-        }
+        refresh()
+    }
+
+    private fun refresh() {
+        val drafts = ActivityNewPostWithDraft.getDraftList(this)
+        val removeCount = adapter.dataset.size
+
+        adapter.dataset.clear()
+        adapter.notifyItemRangeRemoved(0, removeCount)
+        adapter.dataset.addAll(drafts)
+        adapter.notifyItemRangeInserted(0, drafts.size)
+
+        binding.noContent.isVisible = drafts.isEmpty()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        refresh()
     }
 }

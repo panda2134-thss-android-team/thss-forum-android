@@ -128,11 +128,9 @@ class ActivityNewPureTextPost : ActivityNewPostWithDraft<ActivityNewPureTextPost
                                 Toast.LENGTH_SHORT
                             ).show()
                             isPostSent = true
+                            finish()
                         }
                     }
-                    binding.title.text?.clear()
-                    binding.content.text?.clear()
-                    finish()
                 }
                 true
             }

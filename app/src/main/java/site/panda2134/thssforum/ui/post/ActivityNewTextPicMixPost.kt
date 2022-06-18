@@ -196,7 +196,7 @@ class ActivityNewTextPicMixPost : ActivityNewPostWithDraft<ActivityNewTextPicMix
                         uploading.value = true
                         val uploadedImagePath = images.mapIndexed { index, localImagePath ->
                             lifecycleScope.async(Dispatchers.IO) {
-                                api.uploadFileToOSS(Uri.fromFile(File(localImagePath))) { _, uploaded, total ->
+                                api.uploadFileToOSS(Uri.fromFile(File(localImagePath)), useContentResolver = false) { _, uploaded, total ->
                                     uploadedSizeList[index] = uploaded
                                     totalSizeList[index] = total
                                     progressPercentage.postValue((uploadedSizeList.sum() * 100 / totalSizeList.sum()).toInt())
@@ -216,9 +216,6 @@ class ActivityNewTextPicMixPost : ActivityNewPostWithDraft<ActivityNewTextPicMix
                         withContext(Dispatchers.IO) {
                             api.newPost(postContent)
                         }
-                        binding.title.text?.clear()
-                        binding.content.text?.clear()
-                        binding.photoPicker.data.clear()
                         Toast.makeText(this@ActivityNewTextPicMixPost, R.string.post_success, Toast.LENGTH_SHORT).show()
                         isPostSent = true
                         finish()
