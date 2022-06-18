@@ -25,6 +25,7 @@ class ProfileUserHomepage : ActivityProfileItem() {
     private lateinit var api: APIWrapper
     private lateinit var adapter: PostListRecyclerViewAdapter
     private var isCurrentUser = false // 如果是当前用户的话就没有 ”屏蔽与否/关注“，默认不是
+    private var isFollowed = true // 记录是不是已关注的用户（用于切换是调用取关还是关注），默认是
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +49,31 @@ class ProfileUserHomepage : ActivityProfileItem() {
         adapter.setupRecyclerView(this, binding.hpPostsList)
 
         binding.followedButton.setOnClickListener() {
+            MainScope().launch(Dispatchers.IO) {
+                if(isFollowed) {
+                    unfollowUser(uid)
+                } else {
+                    followUser(uid)
+                }
+            }
+        }
+    }
 
+    // 关注用户
+    private suspend fun followUser(uid : String) {
+        try {
+            api.unfollowUser(uid)
+        } catch (e: Throwable) {
+            e.printStackTrace()
+        }
+    }
+
+    // 取关用户
+    private suspend fun unfollowUser(uid : String) {
+        try {
+            api.unfollowUser(uid)
+        } catch (e: Throwable) {
+            e.printStackTrace()
         }
     }
 
