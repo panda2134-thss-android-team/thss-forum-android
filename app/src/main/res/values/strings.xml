@@ -106,8 +106,10 @@
     <string name="nickname">昵称</string>
     <string name="intro">简介</string>
     <string name="save">保存</string>
+    <string name="search_result">搜索结果……</string>
 
     <string name="followed">已关注</string>
+    <string name="follow">关注</string>
 
     <string name="notification_channel_following_updated">关注的人更新动态</string>
     <string name="notification_channel_following_updated_description">关注的人更新动态时发送通知</string>

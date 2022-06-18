@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -48,12 +49,21 @@ class ProfileUserHomepage : ActivityProfileItem() {
         binding.hpPostsList.adapter = adapter
         adapter.setupRecyclerView(this, binding.hpPostsList)
 
+
+
         binding.followedButton.setOnClickListener() {
+            if(isFollowed) {
+                binding.followedButtonText.text = "关注"
+            } else {
+                binding.followedButtonText.text = "已关注"
+            }
             MainScope().launch(Dispatchers.IO) {
                 if(isFollowed) {
                     unfollowUser(uid)
+                    isFollowed = false
                 } else {
                     followUser(uid)
+                    isFollowed = true
                 }
             }
         }
@@ -62,7 +72,8 @@ class ProfileUserHomepage : ActivityProfileItem() {
     // 关注用户
     private suspend fun followUser(uid : String) {
         try {
-            api.unfollowUser(uid)
+            api.followUser(uid)
+            println("follower")
         } catch (e: Throwable) {
             e.printStackTrace()
         }
@@ -72,6 +83,7 @@ class ProfileUserHomepage : ActivityProfileItem() {
     private suspend fun unfollowUser(uid : String) {
         try {
             api.unfollowUser(uid)
+            println("unfollower")
         } catch (e: Throwable) {
             e.printStackTrace()
         }
@@ -79,10 +91,18 @@ class ProfileUserHomepage : ActivityProfileItem() {
 
     private suspend fun loadUserInfo(uid : String) {
         try {
-            val user: User = api.getUserInfo(uid)
-            withContext(Dispatchers.Main) {
-                binding.myName.text = user.nickname
-                binding.myMotto.text = user.intro
+                val user: User = api.getUserInfo(uid)
+                withContext(Dispatchers.Main) {
+                    binding.myName.text = user.nickname
+                    binding.myMotto.text = user.intro
+                val followingUsers = api.getFollowingUsers()
+                withContext(Dispatchers.Main) {
+                    if (followingUsers.contains(user)) {
+                        binding.followedButtonText.text = "已关注"
+                    } else {
+                        binding.followedButtonText.text = "关注"
+                    }
+                }
             }
             // 画图
             withContext(Dispatchers.Main) {

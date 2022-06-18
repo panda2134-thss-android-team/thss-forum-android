@@ -61,6 +61,7 @@
                         android:layout_marginStart="@dimen/normal_margin"
                         app:cardBackgroundColor="@color/followed_button_bg"
                         app:cardCornerRadius="3dp"
+                        android:clickable="true"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">

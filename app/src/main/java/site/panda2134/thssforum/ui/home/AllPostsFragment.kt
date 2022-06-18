@@ -49,7 +49,7 @@ class AllPostsFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.search_menu_item -> {
-                val intent = Intent(activity, DiscoverMenuSearch::class.java)
+                val intent = Intent(activity, HomeMenuSearch::class.java)
                 startActivity(intent)
                 true
             }
