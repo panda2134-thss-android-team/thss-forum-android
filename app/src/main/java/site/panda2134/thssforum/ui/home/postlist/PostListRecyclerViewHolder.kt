@@ -2,7 +2,6 @@ package site.panda2134.thssforum.ui.home.postlist
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -13,6 +12,7 @@ import android.widget.Toast
 import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import cn.bingoogolapple.photopicker.activity.BGAPhotoPreviewActivity
@@ -63,15 +63,24 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIWrapp
         commentAdapter.postId = p.postContent.id!!
         commentAdapter.clear()
 
-        MainScope().launch {
-            commentAdapter.fetchComments()
-            val likes = api.getNumOfLikes(p.postContent.id)
-            val followingUsers = api.getFollowingUsers()
-            withContext(Dispatchers.Main) {
-                binding.likeNum.text = likes.count.toString()
-                binding.likeButton.isChecked = likes.likedByMe
-                binding.followedButton.visibility =
-                    if (followingUsers.contains(p.author)) View.VISIBLE else View.GONE
+        val scope = MainScope()
+        scope.launch(Dispatchers.IO) {
+            try {
+                commentAdapter.fetchComments()
+                val likes = api.getNumOfLikes(p.postContent.id)
+                val likeNicknames = likes.likesUidList.map {
+                    scope.async { api.getUserInfo(it) }
+                }.awaitAll().map { it.nickname }
+                val followingUsers = api.getFollowingUsers()
+                withContext(Dispatchers.Main) {
+                    binding.likeList.text = likeNicknames.joinToString(", ")
+                    binding.likeWrapper.isVisible = binding.likeList.text.isNotBlank()
+                    binding.likeButton.isChecked = likes.likedByMe
+                    binding.followedButton.visibility =
+                        if (followingUsers.contains(p.author)) View.VISIBLE else View.GONE
+                }
+            } catch (e: Throwable) {
+                e.printStackTrace()
             }
         }
 
@@ -163,13 +172,18 @@ class PostListRecyclerViewHolder(val binding: PostItemBinding, val api: APIWrapp
         binding.likeButton.setOnClickListener {
             MainScope().launch(Dispatchers.IO) {
                 try {
-                    val likeNum = if (binding.likeButton.isChecked) {
+                    if (binding.likeButton.isChecked) {
                         api.likeThisPost(p.postContent.id).count
                     } else {
                         api.unlikeThisPost(p.postContent.id).count
                     }
+                    val likes = api.getNumOfLikes(p.postContent.id)
+                    val likeNicknames = likes.likesUidList.map {
+                        scope.async { api.getUserInfo(it) }
+                    }.awaitAll().map { it.nickname }
                     withContext(Dispatchers.Main) {
-                        binding.likeNum.text = likeNum.toString()
+                        binding.likeList.text = likeNicknames.joinToString(", ")
+                        binding.likeWrapper.isVisible = binding.likeList.text.isNotBlank()
                     }
                 } catch (e: Throwable) {
                     e.printStackTrace()

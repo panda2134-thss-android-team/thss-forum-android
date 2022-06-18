@@ -18,7 +18,7 @@ import site.panda2134.thssforum.ui.post.*
 import site.panda2134.thssforum.utils.toTimeAgo
 import java.time.Instant
 
-class DraftListRecyclerViewAdapter(private val dataset: MutableList<Pair<String, ActivityNewPostWithDraft.Companion.DeserializedDraft>>,
+class DraftListRecyclerViewAdapter(val dataset: MutableList<Pair<String, ActivityNewPostWithDraft.Companion.DeserializedDraft>>,
                                    private val showOnEmptyView: View? = null):
     RecyclerView.Adapter<DraftListRecyclerViewAdapter.DraftListRecyclerViewHolder>() {
 

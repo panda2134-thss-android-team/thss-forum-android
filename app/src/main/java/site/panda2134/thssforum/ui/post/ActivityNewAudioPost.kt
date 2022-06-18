@@ -217,10 +217,8 @@ class ActivityNewAudioPost : ActivityNewPostWithDraft<ActivityNewAudioPost.Audio
                         withContext(Dispatchers.Main) {
                             Toast.makeText(this@ActivityNewAudioPost, R.string.post_success, Toast.LENGTH_SHORT).show()
                             isPostSent = true
-                            binding.title.text.clear()
-                            audioPath.value = ""
+                            finish()
                         }
-                        finish()
                     }
                 }
                 true

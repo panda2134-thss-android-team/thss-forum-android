@@ -205,6 +205,7 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
             <LinearLayout
+                android:id="@+id/like_wrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/post_item_inside_margin"
@@ -219,12 +220,12 @@
                         app:tint="@color/click_blue"
                         tools:ignore="MissingConstraints" />
                     <TextView
-                        android:id="@+id/like_num"
+                        android:id="@+id/like_list"
                         style="@style/TextAppearance.AppCompat.Caption"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/post_item_inside_margin"
-                        tools:text="35"
+                        tools:text="Alice, Bob"
                         android:textColor="@color/click_blue"/>
             </LinearLayout>
 
