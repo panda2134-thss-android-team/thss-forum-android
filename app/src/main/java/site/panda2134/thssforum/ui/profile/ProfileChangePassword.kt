@@ -36,6 +36,7 @@ class ProfileChangePassword : ActivityProfileItem() {
         binding.changePasswordButton.setOnClickListener {
             MainScope().launch(Dispatchers.IO) {
                 try {
+                    api.silentHttpResponseStatus = listOf(403)
                     api.changePassword(ChangePasswordRequest(newPassword = binding.editTextNewPassword.text.toString(), oldPassword = binding.editTextOldPassword.text.toString()))
                     withContext(Dispatchers.Main) {
                         Toast.makeText(this@ProfileChangePassword, R.string.TOAST_CHANGE_PASSWORD_SUCCESS, Toast.LENGTH_LONG).show()
@@ -47,6 +48,8 @@ class ProfileChangePassword : ActivityProfileItem() {
                             Toast.makeText(this@ProfileChangePassword, R.string.TOAST_WRONG_OLD_PASSWORD, Toast.LENGTH_LONG).show()
                         }
                     }
+                } finally {
+                    api.silentHttpResponseStatus = listOf()
                 }
             }
         }
