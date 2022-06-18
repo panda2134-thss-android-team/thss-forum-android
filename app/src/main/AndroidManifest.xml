@@ -97,7 +97,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.home.DiscoverMenuSearch"
+            android:name=".ui.home.HomeMenuSearch"
             android:exported="true"
             android:label="@string/search">
             <intent-filter>

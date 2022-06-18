@@ -17,6 +17,7 @@ import site.panda2134.thssforum.api.APIWrapper
 import site.panda2134.thssforum.databinding.PostItemBinding
 import site.panda2134.thssforum.databinding.RecyclerItemLoadingBinding
 import site.panda2134.thssforum.models.Post
+import site.panda2134.thssforum.models.User
 import site.panda2134.thssforum.ui.home.comments.CommentRecyclerViewAdapter
 import site.panda2134.thssforum.ui.utils.RecyclerItemLoadingViewHolder
 import java.lang.Integer.min
@@ -31,6 +32,7 @@ class PostListRecyclerViewAdapter(val api: APIWrapper, val fetchFollowing: Boole
     private val loadingLock = Mutex()
     private var isEnded = false
     private val POSTS_PER_FETCH = 5
+    private lateinit var user : User
 
     var sortBy: APIWrapper.PostsSortBy = APIWrapper.PostsSortBy.Time
 

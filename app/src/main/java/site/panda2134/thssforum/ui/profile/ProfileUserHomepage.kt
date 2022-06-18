@@ -6,6 +6,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -25,6 +26,7 @@ class ProfileUserHomepage : ActivityProfileItem() {
     private lateinit var api: APIWrapper
     private lateinit var adapter: PostListRecyclerViewAdapter
     private var isCurrentUser = false // 如果是当前用户的话就没有 ”屏蔽与否/关注“，默认不是
+    private var isFollowed = true // 记录是不是已关注的用户（用于切换是调用取关还是关注），默认是
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,8 +56,43 @@ class ProfileUserHomepage : ActivityProfileItem() {
         binding.hpPostsList.adapter = adapter
         adapter.setupRecyclerView(this, binding.hpPostsList)
 
-        binding.followedButton.setOnClickListener {
 
+
+        binding.followedButton.setOnClickListener() {
+            if(isFollowed) {
+                binding.followedButtonText.text = "关注"
+            } else {
+                binding.followedButtonText.text = "已关注"
+            }
+            MainScope().launch(Dispatchers.IO) {
+                if(isFollowed) {
+                    unfollowUser(uid)
+                    isFollowed = false
+                } else {
+                    followUser(uid)
+                    isFollowed = true
+                }
+            }
+        }
+    }
+
+    // 关注用户
+    private suspend fun followUser(uid : String) {
+        try {
+            api.followUser(uid)
+            println("follower")
+        } catch (e: Throwable) {
+            e.printStackTrace()
+        }
+    }
+
+    // 取关用户
+    private suspend fun unfollowUser(uid : String) {
+        try {
+            api.unfollowUser(uid)
+            println("unfollower")
+        } catch (e: Throwable) {
+            e.printStackTrace()
         }
     }
 
@@ -69,9 +106,22 @@ class ProfileUserHomepage : ActivityProfileItem() {
             val user = withContext(Dispatchers.IO) {
                 api.getUserInfo(uid)
             }
+            val followingUsers = withContext(Dispatchers.IO) {
+                api.getFollowingUsers()
+            }
             withContext(Dispatchers.Main) {
                 binding.myName.text = user.nickname
                 binding.myMotto.text = user.intro
+                withContext(Dispatchers.Main) {
+                    if (followingUsers.contains(user)) {
+                        binding.followedButtonText.text = "已关注"
+                    } else {
+                        binding.followedButtonText.text = "关注"
+                    }
+                }
+            }
+            // 画图
+            withContext(Dispatchers.Main) {
                 Glide.with(binding.root).load(user.avatar)
                     .placeholder(R.drawable.ic_baseline_account_circle_24)
                     .into(binding.myAvatar)
