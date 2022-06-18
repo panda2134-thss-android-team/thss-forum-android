@@ -22,11 +22,11 @@ class ProfileUserHomepage : ActivityProfileItem() {
     private lateinit var binding: ProfileUserHomepageBinding
     private var isBlocked = MutableLiveData<Boolean>(false) // 右上角的屏蔽与否：默认是不屏蔽
     private var menu: Menu? = null
-    private lateinit var uid : String // 本界面展示的作者的uid
+    private lateinit var uid: String // 本界面展示的作者的uid
     private lateinit var api: APIWrapper
     private lateinit var adapter: PostListRecyclerViewAdapter
     private var isCurrentUser = false // 如果是当前用户的话就没有 ”屏蔽与否/关注“，默认不是
-    private var isFollowed = true // 记录是不是已关注的用户（用于切换是调用取关还是关注），默认是
+    private var isFollowed = MutableLiveData(false) // 记录是不是已关注的用户（用于切换是调用取关还是关注），默认是
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,55 +44,62 @@ class ProfileUserHomepage : ActivityProfileItem() {
         isBlocked.observe(this) {
             menu?.apply {
                 findItem(R.id.eye_menu_item).icon =
-                    ContextCompat.getDrawable(this@ProfileUserHomepage,
-                        if (it) R.drawable.eye_off else R.drawable.eye)
+                    ContextCompat.getDrawable(
+                        this@ProfileUserHomepage,
+                        if (it) R.drawable.eye_off else R.drawable.eye
+                    )
+            }
+        }
+        isFollowed.observe(this) {
+            if(!it) {
+                binding.followedButtonText.text = "关注"
+            } else {
+                binding.followedButtonText.text = "已关注"
             }
         }
 
         isCurrentUser = (uid == api.currentUserId)
         binding.followedButton.visibility = if (isCurrentUser) View.GONE else View.VISIBLE
 
-        adapter = PostListRecyclerViewAdapter(api, uid = uid, activity = this, lifecycleOwner = this)
+        adapter =
+            PostListRecyclerViewAdapter(api, uid = uid, activity = this, lifecycleOwner = this)
         binding.hpPostsList.adapter = adapter
         adapter.setupRecyclerView(this, binding.hpPostsList)
 
 
 
-        binding.followedButton.setOnClickListener() {
-            if(isFollowed) {
-                binding.followedButtonText.text = "关注"
-            } else {
-                binding.followedButtonText.text = "已关注"
-            }
-            MainScope().launch(Dispatchers.IO) {
-                if(isFollowed) {
-                    unfollowUser(uid)
-                    isFollowed = false
+        binding.followedButton.setOnClickListener {
+            MainScope().launch {
+                if (isFollowed.value == true) {
+                    unfollowUser()
+                    isFollowed.value = false
                 } else {
-                    followUser(uid)
-                    isFollowed = true
+                    followUser()
+                    isFollowed.value = true
                 }
             }
         }
     }
 
     // 关注用户
-    private suspend fun followUser(uid : String) {
-        try {
-            api.followUser(uid)
-            println("follower")
-        } catch (e: Throwable) {
-            e.printStackTrace()
+    private suspend fun followUser() {
+        withContext(Dispatchers.IO) {
+            try {
+                api.followUser(uid)
+            } catch (e: Throwable) {
+                e.printStackTrace()
+            }
         }
     }
 
     // 取关用户
-    private suspend fun unfollowUser(uid : String) {
-        try {
-            api.unfollowUser(uid)
-            println("unfollower")
-        } catch (e: Throwable) {
-            e.printStackTrace()
+    private suspend fun unfollowUser() {
+        withContext(Dispatchers.IO) {
+            try {
+                api.unfollowUser(uid)
+            } catch (e: Throwable) {
+                e.printStackTrace()
+            }
         }
     }
 
@@ -164,7 +171,7 @@ class ProfileUserHomepage : ActivityProfileItem() {
     // activity的menubar
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
-        if(!isCurrentUser) { // 如果不是当前用户
+        if (!isCurrentUser) { // 如果不是当前用户
             inflater.inflate(R.menu.following_eyeswitch_menuicon, menu)
             this.menu = menu
         }
@@ -175,7 +182,7 @@ class ProfileUserHomepage : ActivityProfileItem() {
         return when (item.itemId) {
             R.id.eye_menu_item -> {
                 MainScope().launch {
-                    if(isBlocked.value == true) {
+                    if (isBlocked.value == true) {
                         unblockThisUser()
                     } else {
                         blockThisUser()
