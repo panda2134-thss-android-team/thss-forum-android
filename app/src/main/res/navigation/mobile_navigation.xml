@@ -47,6 +47,9 @@
         <action
             android:id="@+id/action_navigation_profile_to_profileNotify"
             app:destination="@id/profileNotify" />
+        <action
+            android:id="@+id/action_navigation_profile_to_profileChangePassword"
+            app:destination="@id/profileChangePassword" />
     </fragment>
     <activity
         android:id="@+id/postPureText"
@@ -73,6 +76,11 @@
         android:name="site.panda2134.thssforum.ui.profile.ProfileEditMyProfile"
         android:label="activity_profile_edit_my_profile"
         tools:layout="@layout/activity_profile_edit_my_profile" />
+    <activity
+        android:id="@+id/profileChangePassword"
+        android:name="site.panda2134.thssforum.ui.profile.ProfileChangePassword"
+        android:label="activity_profile_change_password"
+        tools:layout="@layout/profile_change_password" />
     <activity
         android:id="@+id/profileDrafts"
         android:name="site.panda2134.thssforum.ui.profile.ProfileDrafts"
