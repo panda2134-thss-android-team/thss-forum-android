@@ -15,6 +15,8 @@
     <string name="TOAST_INTERNAL_SERVER_ERROR">服务器内部错误</string>
     <string name="TOAST_UNPROCESSABLE_ENTITY">校验失败</string>
     <string name="TOAST_EMAIL_USED">此电子邮件已被注册</string>
+    <string name="TOAST_WRONG_OLD_PASSWORD">旧密码错误</string>
+    <string name="TOAST_CHANGE_PASSWORD_SUCCESS">密码修改成功</string>
     <string name="NO_MORE_CONTENT">没有更多内容了</string>
 
     <string name="GLOBAL_SHARED_PREF" translatable="false">site.panda2134.thssforum.SHARED_PREF</string>
@@ -38,6 +40,9 @@
 
     <string name="email">电子邮箱</string>
     <string name="password">密码</string>
+    <string name="old_password">旧密码</string>
+    <string name="new_password">新密码</string>
+    <string name="change_password">确认修改</string>
     <string name="register">注册</string>
     <string name="avatar">头像</string>
     <string name="login">登录</string>
@@ -63,6 +68,7 @@
     <string name="drafts">草稿箱</string>
     <string name="followed_list">关注列表</string>
     <string name="edit_my_profile">修改个人信息</string>
+    <string name="edit_my_password">修改密码</string>
 
 
     <string name="notify_description">来自其他用户的点赞、评论通知</string>
