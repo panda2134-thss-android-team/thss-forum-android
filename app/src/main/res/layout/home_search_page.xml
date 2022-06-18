@@ -4,30 +4,29 @@
     android:layout_height="match_parent"
     android:layout_marginHorizontal="@dimen/normal_margin"
     android:layout_marginTop="@dimen/normal_margin"
-    android:orientation="vertical"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:orientation="vertical">
 
     <EditText
-        android:id="@+id/title"
+        android:id="@+id/search_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/medium_margin"
-        android:textColor="@color/black"
         android:hint="@string/title_content"
-        android:inputType="textLongMessage" />
+        android:inputType="textLongMessage"
+        android:importantForAutofill="no" />
     <EditText
-        android:id="@+id/user_name"
+        android:id="@+id/search_nickname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/medium_margin"
-        android:textColor="@color/black"
-        android:hint="@string/user_name"
+        android:hint="@string/nickname"
+        android:autofillHints="name"
         android:inputType="textLongMessage" />
     <TextView
         android:id="@+id/types"
         android:textSize="@dimen/types_size"
         android:layout_marginTop="@dimen/small_margin"
-        android:layout_marginLeft="@dimen/pic_to_text_margin"
+        android:layout_marginStart="@dimen/pic_to_text_margin"
         android:textColor="@color/types_color"
         android:layout_gravity="center_vertical"
         android:layout_width="wrap_content"
@@ -35,6 +34,7 @@
         android:text="@string/type" />
     <RadioGroup
         android:id="@+id/rg_types"
+        android:checkedButton="@id/rb_all"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/medium_margin"

@@ -112,7 +112,8 @@
     <string name="nickname">昵称</string>
     <string name="intro">简介</string>
     <string name="save">保存</string>
-    <string name="search_result">搜索结果……</string>
+    <string name="search_result">搜索结果</string>
+    <string name="search_result_for">搜索 “%1$s” 的结果如下</string>
 
     <string name="followed">已关注</string>
     <string name="follow">关注</string>

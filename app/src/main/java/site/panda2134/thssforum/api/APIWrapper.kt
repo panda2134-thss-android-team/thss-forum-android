@@ -308,6 +308,8 @@ class APIWrapper(private val context: Context) {
         limit: Int? = null,
         types: List<PostType> = PostType.values().toList(),
         following: Boolean = false,
+        searchText: String? = null,
+        searchNickname: String? = null,
         scope: CoroutineScope = MainScope()
     ): List<Post> {
         val posts = fuel.get(
@@ -317,7 +319,9 @@ class APIWrapper(private val context: Context) {
                 "end" to end?.toString(),
                 "sort_by" to sortBy.value,
                 "skip" to skip,
-                "limit" to limit
+                "limit" to limit,
+                "q" to searchText,
+                "qu" to searchNickname
             ) + (if (following) listOf("following" to "True") else listOf())
               + types.map { "type" to it.value }
         )

@@ -7,23 +7,17 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
-import com.bumptech.glide.Glide
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import site.panda2134.thssforum.R
 import site.panda2134.thssforum.api.APIWrapper
 import site.panda2134.thssforum.databinding.HomeSearchPageBinding
-import site.panda2134.thssforum.models.User
-import site.panda2134.thssforum.ui.profile.ProfileNotificationList
+import site.panda2134.thssforum.models.PostType
 
 
 class HomeMenuSearch : AppCompatActivity() {
+
     private lateinit var binding: HomeSearchPageBinding
-    private lateinit var select_type : String
-    private lateinit var uid: String
     private lateinit var api: APIWrapper
+    private var filterPostType: PostType? = null // null=全部，否则筛选某类
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,55 +28,24 @@ class HomeMenuSearch : AppCompatActivity() {
 
         // 载入顶部：我的头像、昵称和简介
         api = APIWrapper(this)
-        MainScope().launch(Dispatchers.IO) {
-            getUid()
-        }
-    }
 
-    fun onRadioButtonClicked(view: View) {
-        if (view is RadioButton) {
-            // Is the button now checked?
-            val checked = view.isChecked
-
-            // Check which radio button was clicked
-            when (view.getId()) {
+        binding.rgTypes.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
                 R.id.rb_all ->
-                    if (checked) {
-                        // 全部
-                        select_type = "all"
-                    }
+                    // 全部
+                    filterPostType = null
                 R.id.rb_normal ->
-                    if (checked) {
-                        // 纯文字 和 图文混合
-                        select_type = "normal"
-                    }
+                    // 纯文字 和 图文混合
+                    filterPostType = PostType.normal
                 R.id.rb_audio ->
-                    if (checked) {
-                        // 音频
-                        select_type = "audio"
-                    }
+                    // 音频
+                    filterPostType = PostType.audio
                 R.id.rb_video ->
-                    if (checked) {
-                        // 视频
-                        select_type = "video"
-                    }
+                    // 视频
+                    filterPostType = PostType.video
             }
         }
     }
-
-    private suspend fun getUid() {
-        try {
-            val user: User = api.getProfile()
-            withContext(Dispatchers.Main) {
-                uid = user.uid
-            }
-        } catch (e: Throwable) {
-            e.printStackTrace()
-        }
-    }
-
-
-
 
     // activity的menubar
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -95,11 +58,9 @@ class HomeMenuSearch : AppCompatActivity() {
         return when (item.itemId) {
             R.id.send_menu_item -> {
                 val intent = Intent(this, HomeSearchResult::class.java)
-                                .putExtra("uid", uid)
-                                .putExtra("title", binding.title.text)
-                                .putExtra("user_name", binding.userName.text)
-                                .putExtra("types", select_type)
-                println("before_enter_result")
+                    .putExtra("searchText", binding.searchText.text.toString())
+                    .putExtra("searchNickname", binding.searchNickname.text.toString())
+                    .putExtra("postType", filterPostType?.ordinal)
                 startActivity(intent)
                 true
             }

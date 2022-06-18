@@ -17,6 +17,7 @@ import site.panda2134.thssforum.api.APIWrapper
 import site.panda2134.thssforum.databinding.PostItemBinding
 import site.panda2134.thssforum.databinding.RecyclerItemLoadingBinding
 import site.panda2134.thssforum.models.Post
+import site.panda2134.thssforum.models.PostType
 import site.panda2134.thssforum.models.User
 import site.panda2134.thssforum.ui.home.comments.CommentRecyclerViewAdapter
 import site.panda2134.thssforum.ui.utils.RecyclerItemLoadingViewHolder
@@ -32,7 +33,9 @@ class PostListRecyclerViewAdapter(val api: APIWrapper, val fetchFollowing: Boole
     private val loadingLock = Mutex()
     private var isEnded = false
     private val POSTS_PER_FETCH = 5
-    private lateinit var user : User
+    var searchText: String? = null
+    var searchNickname: String? = null
+    var types: List<PostType> = listOf()
 
     var sortBy: APIWrapper.PostsSortBy = APIWrapper.PostsSortBy.Time
 
@@ -111,13 +114,14 @@ class PostListRecyclerViewAdapter(val api: APIWrapper, val fetchFollowing: Boole
                     val initial = posts.size == 0
                     var postsToAdd: List<Post> = if (uid == null) {
                         api.getPosts( // +1 is necessary!
-                            skip = posts.size, limit = POSTS_PER_FETCH + 1, following = fetchFollowing, scope = scope,
-                            sortBy = sortBy
+                            skip = posts.size, limit = POSTS_PER_FETCH + 1, following = fetchFollowing,
+                            scope = scope, sortBy = sortBy, searchText = searchText, searchNickname = searchNickname,
+                            types = types
                         )
                     } else {
                         api.getUserPosts( // +1 is necessary!
                             skip = posts.size, limit = POSTS_PER_FETCH + 1, uid = uid, scope = scope,
-                            sortBy = sortBy
+                            sortBy = sortBy, types = types
                         )
                     }
                     val insertedAt = posts.size
