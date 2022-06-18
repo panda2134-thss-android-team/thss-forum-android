@@ -2,6 +2,7 @@ package site.panda2134.thssforum.ui.profile
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -78,6 +79,9 @@ class ProfileFragment : Fragment() {
         }
         binding.editMyProfile.setOnClickListener {
             requireView().findNavController().navigate(R.id.action_navigation_profile_to_profileEditMyProfile)
+        }
+        binding.editMyPassword.setOnClickListener {
+            requireView().findNavController().navigate(R.id.action_navigation_profile_to_profileChangePassword)
         }
         binding.logout.setOnClickListener {
             api.logout()

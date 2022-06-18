@@ -25,7 +25,8 @@ class CommentRecyclerViewAdapter(private val api: APIWrapper): RecyclerView.Adap
         return CommentRecyclerViewHolder(binding, api).apply {
             onDeleteCallback = { _, _, bindingIndex ->
                 dataset.removeAt(bindingIndex)
-                notifyItemRemoved(bindingIndex)
+//                notifyItemRemoved(bindingIndex)
+                notifyDataSetChanged()
             }
         }
     }
@@ -41,14 +42,14 @@ class CommentRecyclerViewAdapter(private val api: APIWrapper): RecyclerView.Adap
         }
     }
 
-    override fun getItemCount(): Int {
-        return dataset.size
-    }
+    override fun getItemCount() = dataset.size
+
 
     fun clear() {
-        val removeCount = dataset.size
+//        val removeCount = dataset.size
         dataset.clear()
-        notifyItemRangeRemoved(0, removeCount)
+//        notifyItemRangeRemoved(0, removeCount)
+        notifyDataSetChanged()
         isEnded = false
     }
 
@@ -64,7 +65,8 @@ class CommentRecyclerViewAdapter(private val api: APIWrapper): RecyclerView.Adap
             val insertAt = dataset.size
             dataset.addAll(insertAt, newComments)
             withContext(Dispatchers.Main) {
-                notifyItemRangeInserted(insertAt, newComments.size)
+//                notifyItemRangeInserted(insertAt, newComments.size)
+                notifyDataSetChanged()
                 finishCallback()
             }
         }

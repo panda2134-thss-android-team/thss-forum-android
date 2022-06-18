@@ -60,6 +60,10 @@
             android:exported="true"
             android:label="@string/edit_my_profile" />
         <activity
+            android:name=".ui.profile.ProfileChangePassword"
+            android:exported="true"
+            android:label="@string/edit_my_password" />
+        <activity
             android:name=".ui.profile.following.ProfileFollowingList"
             android:exported="true"
             android:label="@string/followed_list" />
@@ -88,21 +92,22 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.home.DiscoverMenuSearch"
+            android:name=".ui.home.HomeMenuSearch"
             android:exported="true"
             android:label="@string/search">
             <intent-filter>
                 <action android:name="MenuActivity" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
+        <activity android:name=".ui.home.HomeSearchResult"
+            android:exported="false"
+            android:label="@string/search_result"
+        />
         <service android:name="com.amap.api.location.APSService" />
     </application>
 
