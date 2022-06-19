@@ -211,7 +211,8 @@ class ActivityNewTextPicMixPost : ActivityNewPostWithDraft<ActivityNewTextPicMix
                                     text=binding.content.text.toString(),
                                     images=uploadedImagePath.map { it.toString() }.toCollection(ArrayList())
                                 ),
-                                createdAt = Instant.now()
+                                createdAt = Instant.now(),
+                                location = location
                             )
                         withContext(Dispatchers.IO) {
                             api.newPost(postContent)
