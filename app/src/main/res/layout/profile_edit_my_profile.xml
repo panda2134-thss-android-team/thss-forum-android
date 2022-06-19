@@ -43,9 +43,14 @@
         android:text="@string/save"
         android:textSize="@dimen/profile_button_save_ts"
         android:layout_gravity="center"
-        app:spinning_bar_padding="3dp"
-        app:spinning_bar_color="@color/white"
         android:layout_width="@dimen/profile_button_save_w"
         android:layout_height="@dimen/profile_button_save_h"
+        app:spinning_bar_padding="3dp"
+        app:spinning_bar_color="@color/white"
+        app:initialCornerAngle="100dp"
     />
+    <!--
+        See: original issue
+        https://github.com/leandroBorgesFerreira/LoadingButtonAndroid/issues/185
+    -->
 </LinearLayout>

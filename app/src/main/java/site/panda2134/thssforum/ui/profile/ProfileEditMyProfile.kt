@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import cn.bingoogolapple.photopicker.activity.BGAPhotoPickerActivity
@@ -72,9 +73,9 @@ class ProfileEditMyProfile : ActivityProfileItem() {
                 }
             }
         }
-
         binding.saveButton.setOnClickListener {
             // 修改个人信息
+            Log.d("test", "Clicked")
             MainScope().launch(Dispatchers.IO) {
                 try {
                     val uploadedAvatar = newImageLocalPath?.let {
@@ -105,6 +106,7 @@ class ProfileEditMyProfile : ActivityProfileItem() {
                         avatar = uploadedAvatar?.toString()
                     )
                     api.modifyProfile(req)
+                    Log.d("test", "I'm OK")
                     withContext(Dispatchers.Main) {
                         binding.saveButton.doneLoadingAnimation(
                             br.com.simplepass.loadingbutton.R.color.green,
@@ -125,11 +127,12 @@ class ProfileEditMyProfile : ActivityProfileItem() {
                         )
                     }
                 } catch (e: Throwable) {
-                    binding.saveButton.revertAnimation()
+                    withContext(Dispatchers.Main) {
+                        binding.saveButton.revertAnimation()
+                    }
                     e.printStackTrace()
                 }
             }
-
         }
 
     }
